@@ -1,0 +1,52 @@
+<template name="MoneyTransfer_sidebarMenu">
+    <li class="{{isActiveRoute name='moneyTransfer.home'}}">
+        <a href="{{pathFor 'moneyTransfer.home'}}">
+            <i class="fa fa-home"></i> <span>{{_ "moneyTransfer.sidebarMenu.home"}}</span>
+        </a>
+    </li>
+
+    <!--Data-->
+    {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
+        <li class="header"><i class="fa fa-database"></i> DATA</li>
+        <li class="{{isActiveRoute name='moneyTransfer.customer'}}">
+            <a href="{{pathFor 'moneyTransfer.customer'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moneyTransfer.order'}}">
+            <a href="{{pathFor 'moneyTransfer.order'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>
+            </a>
+        </li>
+    {{/if}}
+
+    <!--Report-->
+    {{#if isInRole 'reporter' 'MoneyTransfer'}}
+        <li class="header"><i class="fa fa-file-o"></i> REPORT</li>
+        <li class="{{isActiveRoute name='moneyTransfer.customerReport'}}">
+            <a href="{{pathFor 'moneyTransfer.customerReport'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moneyTransfer.orderReport'}}">
+            <a href="{{pathFor 'moneyTransfer.orderReport'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>
+            </a>
+        </li>
+    {{/if}}
+
+    <!--Settings-->
+    {{#if isInRole 'setting' 'MoneyTransfer'}}
+        <li class="header"><i class="fa fa-cogs"></i> SETTING</li>
+        <li class="{{isActiveRoute name='core.exchange'}}">
+            <a href="{{pathFor 'core.exchange'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moneyTransfer.item'}}">
+            <a href="{{pathFor 'moneyTransfer.item'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.item"}}</span>
+            </a>
+        </li>
+    {{/if}}
+</template>
