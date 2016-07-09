@@ -4,7 +4,13 @@
       "home": "Home",
       "item": "Item",
       "customer": "Customer",
-      "order": "Order"
+      "order": "Order",
+      "sender": "Sender",
+      "receiver": "Receiver",
+      "thaiBank": "Thai Bank",
+      "thaiService": "Thai Service",
+      "fromThai": "Transfer From Thai",
+      "fromKhmer": "Transfer From Khmer"
     },
     "home": {
       "title": "Home",
@@ -97,6 +103,98 @@
     },
     "orderReport": {
       "title": "Customer Report"
+    },
+    "sender":{
+      "title": "Sender",
+      "schema": {
+        "_id": {
+          "label": "ID"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "gender": {
+          "label": "Gender"
+        },
+        "address": {
+          "label": "Address"
+        },
+        "telephone": {
+          "label": "Telephone"
+        },
+        "description": {
+          "label": "Description"
+        },
+        "branchId": {
+          "label": "Branch"
+        }
+      }
+    },
+    "receiver":{
+      "title": "Receiver",
+      "schema": {
+        "_id": {
+          "label": "ID"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "gender": {
+          "label": "Gender"
+        },
+        "address": {
+          "label": "Address"
+        },
+        "telephone": {
+          "label": "Telephone"
+        },
+        "description": {
+          "label": "Description"
+        },
+        "branchId": {
+          "label": "Branch"
+        }
+      }
+    },
+    "thaiService":{
+      "title": "Thai Service",
+      "schema": {
+        "_id": {
+          "label": "ID"
+        },
+        "fromAmount": {
+          "label": "From Amount"
+        },
+        "toAmount": {
+          "label": "To Amount"
+        }
+      }
+    },
+    "thaiBank":{
+      "title": "Thai Bank",
+      "schema": {
+        "_id": {
+          "label": "ID"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "description": {
+          "label": "Description"
+        }
+      }
+    },
+    "fromThai":{
+      "title": "Transfer From Thai",
+      "schema": {
+
+      }
+    },
+    "fromKhmer":{
+      "title": "Transfer From Khmer",
+      "schema": {
+
+      }
     }
   }
 }
