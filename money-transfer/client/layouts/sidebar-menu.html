@@ -8,6 +8,11 @@
     <!--Data-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
         <li class="header"><i class="fa fa-database"></i> DATA</li>
+        <li class="{{isActiveRoute name='moneyTransfer.cashIn'}}">
+            <a href="{{pathFor 'moneyTransfer.cashIn'}}">
+                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.cashIn"}}</span>
+            </a>
+        </li>
         <li class="{{isActiveRoute name='moneyTransfer.customer'}}">
             <a href="{{pathFor 'moneyTransfer.customer'}}">
                 <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>

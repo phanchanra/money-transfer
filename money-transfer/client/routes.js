@@ -40,7 +40,22 @@ MoneyTransferRoutes.route('/home', {
         parent: 'core.welcome'
     }
 });
-
+// Item
+import '../imports/ui/pages/cash-in.js';
+MoneyTransferRoutes.route('/cash-in', {
+    name: 'moneyTransfer.cashIn',
+    title: __('moneyTransfer.cashIn.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_cashIn');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.cashIn.title'),
+        icon: 'product-hunt',
+        parent: 'moneyTransfer.home'
+    }
+});
 // Item
 import '../imports/ui/pages/item.js';
 MoneyTransferRoutes.route('/item', {

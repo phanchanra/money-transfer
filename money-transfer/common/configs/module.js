@@ -16,6 +16,7 @@ Module.MoneyTransfer = {
             'moneyTransfer_location'
         ],
         data: [
+            'moneyTransfer_cashIn',
             'moneyTransfer_customer',
             'moneyTransfer_order'
         ]
