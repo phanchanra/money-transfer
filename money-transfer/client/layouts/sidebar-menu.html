@@ -23,6 +23,36 @@
                 <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>
             </a>
         </li>
+      <li class="{{isActiveRoute name='moneyTransfer.sender'}}">
+        <a href="{{pathFor 'moneyTransfer.sender'}}">
+          <i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.sender"}}</span>
+        </a>
+      </li>
+      <li class="{{isActiveRoute name='moneyTransfer.receiver'}}">
+        <a href="{{pathFor 'moneyTransfer.receiver'}}">
+          <i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.receiver"}}</span>
+        </a>
+      </li>
+      <li class="{{isActiveRoute name='moneyTransfer.thaiService'}}">
+        <a href="{{pathFor 'moneyTransfer.thaiService'}}">
+          <i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.thaiService"}}</span>
+        </a>
+      </li>
+      <li class="{{isActiveRoute name='moneyTransfer.thaiBank'}}">
+        <a href="{{pathFor 'moneyTransfer.thaiBank'}}">
+          <i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.thaiBank"}}</span>
+        </a>
+      </li>
+      <li class="{{isActiveRoute name='moneyTransfer.fromThai'}}">
+        <a href="{{pathFor 'moneyTransfer.fromThai'}}">
+          <i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.fromThai"}}</span>
+        </a>
+      </li>
+      <li class="{{isActiveRoute name='moneyTransfer.fromKhmer'}}">
+        <a href="{{pathFor 'moneyTransfer.fromKhmer'}}">
+          <i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.fromKhmer"}}</span>
+        </a>
+      </li>
     {{/if}}
 
     <!--Report-->

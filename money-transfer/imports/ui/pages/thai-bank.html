@@ -1,0 +1,75 @@
+<!--Index-->
+<template name="MoneyTransfer_thaiBank">
+  <div class="box-header with-border">
+    <h3 class="box-title">
+      {{> addNewButton}}
+    </h3>
+  </div>
+  <!-- /.box-header -->
+
+  <div class="box-body">
+    <!--Tabular-->
+    {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
+
+    <!--Reactive Table-->
+    <!--{{> reactiveTable settings=tableSettings}}-->
+  </div>
+  <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="MoneyTransfer_thaiBankAction">
+  {{#columnAction}}
+    <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+    <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+    <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+  {{/columnAction}}
+</template>
+
+<!--Insert-->
+<template name="MoneyTransfer_thaiBankNew">
+  <div class="box-body">
+    {{#autoForm collection=collection id="MoneyTransfer_thaiBankNew" type="insert"}}
+      {{> afQuickField name='name'}}
+      {{> afQuickField name='des' rows=3}}
+      {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+      {{> formFooterWithButton}}
+    {{/autoForm}}
+  </div>
+</template>
+
+<!--Update-->
+<template name="MoneyTransfer_thaiBankEdit">
+  <div class="box-body">
+    {{#if Template.subscriptionsReady}}
+      {{#autoForm collection=collection id="MoneyTransfer_thaiBankEdit" doc=data type="update"}}
+        {{> afQuickField name='name'}}
+        {{> afQuickField name='des' rows=3}}
+        {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+        {{> formFooterWithButton}}
+      {{/autoForm}}
+    {{else}}
+      {{> loading}}
+    {{/if}}
+  </div>
+</template>
+
+<!--Show-->
+<template name="MoneyTransfer_thaiBankShow">
+  <div class="box-body">
+    {{#if Template.subscriptionsReady}}
+      {{#with data}}
+        <dl class="dl-horizontal">
+          <dt>{{_ (i18nLabel "_id")}}</dt>
+          <dd>{{_id}}</dd>
+          <dt>{{_ (i18nLabel "name")}}</dt>
+          <dd>{{name}}</dd>
+          <dt>{{_ (i18nLabel "description")}}</dt>
+          <dd>{{des}}</dd>
+        </dl>
+      {{/with}}
+    {{else}}
+      {{> loading}}
+    {{/if}}
+  </div>
+</template>

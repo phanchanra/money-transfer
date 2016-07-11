@@ -106,3 +106,105 @@ MoneyTransferRoutes.route('/order', {
         parent: 'moneyTransfer.home'
     }
 });
+
+// Sender
+import '../imports/ui/pages/sender.js';
+MoneyTransferRoutes.route('/sender', {
+    name: 'moneyTransfer.sender',
+    title: __('moneyTransfer.sender.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_sender');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.sender.title'),
+        icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// Receiver
+import '../imports/ui/pages/receiver.js';
+MoneyTransferRoutes.route('/receiver', {
+    name: 'moneyTransfer.receiver',
+    title: __('moneyTransfer.receiver.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_receiver');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.receiver.title'),
+        icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// ThaiBank
+import '../imports/ui/pages/thai-bank.js';
+MoneyTransferRoutes.route('/thai-bank', {
+    name: 'moneyTransfer.thaiBank',
+    title: __('moneyTransfer.thaiBank.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_thaiBank');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.thaiBank.title'),
+        icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// ThaiService
+import '../imports/ui/pages/thai-service.js';
+MoneyTransferRoutes.route('/thai-service', {
+    name: 'moneyTransfer.thaiService',
+    title: __('moneyTransfer.thaiService.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_thaiService');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.thaiService.title'),
+        icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// Transfer from Thai
+import '../imports/ui/pages/from-thai.js';
+MoneyTransferRoutes.route('/from-thai', {
+    name: 'moneyTransfer.fromThai',
+    title: __('moneyTransfer.fromThai.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_fromThai');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.fromThai.title'),
+        icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// Transfer from Khmer
+import '../imports/ui/pages/from-khmer.js';
+MoneyTransferRoutes.route('/from-khmer', {
+    name: 'moneyTransfer.fromKhmer',
+    title: __('moneyTransfer.fromKhmer.title'),
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_fromKhmer');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moneyTransfer.fromKhmer.title'),
+        icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
