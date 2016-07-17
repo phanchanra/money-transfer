@@ -26,5 +26,15 @@ export const SelectOpts = {
         ];
 
         return list;
+    },
+    currency: function () {
+        let list = [
+            {label: "THB", value: "THB"},
+            {label: "KHR", value: "KHR"},
+            {label: "USD", value: "USD"}
+        ];
+
+        return list;
     }
+
 };

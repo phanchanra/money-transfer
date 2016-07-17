@@ -13,8 +13,12 @@ Customer.schema = new SimpleSchema({
     name: {
         type: String
     },
+    telephone: {
+        type: String
+    },
     gender: {
         type: String,
+        optional:true,
         autoform: {
             type: "select2",
             options: function () {
@@ -35,16 +39,14 @@ Customer.schema = new SimpleSchema({
             }
         }
     },
-    address: {
-        type: String
-    },
-    telephone: {
-        type: String
-    },
     email: {
         type: String,
         regEx: SimpleSchema.RegEx.Email,
         optional: true
+    },
+    address: {
+        type: String,
+        optional:true
     },
     branchId: {
         type: String

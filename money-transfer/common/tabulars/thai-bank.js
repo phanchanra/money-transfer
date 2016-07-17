@@ -23,6 +23,9 @@ tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_thaiBankAction},
     {data: "_id", title: "ID"},
     {data: "name", title: "Name"},
-    {data: "des", title: "Description"}
+    {data: "telephone", title: "Telephone"},
+    {data: "address", title: "Address"},
+    {data: "email", title: "E-mail"},
+    {data: "website", title: "Website"}
 ];
 export const ThaiBankTabular = new Tabular.Table(tabularOpts);

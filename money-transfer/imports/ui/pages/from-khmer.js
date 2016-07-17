@@ -42,7 +42,7 @@ let indexTmpl = Template.MoneyTransfer_fromKhmer,
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('fromKhmer', {size: ''});
+    createNewAlertify('fromKhmer', {size: 'lg'});
     createNewAlertify('fromKhmerShow',);
 
 });

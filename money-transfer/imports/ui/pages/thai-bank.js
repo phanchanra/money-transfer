@@ -42,7 +42,7 @@ let indexTmpl = Template.MoneyTransfer_thaiBank,
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('thaiBank', {size: ''});
+    createNewAlertify('thaiBank', {size: 'lg'});
     createNewAlertify('thaiBankShow',);
 
 });

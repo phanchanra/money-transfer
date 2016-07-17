@@ -30,9 +30,18 @@
 <template name="MoneyTransfer_thaiBankNew">
   <div class="box-body">
     {{#autoForm collection=collection id="MoneyTransfer_thaiBankNew" type="insert"}}
-      {{> afQuickField name='name'}}
-      {{> afQuickField name='des' rows=3}}
-      {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+        <div class="row">
+            <div class="col-md-6">
+                {{> afQuickField name='name'}}
+                {{> afQuickField name='telephone'}}
+                {{> afQuickField name='address' rows=3}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name='email'}}
+                {{> afQuickField name='website'}}
+            </div>
+        </div>
+      <!--{{> afQuickField type="hidden" name='branchId' value=currentBranch}}-->
       {{> formFooterWithButton}}
     {{/autoForm}}
   </div>
@@ -43,9 +52,18 @@
   <div class="box-body">
     {{#if Template.subscriptionsReady}}
       {{#autoForm collection=collection id="MoneyTransfer_thaiBankEdit" doc=data type="update"}}
-        {{> afQuickField name='name'}}
-        {{> afQuickField name='des' rows=3}}
-        {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+          <div class="row">
+              <div class="col-md-6">
+                  {{> afQuickField name='name'}}
+                  {{> afQuickField name='telephone'}}
+                  {{> afQuickField name='address' rows=3}}
+              </div>
+              <div class="col-md-6">
+                  {{> afQuickField name='email'}}
+                  {{> afQuickField name='website'}}
+              </div>
+          </div>
+        <!--{{> afQuickField type="hidden" name='branchId' value=currentBranch}}-->
         {{> formFooterWithButton}}
       {{/autoForm}}
     {{else}}
@@ -65,7 +83,7 @@
           <dt>{{_ (i18nLabel "name")}}</dt>
           <dd>{{name}}</dd>
           <dt>{{_ (i18nLabel "description")}}</dt>
-          <dd>{{des}}</dd>
+          <dd>{{address}}</dd>
         </dl>
       {{/with}}
     {{else}}

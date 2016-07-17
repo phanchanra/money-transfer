@@ -23,7 +23,6 @@ CashIn.schema = new SimpleSchema({
             }
         }
     },
-
     'cash':{
         type:Object
     },
@@ -37,7 +36,6 @@ CashIn.schema = new SimpleSchema({
     'cash.bath': {
         type: Number
     },
-
     branchId: {
         type: String
     }

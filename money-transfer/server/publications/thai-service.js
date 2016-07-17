@@ -4,7 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {ThaiService} from '../../imports/api/collections/thai-service.js';
 
-Meteor.publish('moneyTransfer.thaiServiceById', function simpleItem(thaiServiceId) {
+Meteor.publish('moneyTransfer.thaiServiceById', function simpleThaiService(thaiServiceId) {
     this.unblock();
 
     new SimpleSchema({

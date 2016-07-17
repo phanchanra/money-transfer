@@ -4,7 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {Sender} from '../../imports/api/collections/sender.js';
 
-Meteor.publish('moneyTransfer.senderById', function simpleItem(senderId) {
+Meteor.publish('moneyTransfer.senderById', function simpleSender(senderId) {
     this.unblock();
 
     new SimpleSchema({

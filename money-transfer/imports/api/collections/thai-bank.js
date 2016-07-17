@@ -13,12 +13,21 @@ ThaiBank.schema = new SimpleSchema({
     name: {
         type: String
     },
-    des: {
+    telephone: {
+        type: String,
+        optional:true
+    },
+    address: {
+        type: String,
+        optional:true
+    },
+    email:{
+        type: String,
+        optional:true
+    },
+    website: {
         type: String,
         optional: true
-    },
-    branchId: {
-        type: String
     }
 });
 

@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
-import {Templet} from 'meteor/templating';
+import {Session} from 'meteor/session';
+import {Templete} from 'meteor/templating';
 import {Tabular} from 'meteor/aldeed:tabular';
 import {EJSON} from 'meteor/ejson';
 import {moment} from 'meteor/momentjs:moment';
@@ -28,7 +29,12 @@ tabularOpts.columns = [
             return moment(val).format('YYYY-MM-DD');
         }
     },
-    {data: "cash", title: "Cash In"}
-    
+    {
+        data: "cash", title: "Cash In",
+        render: function (val, type, doc) {
+            return JSON.stringify(val).slice(1, JSON.stringify(val).length-1);
+        }
+    }
+
 ];
 export const CashInTabular = new Tabular.Table(tabularOpts);

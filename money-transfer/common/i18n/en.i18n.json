@@ -10,8 +10,8 @@
       "receiver": "Receiver",
       "thaiBank": "Thai Bank",
       "thaiService": "Thai Service",
-      "fromThai": "Transfer From Thai",
-      "fromKhmer": "Transfer From Khmer"
+      "fromThai": "Transfer (Thai-Khmer)",
+      "fromKhmer": "Transfer (Khmer)"
     },
     "home": {
       "title": "Home",
@@ -197,13 +197,13 @@
       }
     },
     "fromThai":{
-      "title": "Transfer From Thai",
+      "title": "Transfer (Thai-Khmer)",
       "schema": {
 
       }
     },
     "fromKhmer":{
-      "title": "Transfer From Khmer",
+      "title": "Transfer (Khmer)",
       "schema": {
 
       }
