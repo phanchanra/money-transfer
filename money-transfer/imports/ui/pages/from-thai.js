@@ -81,6 +81,7 @@ newTmpl.onRendered(function () {
     //let currency = $('[name="currency"]').val();
     //alert(currency);
     Session.set('currencySession', 'THB');
+    $('[name="amountFee"]').val('0');
 });
 newTmpl.helpers({
     collection(){
@@ -108,12 +109,14 @@ newTmpl.events({
     },
     // check fee amount readonly
     'change [name="feeType"]'(e){
-        var checkReadOnly = $(e.currentTarget).val();
+        let checkReadOnly = $(e.currentTarget).val();
+        let feeAmount=$('[name="amountFee"]');
         if (checkReadOnly == 'Custom') {
-            $('[name="amountFee"]').prop("readonly", false);
-            $('[name="amountFee"]').val('0');
+            feeAmount.prop("readonly", false);
+            feeAmount.val('0');
         } else {
-            $('[name="amountFee"]').prop("readonly", true);
+            feeAmount.prop("readonly", true);
+            feeAmount.val('0');
         }
     },
     'keyup [name="amount"]'(e){
@@ -136,45 +139,27 @@ newTmpl.events({
             $('#up-down-slide').slideUp(500);
         }
     }    ,
-    'keyup [name="fromAmount"]'(e){
+    'keyup [name="exchange.0.fromAmount"]'(e){
         let currency = Session.get('currencySession');
         
-        let fromAmount1 = $(e.currentTarget).val();
-        fromAmount1 = fromAmount1 == "" ? 0 : parseFloat(fromAmount1);
+        let fromAmount0 = $(e.currentTarget).val();
+        fromAmount0 = fromAmount0 == "" ? 0 : parseFloat(fromAmount0);
         
-        let fromAmount2 = $('[name="exchangeUsd"]').val();
-        fromAmount2 = fromAmount2 == "" ? 0 : parseFloat(fromAmount2);
+        let fromAmount1 = $('[name="exchange.1.fromAmount"]').val();
+        fromAmount1 = fromAmount1 == "" ? 0 : parseFloat(fromAmount1);
         
         let amount = parseFloat($('[name="amount"]').val());
         
-        let rielResult = bathExAmount * 100;
-        let lastRemainAmount = amount - (bathExAmount + usdExAmount);
+        //let result = bathExAmount * 100;
+        //let lastRemainAmount = amount - (bathExAmount + usdExAmount);
         
-        Meteor.call('dynamicCurrency', currency, amount, function (error, result) {
+        Meteor.call('dynamicCurrency', currency, amount, fromAmount0, fromAmount1, function (er,re) {
         //
-            $('[name="fromAmount"]').val(result);
-            $('[name="remainAmount"]').val(result);
+            $('[name="exchange.0.toAmount"]').val(re.ex1);
+            $('[name="exchange.1.toAmount"]').val(re.ex2);
+            $('[name="remainAmount"]').val(re.res);
         });
         //exchange to riel
-        //===================//
-        // let bathExAmount = $(e.currentTarget).val();
-        // bathExAmount = bathExAmount == "" ? 0 : parseFloat(bathExAmount);
-        //
-        // let usdExAmount = $('[name="exchangeUsd"]').val();
-        // usdExAmount = usdExAmount == "" ? 0 : parseFloat(usdExAmount);
-        //
-        // let amount = parseFloat($('[name="amount"]').val());
-        //
-        // let rielResult = bathExAmount * 100;
-        // let lastRemainAmount = amount - (bathExAmount + usdExAmount);
-        //
-        // Meteor.call('dynamicCurrency', currency, amount, function (error, result) {
-        //     //
-        //     $('[name="fromAmount"]').val(result);
-        //     $('[name="remainAmount"]').val(result);
-        // });
-        //===================//
-    
     }
     //,
     // 'keyup [name="exchangeUsd"]'(e){
