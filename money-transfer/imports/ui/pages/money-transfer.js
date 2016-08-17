@@ -27,6 +27,7 @@ import {MoneyTransfer} from '../../api/collections/money-transfer';
 
 // Tabular
 import {MoneyTransferTabular} from '../../../common/tabulars/money-transfer';
+import {calculateIncome} from '../../../common/globalState/calculateIncome'
 let tmpCollection = new Mongo.Collection(null);
 // Page
 import './money-transfer.html';
@@ -100,6 +101,7 @@ fromThaiInvoice.events({
 // New
 newTmpl.onCreated(function () {
     insertTmpCollection({});
+    this.state = new ReactiveVar(0);
 });
 newTmpl.onRendered(function () {
     Session.set('currencySession', 'THB');
@@ -135,8 +137,20 @@ newTmpl.helpers({
         return collection ? collection.expend : 0;
     },
     income(){
-        let collection = tmpCollection.findOne();
-        return collection ? collection.income : 0;
+        let feeType=Session.get("feeTypeSession");
+        // let supplierId=Session.get("supplierId");
+        // Meteor.call("getSupplierId", supplierId, function (err, res) {
+        //     if (res == "Internal") {
+                if(feeType=="Default"){
+                    let collection = tmpCollection.findOne();
+                    return collection ? collection.income : 0;
+                }else{
+                    const income=Template.instance();
+                    return income.state.get();
+                }
+
+        //     }
+        // });
     }
 
 });
@@ -202,37 +216,39 @@ newTmpl.events({
         //     expend.val(0);
         //     income.val(0);
         // } else {
-            //feeAmount.prop("readonly", true);
-            //expend.prop("readonly", true);
-            Meteor.call("getSupplierId", supplierId, function (err, res) {
-                //check internal
-                if (res == "Internal") {
-                    if (transferType == "In") {
-                        if(checkReadOnly=="Default"){
-                            Meteor.call('getFee', supplierId, amount, function (error, result) {
-                                tmpCollection.remove({});
-                                tmpCollection.insert(result);
-                            });
-                        }else{
-                            feeAmount.prop("readonly", false);
-                            expend.prop("readonly", false);
-                            insertTmpCollection({});
-                        }
-                    }
-                //check external
-                } else {
-                    if(checkReadOnly=="Default"){
-                        feeAmount.prop("readonly", true);
+        //feeAmount.prop("readonly", true);
+        //expend.prop("readonly", true);
+        Meteor.call("getSupplierId", supplierId, function (err, res) {
+            //check internal
+            if (res == "Internal") {
+                if (transferType == "In") {
+                    if (checkReadOnly == "Default") {
                         Meteor.call('getFee', supplierId, amount, function (error, result) {
                             tmpCollection.remove({});
                             tmpCollection.insert(result);
                         });
-                    }else{
+                    } else {
                         feeAmount.prop("readonly", false);
+                        expend.prop("readonly", false);
                         insertTmpCollection({});
+                        instance.state.set(0);
                     }
                 }
-            });
+                //check external
+            } else {
+                if (checkReadOnly == "Default") {
+                    feeAmount.prop("readonly", true);
+                    Meteor.call('getFee', supplierId, amount, function (error, result) {
+                        tmpCollection.remove({});
+                        tmpCollection.insert(result);
+                    });
+                } else {
+                    feeAmount.prop("readonly", false);
+                    insertTmpCollection({});
+                    instance.state.set(0);
+                }
+            }
+        });
         //}
     },
     'change [name=supplierId]'(e, instance){
@@ -268,14 +284,16 @@ newTmpl.events({
             });
         }
     },
-    // 'change #up-down'(e){
-    //     let checkHideShow = $('[name="up-down"]:checked').val();
-    //     if (checkHideShow) {
-    //         $('#up-down-slide').slideDown(500);
-    //     } else {
-    //         $('#up-down-slide').slideUp(500);
-    //     }
-    // },
+    'keyup [name="amountFee"]'(e, instance){
+        let fee = $(e.currentTarget).val();
+        let expend = instance.$('[name="expend"]').val();
+        instance.state.set(calculateIncome(fee, expend));
+    },
+    'keyup [name="expend"]'(e, instance){
+        let expend = $(e.currentTarget).val();
+        let fee = instance.$('[name="amountFee"]').val();
+        instance.state.set(calculateIncome(fee, expend));
+    },
     'keyup [name="exchange.0.fromAmount"]'(e){
         let currency = Session.get('currencySession');
 
