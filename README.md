@@ -1,7 +1,7 @@
 # Money Transfer
 
 ## Todo
-[] Product
-[] Customer
-[] Transaction
-[] ...
+* [ ] Product
+* [ ] Customer
+* [ ] Transaction
+* [ ] ...
