@@ -16,6 +16,12 @@ Setting.schema = new SimpleSchema({
             type: "select2",
             options: function () {
                 return SelectOpts.branch();
+            },
+            afFieldInput: {
+                select2Options: {
+                    placeholder: '(Select One)',
+                    // allowClear: true
+                }
             }
         }
     },
@@ -23,9 +29,58 @@ Setting.schema = new SimpleSchema({
         type: String,
         label: __('core.setting.baseCurrencyLbl'),
         autoform: {
-            type: "select2",
+            type: "select-radio-inline",
             options: function () {
-                return SelectOpts.currency();
+                return SelectOpts.currency(false);
+            }
+        }
+    },
+    roundNumber: {
+        type: Object,
+        label: 'Round number'
+    },
+    'roundNumber.type': {
+        type: String,
+        label: 'Type',
+        autoform: {
+            type: "select-radio-inline",
+            defaultValue: 'general',
+            options: function () {
+                return [
+                    {label: 'General', value: 'general'},
+                    {label: 'Up', value: 'up'},
+                    {label: 'Down', value: 'down'},
+                ];
+            }
+        }
+    },
+    'roundNumber.khrPrecision': {
+        type: Number,
+        label: 'KHR precision',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.integer();
+            }
+        }
+    },
+    'roundNumber.usdPrecision': {
+        type: Number,
+        label: 'USD precision',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.integer();
+            }
+        }
+    },
+    'roundNumber.thbPrecision': {
+        type: Number,
+        label: 'THB precision',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.integer();
             }
         }
     },
@@ -33,7 +88,7 @@ Setting.schema = new SimpleSchema({
         type: String,
         label: __('core.setting.languageLbl'),
         autoform: {
-            type: "select2",
+            type: "select-radio-inline",
             options: function () {
                 return [
                     {label: 'En', value: 'en'},

@@ -1,6 +1,6 @@
 Package.describe({
     name: 'theara:autoform-inputmask',
-    version: '0.4.7',
+    version: '0.4.8',
     // Brief, one-line summary of the package.
     summary: 'Inputmask for AutoForm',
     // URL to the Git repository containing the source code for this package.

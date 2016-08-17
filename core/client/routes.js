@@ -128,7 +128,7 @@ CoreRoutes.route('/company', {
         //params: ['id'],
         //queryParams: ['show', 'color'],
         title: __('core.company.title'),
-        icon: 'sitemap',
+        icon: 'building',
         parent: 'core.welcome'
     }
 });
@@ -145,7 +145,7 @@ CoreRoutes.route('/exchange', {
         //params: ['id'],
         //queryParams: ['show', 'color'],
         title: __('core.exchange.title'),
-        icon: 'sitemap',
+        icon: 'exchange',
         parent: 'core.welcome'
     }
 });
@@ -162,7 +162,7 @@ CoreRoutes.route('/setting', {
         //params: ['id'],
         //queryParams: ['show', 'color'],
         title: __('core.setting.title'),
-        icon: 'sitemap',
+        icon: 'cogs',
         parent: 'core.welcome'
     }
 });
@@ -179,7 +179,7 @@ CoreRoutes.route('/user', {
         //params: ['id'],
         //queryParams: ['show', 'color'],
         title: __('core.user.title'),
-        icon: 'sitemap',
+        icon: 'user',
         parent: 'core.welcome'
     }
 });
@@ -197,6 +197,38 @@ CoreRoutes.route('/profile', {
         //queryParams: ['show', 'color'],
         title: 'Profile',
         icon: 'user',
+        parent: 'core.welcome'
+    }
+});
+
+// Backup  & Restore
+import '../imports/ui/pages/backup-restore.js';
+CoreRoutes.route('/backup', {
+    name: 'core.backup',
+    title: 'Backup',
+    action: function (params, queryParams) {
+        Layout.main('Core_backup');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Backup',
+        icon: 'download',
+        parent: 'core.welcome'
+    }
+});
+
+CoreRoutes.route('/restore', {
+    name: 'core.restore',
+    title: 'Restore',
+    action: function (params, queryParams) {
+        Layout.main('Core_restore');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Restore',
+        icon: 'upload',
         parent: 'core.welcome'
     }
 });

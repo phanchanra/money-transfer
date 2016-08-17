@@ -4,7 +4,7 @@ import {Roles} from  'meteor/alanning:roles';
 import {alertify} from 'meteor/ovcharik:alertifyjs';
 import {sAlert} from 'meteor/juliancwirko:s-alert';
 import {fa} from 'meteor/theara:fa-helpers';
-import {moment} from 'meteor/momentjs:moment';
+import moment from 'moment';
 import {EJSON} from 'meteor/ejson';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {TAPi18n} from 'meteor/tap:i18n';
@@ -16,7 +16,7 @@ import '../../../client/components/form-footer.js';
 import {createNewAlertify} from '../../../client/libs/create-new-alertify.js';
 import {renderTemplate} from '../../../client/libs/render-template.js';
 import {destroyAction} from '../../../client/libs/destroy-action.js';
-import {displaySuccess, displayError} from '../../../client/libs/display-alert.js';
+import {displaySuccess, displayError, displayLoading} from '../../../client/libs/display-alert.js';
 
 // Collection
 import {Exchange} from '../../api/collections/exchange.js';

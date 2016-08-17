@@ -5,6 +5,8 @@ Restore = Npm.require('mongodb-restore');
 Busboy = Npm.require("busboy");
 
 Picker.route('/appDump', function (params, req, res, next) {
+    console.log(req.headers);
+
     var filename, token, userToken;
 
     /*** Backup ***/
