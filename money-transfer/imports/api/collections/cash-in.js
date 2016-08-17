@@ -26,15 +26,18 @@ CashIn.schema = new SimpleSchema({
     'cash':{
         type:Object
     },
-    'cash.riel': {
-        type: Number
-    },
-    'cash.usd': {
+    'cash.KHR': {
         type: Number,
-        decimal:true
+        label:"KHR"
     },
-    'cash.bath': {
-        type: Number
+    'cash.USD': {
+        type: Number,
+        decimal:true,
+        label:"USD"
+    },
+    'cash.THB': {
+        type: Number,
+        label:"THB"
     },
     branchId: {
         type: String

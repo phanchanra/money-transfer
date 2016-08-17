@@ -70,7 +70,13 @@
                     <dt>{{i18nLabel "_id"}}</dt>
                     <dd>{{_id}}</dd>
                     <dt>{{i18nLabel "cashInDate"}}</dt>
-                    <dd>{{cashInDate}}</dd>
+                    <dd>{{moFormat cashInDate "DD/MM/YYYY"}}</dd>
+                    <dt>{{i18nLabel "KHR"}}</dt>
+                    <dd>{{cash.KHR}}</dd>
+                    <dt>{{i18nLabel "USD"}}</dt>
+                    <dd>{{cash.USD}}</dd>
+                    <dt>{{i18nLabel "THB"}}</dt>
+                    <dd>{{cash.THB}}</dd>
 
                 </dl>
             {{/with}}

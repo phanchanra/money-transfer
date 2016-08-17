@@ -7,26 +7,14 @@ import {moment} from 'meteor/momentjs:moment';
 import {__} from '../../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../ui/libs/select-opts.js';
 
-export const Customer = new Mongo.Collection("mt_customer");
+export const Service = new Mongo.Collection("mt_service");
 
-Customer.schema = new SimpleSchema({
-    name: {
-        type: String
+Service.schema = new SimpleSchema({
+    supplierId:{
+        type:String,
+        label:"Supplier"
     },
-    telephone: {
-        type: String
-    },
-    gender: {
-        type: String,
-        optional:true,
-        autoform: {
-            type: "select2",
-            options: function () {
-                return SelectOpts.gender();
-            }
-        }
-    },
-    dob: {
+    registerDate: {
         type: Date,
         defaultValue: moment().toDate(),
         autoform: {
@@ -39,21 +27,33 @@ Customer.schema = new SimpleSchema({
             }
         }
     },
-    email: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Email,
-        optional: true
+
+    fromAmount: {
+        type: Number,
+        decimal:true
     },
-    address: {
-        type: String,
-        optional:true
+    toAmount: {
+        type: Number,
+        decimal:true
     },
-    branchId: {
-        type: String
-    }
+    fee: {
+        type: Number,
+        decimal:true
+    },
+    supplierFee: {
+        type: Number,
+        optional: true,
+        decimal:true
+    },
+    profit: {
+        type: Number,
+        optional: true,
+        decimal:true
+    },
+
 });
 
 Meteor.startup(function () {
-    Customer.schema.i18n("moneyTransfer.customer.schema");
-    Customer.attachSchema(Customer.schema);
+    Service.schema.i18n("moneyTransfer.service.schema");
+    Service.attachSchema(Service.schema);
 });

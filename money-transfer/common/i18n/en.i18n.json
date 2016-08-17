@@ -8,10 +8,10 @@
       "order": "Order",
       "sender": "Sender",
       "receiver": "Receiver",
-      "thaiBank": "Thai Bank",
-      "thaiService": "Thai Service",
-      "fromThai": "Transfer (Thai-Khmer)",
-      "fromKhmer": "Transfer (Khmer)"
+      "supplier": "Supplier",
+      "service": "Service",
+      "transfer": "Transfer",
+      "exchange": "Exchange"
     },
     "home": {
       "title": "Home",
@@ -23,28 +23,26 @@
         "_id": {
           "label": "ID"
         },
+        "cashInDate": {
+          "label": "In Date"
+        },
         "cash": {
           "label": "Cash"
+        },
+        "KHR":{
+          "label": "KHR"
+        }
+      ,
+        "USD":{
+          "label": "USD"
+        }
+      ,
+        "THB":{
+          "label": "THB"
         }
       }
     },
-    "item": {
-      "title": "Item",
-      "schema": {
-        "_id": {
-          "label": "ID"
-        },
-        "name": {
-          "label": "Name"
-        },
-        "price": {
-          "label": "Price"
-        },
-        "photo": {
-          "label": "Photo"
-        }
-      }
-    },
+
     "customer": {
       "title": "Customer",
       "schema": {
@@ -74,50 +72,103 @@
         }
       }
     },
-    "order": {
-      "title": "Order",
-      "invoiceAction": "invoice",
-      "schema": {
-        "_id": {
-          "label": "ID"
-        },
-        "itemId": {
-          "label": "Item"
-        },
-        "qty": {
-          "label": "Qty"
-        },
-        "price": {
-          "label": "Price"
-        },
-        "amount": {
-          "label": "Amount"
-        },
-        "orderDate": {
-          "label": "Date"
-        },
-        "customerId": {
-          "label": "Customer"
-        },
-        "des": {
-          "label": "Description"
-        },
-        "total": {
-          "label": "Total"
-        },
-        "branchId": {
-          "label": "Branch"
-        }
-      }
-    },
+
+    //
     "customerReport": {
       "title": "Customer Report"
     },
     "orderReport": {
       "title": "Customer Report"
     },
-    "sender":{
-      "title": "Sender",
+    "fromThaiReport": {
+      "title": "Money Transfer Invoice"
+    },
+
+    "transfer":{
+      "title": "Transfer",
+      "invoiceAction": "invoice",
+      "schema": {
+        "_id":{
+          "label":"ID"
+        },
+        "invoice":{
+          "label":"Invoice"
+        },
+        "transferDate":{
+          "label":"Date"
+        },
+        "transferType":{
+          "label":"Transfer Type"
+        },
+        "feeType":{
+          "label":"Fee Type"
+        },
+        "senderId":{
+          "label":"Sender"
+        },
+        "receiverId":{
+          "label":"Receiver"
+        },
+        "thaiBankId":{
+          "label":"Thai Bank"
+        },
+        "code":{
+          "label":"Account Code"
+        },
+        "amount":{
+          "label":"Account"
+        },
+        "amountFee":{
+          "label":"Fee Amount"
+        },
+        "currency":{
+          "label":"Currency"
+        },
+        "exchange":{
+          "label":"Exchange"
+        },
+        "fromAmount":{
+          "label":"From Amount"
+        },
+        "toAmount":{
+          "label":"To Amount"
+        },
+        "remainAmount":{
+          "label":"Remain Amount"
+        },
+        "description":{
+          "label":"Description"
+        },
+        "status":{
+          "label":"Status"
+        }
+
+
+      }
+    },
+    "exchange":{
+      "title": "Exchange",
+      "schema": {
+        "_id":{
+          "label":"ID"
+        },
+        "date":{
+          "label":"Date"
+        },
+        "KHR":{
+          "label":"KHR"
+        },
+        "USD":{
+          "label":"USD"
+        },
+        "THB":{
+          "label":"THB"
+        }
+
+      }
+    },
+    "supplier": {
+      "title": "Supplier",
       "schema": {
         "_id": {
           "label": "ID"
@@ -125,8 +176,8 @@
         "name": {
           "label": "Name"
         },
-        "gender": {
-          "label": "Gender"
+        "registerDate": {
+          "label": "Register Date"
         },
         "address": {
           "label": "Address"
@@ -134,78 +185,38 @@
         "telephone": {
           "label": "Telephone"
         },
-        "description": {
-          "label": "Description"
-        },
-        "branchId": {
-          "label": "Branch"
+        "email": {
+          "label": "Email"
         }
       }
     },
-    "receiver":{
-      "title": "Receiver",
+    "service": {
+      "title": "Service",
       "schema": {
         "_id": {
           "label": "ID"
         },
-        "name": {
-          "label": "Name"
+        "supplierId":{
+          "label":"Supplier"
         },
-        "gender": {
-          "label": "Gender"
-        },
-        "address": {
-          "label": "Address"
-        },
-        "telephone": {
-          "label": "Telephone"
-        },
-        "description": {
-          "label": "Description"
-        },
-        "branchId": {
-          "label": "Branch"
-        }
-      }
-    },
-    "thaiService":{
-      "title": "Thai Service",
-      "schema": {
-        "_id": {
-          "label": "ID"
+        "registerDate": {
+          "label": "Register Date"
         },
         "fromAmount": {
           "label": "From Amount"
         },
         "toAmount": {
           "label": "To Amount"
-        }
-      }
-    },
-    "thaiBank":{
-      "title": "Thai Bank",
-      "schema": {
-        "_id": {
-          "label": "ID"
         },
-        "name": {
-          "label": "Name"
+        "fee": {
+          "label": "Fee"
         },
-        "description": {
-          "label": "Description"
+        "supplierFee": {
+          "label": "Supplier Fee"
+        },
+        "profit": {
+          "label": "Profit"
         }
-      }
-    },
-    "fromThai":{
-      "title": "Transfer (Thai-Khmer)",
-      "schema": {
-
-      }
-    },
-    "fromKhmer":{
-      "title": "Transfer (Khmer)",
-      "schema": {
-
       }
     }
   }

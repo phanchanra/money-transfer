@@ -31,9 +31,16 @@ tabularOpts.columns = [
     },
     {
         data: "cash", title: "Cash In",
-        render: function (val, type, doc) {
-            return JSON.stringify(val).slice(1, JSON.stringify(val).length-1);
+        render:function(val,type,doc){
+            var str = "";
+            $.each(val, function (key, val) {
+                str += '&nbsp;&nbsp;&nbsp;&nbsp;'+ key + " = "+ numeral(val).format('0,000.00') + ",";
+            });
+            return Spacebars.SafeString(str.slice(0,-1));
         }
+        // render: function (val, type, doc) {
+        //     return JSON.stringify(val).slice(1, JSON.stringify(val).length-1);
+        // }
     }
 
 ];

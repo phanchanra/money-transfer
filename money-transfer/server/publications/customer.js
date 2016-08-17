@@ -5,19 +5,29 @@ import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 // Collection
 import {Customer} from '../../imports/api/collections/customer.js';
 
-Meteor.publish('moneyTransfer.customerById', function simpleCustomer(customerId) {
-    this.unblock();
+// Meteor.publish('moneyTransfer.customerById', function simpleCustomer(customerId) {
+// Meteor.publish('moneyTransfer.customerById', function simpleCustomer(customerId) {
+//     this.unblock();
+//
+//     new SimpleSchema({
+//         customerId: {type: String}
+//     }).validate({customerId});
+//
+//     if (this.userId) {
+//         let data = Customer.find({_id: customerId});
+//
+//         return data;
+//     }
+//
+//     return this.ready();
+// });
 
-    new SimpleSchema({
-        customerId: {type: String}
-    }).validate({customerId});
+Meteor.publish('moneyTransfer.customer', function () {
 
     if (this.userId) {
-        let data = Customer.find({_id: customerId});
-
-        return data;
+        this.unblock();
+        return Customer.find();
     }
-
     return this.ready();
 });
 

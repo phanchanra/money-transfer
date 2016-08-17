@@ -7,16 +7,16 @@
     <!--Transaction-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
         <li class="header"><i class="fa fa-file-o"></i> Transaction</li>
-        <li class="{{isActiveRoute name='moneyTransfer.fromThai'}}">
-            <a href="{{pathFor 'moneyTransfer.fromThai'}}">
-                <i class="fa fa-arrows"></i> <span>{{_ "moneyTransfer.sidebarMenu.fromThai"}}</span>
+        <li class="{{isActiveRoute name='moneyTransfer.transfer'}}">
+            <a href="{{pathFor 'moneyTransfer.transfer'}}">
+                <i class="fa fa-arrows"></i> <span>{{_ "moneyTransfer.sidebarMenu.transfer"}}</span>
             </a>
         </li>
-        <li class="{{isActiveRoute name='moneyTransfer.fromKhmer'}}">
-            <a href="{{pathFor 'moneyTransfer.fromKhmer'}}">
-                <i class="fa fa-arrows"></i> <span>{{_ "moneyTransfer.sidebarMenu.fromKhmer"}}</span>
-            </a>
-        </li>
+        <!--<li class="{{isActiveRoute name='moneyTransfer.fromKhmer'}}">-->
+            <!--<a href="{{pathFor 'moneyTransfer.fromKhmer'}}">-->
+                <!--<i class="fa fa-arrows"></i> <span>{{_ "moneyTransfer.sidebarMenu.fromKhmer"}}</span>-->
+            <!--</a>-->
+        <!--</li>-->
     {{/if}}
     <!--Data-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
@@ -28,62 +28,47 @@
         </li>
         <li class="{{isActiveRoute name='moneyTransfer.customer'}}">
         <a href="{{pathFor 'moneyTransfer.customer'}}">
-        <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
+        <i class="fa fa-users"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
         </a>
         </li>
-        <li class="{{isActiveRoute name='moneyTransfer.order'}}">
-        <a href="{{pathFor 'moneyTransfer.order'}}">
-        <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>
-        </a>
-        </li>
-        <!--<li class="{{isActiveRoute name='moneyTransfer.sender'}}">-->
-            <!--<a href="{{pathFor 'moneyTransfer.sender'}}">-->
-                <!--<i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.sender"}}</span>-->
-            <!--</a>-->
-        <!--</li>-->
-        <!--<li class="{{isActiveRoute name='moneyTransfer.receiver'}}">-->
-            <!--<a href="{{pathFor 'moneyTransfer.receiver'}}">-->
-                <!--<i class="fa fa-user"></i> <span>{{_ "moneyTransfer.sidebarMenu.receiver"}}</span>-->
-            <!--</a>-->
+        <!--<li class="{{isActiveRoute name='moneyTransfer.order'}}">-->
+        <!--<a href="{{pathFor 'moneyTransfer.order'}}">-->
+        <!--<i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>-->
+        <!--</a>-->
         <!--</li>-->
     {{/if}}
 
     <!--Report-->
-    {{#if isInRole 'reporter' 'MoneyTransfer'}}
-        <li class="header"><i class="fa fa-file-o"></i> REPORT</li>
-        <li class="{{isActiveRoute name='moneyTransfer.customerReport'}}">
-            <a href="{{pathFor 'moneyTransfer.customerReport'}}">
-                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moneyTransfer.orderReport'}}">
-            <a href="{{pathFor 'moneyTransfer.orderReport'}}">
-                <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>
-            </a>
-        </li>
-    {{/if}}
+    <!--{{#if isInRole 'reporter' 'MoneyTransfer'}}-->
+        <!--<li class="header"><i class="fa fa-file-o"></i> REPORT</li>-->
+        <!--<li class="{{isActiveRoute name='moneyTransfer.customerReport'}}">-->
+            <!--<a href="{{pathFor 'moneyTransfer.customerReport'}}">-->
+                <!--<i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>-->
+            <!--</a>-->
+        <!--</li>-->
+        <!--<li class="{{isActiveRoute name='moneyTransfer.orderReport'}}">-->
+            <!--<a href="{{pathFor 'moneyTransfer.orderReport'}}">-->
+                <!--<i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>-->
+            <!--</a>-->
+        <!--</li>-->
+    <!--{{/if}}-->
 
     <!--Settings-->
     {{#if isInRole 'setting' 'MoneyTransfer'}}
         <li class="header"><i class="fa fa-cogs"></i> SETTING</li>
-        <li class="{{isActiveRoute name='core.exchange'}}">
-            <a href="{{pathFor 'core.exchange'}}">
-                <i class="fa fa-exchange"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+        <li class="{{isActiveRoute name='moneyTransfer.exchange'}}">
+            <a href="{{pathFor 'moneyTransfer.exchange'}}">
+                <i class="fa fa-exchange"></i> <span>{{_ "moneyTransfer.sidebarMenu.exchange"}}</span>
             </a>
         </li>
-        <!--<li class="{{isActiveRoute name='moneyTransfer.item'}}">-->
-        <!--<a href="{{pathFor 'moneyTransfer.item'}}">-->
-        <!--<i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.item"}}</span>-->
-        <!--</a>-->
+        <!--<li class="{{isActiveRoute name='moneyTransfer.service'}}">-->
+            <!--<a href="{{pathFor 'moneyTransfer.service'}}">-->
+                <!--<i class="fa fa-server"></i> <span>{{_ "moneyTransfer.sidebarMenu.service"}}</span>-->
+            <!--</a>-->
         <!--</li>-->
-        <li class="{{isActiveRoute name='moneyTransfer.thaiService'}}">
-            <a href="{{pathFor 'moneyTransfer.thaiService'}}">
-                <i class="fa fa-server"></i> <span>{{_ "moneyTransfer.sidebarMenu.thaiService"}}</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moneyTransfer.thaiBank'}}">
-            <a href="{{pathFor 'moneyTransfer.thaiBank'}}">
-                <i class="fa fa-university"></i> <span>{{_ "moneyTransfer.sidebarMenu.thaiBank"}}</span>
+        <li class="{{isActiveRoute name='moneyTransfer.supplier'}}">
+            <a href="{{pathFor 'moneyTransfer.supplier'}}">
+                <i class="fa fa-university"></i> <span>{{_ "moneyTransfer.sidebarMenu.supplier"}}</span>
             </a>
         </li>
     {{/if}}

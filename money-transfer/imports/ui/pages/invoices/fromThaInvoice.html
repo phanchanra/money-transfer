@@ -1,0 +1,99 @@
+
+<template name="generateFromThaiInvoice">
+    {{#if Template.subscriptionsReady}}
+    <div class="container print" id="print-invoice" style="width: 559px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="invoice-title" align="center">
+                    {{#with title}}
+                        <h4>{{khName}}<br>{{enName}}</h4>
+                        <h3>វិក័យប័ត្រ<br>(Invoice)</h3>
+                        <p align="center">អាស័យដ្ឋាន:{{khAddress}}&nbsp;&nbsp;<i class="fa fa-phone-square"></i>&nbsp;&nbsp;{{telephone}}</p>
+                    {{/with}}
+                </div>
+                <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;"></div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <address>
+                            <strong>ID: </strong> {{_id}}<br>
+                            <strong>Date: </strong> {{moFormat transferDate "DD/MM/YYYY"}}<br>
+                            <strong>Invoice: </strong> {{invoice}}<br>
+                            <strong>Account Number: </strong> {{code}}<br>
+                            <strong>Status: </strong>{{status}}<br>
+                            <strong>Sender: </strong> {{sender._id}}-{{sender.name}}<br>
+                            <strong>Receiver: </strong> {{receiver._id}}-{{receiver.name}}
+                        </address>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <address>
+                            <strong>Transfer Type:</strong> {{transferType}}<br>
+                            <strong>Fee Type:</strong> {{feeType}}<br>
+                            <strong>Amount:</strong>{{amount}}<br>
+                            <strong>Fee Amount:</strong> {{amountFee}}<br>
+                            <strong>Partner:</strong> {{thaiBank._id}}-{{thaiBank.name}}<br>
+                            <strong>Currency:</strong> {{currency}}<br>
+                            <strong>Remain Amount:</strong> {{remainAmount}}:
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><strong>Exchange Amount</strong></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table width="100%" border="1" style="border-collapse: collapse;">
+                                <thead>
+                                <tr>
+                                    <td class="text-center"><strong>From Amount</strong></td>
+                                    <td class="text-center"><strong>To Amount</strong></td>
+                                    <td class="text-center"><strong>Currency</strong></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#each exchange}}
+                                <tr>
+                                    <td class="text-center">{{fromAmount}}</td>
+                                    <td class="text-center">{{toAmount}}</td>
+                                    <td class="text-center">{{currency}}</td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <span>Thank you Please see you again!</span>
+                <br>
+                <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;">
+                    <p style="text-align: center;">Powered by <a href="rabbitis.com" target="_blank">Rabbit Technology</a>&nbsp;&nbsp;&nbsp;<i class="fa fa-phone-square"></i> 053 50 66 777</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="container" style="width: 559px;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <address>
+                            </address>
+                        </div>
+                        <div class="col-xs-11">
+                            <address class="text-right">
+                                <button type="button" id="print" class="btn btn-primary fa fa-print"><span style="font-family: Arial;">Print</span></button>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>

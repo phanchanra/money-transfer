@@ -20,73 +20,73 @@ import '../../../../core/client/components/column-action.js';
 import '../../../../core/client/components/form-footer.js';
 
 // Collection
-import {CashIn} from '../../api/collections/cash-in.js';
+import {Exchange} from '../../api/collections/exchange.js';
 
 // Tabular
-import {CashInTabular} from '../../../common/tabulars/cash-in.js';
+import {ExchangeTabular} from '../../../common/tabulars/exchange.js';
 
 // Page
-import './cash-in.html';
+import './exchange.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_cashIn,
-    actionTmpl = Template.MoneyTransfer_cashInAction,
-    newTmpl = Template.MoneyTransfer_cashInNew,
-    editTmpl = Template.MoneyTransfer_cashInEdit,
-    showTmpl = Template.MoneyTransfer_cashInShow;
+let indexTmpl = Template.MoneyTransfer_exchange,
+    actionTmpl = Template.MoneyTransfer_exchangeAction,
+    newTmpl = Template.MoneyTransfer_exchangeNew,
+    editTmpl = Template.MoneyTransfer_exchangeEdit,
+    showTmpl = Template.MoneyTransfer_exchangeShow;
 
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('cashIn');
+    createNewAlertify('exchange', {size: 'lg'});
 });
 
 indexTmpl.helpers({
     tabularTable(){
-        return CashInTabular;
+        return ExchangeTabular;
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.cashIn(fa('plus', TAPi18n.__('moneyTransfer.cashIn.title')), renderTemplate(newTmpl));
+        alertify.exchange(fa('plus', TAPi18n.__('moneyTransfer.exchange.title')), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.cashIn(fa('pencil', TAPi18n.__('moneyTransfer.cashIn.title')), renderTemplate(editTmpl, this));
+        alertify.exchange(fa('pencil', TAPi18n.__('moneyTransfer.exchange.title')), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
-            CashIn,
+            Exchange,
             {_id: this._id},
-            {title: TAPi18n.__('moneyTransfer.cashIn.title'), cashInTitle: this._id}
+            {title: TAPi18n.__('moneyTransfer.exchange.title'), exchangeTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.cashIn(fa('eye', TAPi18n.__('moneyTransfer.cashIn.title')), renderTemplate(showTmpl, this));
+        alertify.exchange(fa('eye', TAPi18n.__('moneyTransfer.exchange.title')), renderTemplate(showTmpl, this));
     }
 });
 
 // New
 newTmpl.helpers({
     collection(){
-        return CashIn;
+        return Exchange;
     }
 });
 
 // Edit
 editTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('moneyTransfer.cashInById', this.data._id);
+        this.subscribe('moneyTransfer.exchange', this.data._id);
     });
 });
 
 editTmpl.helpers({
     collection(){
-        return CashIn;
+        return Exchange;
     },
     data () {
-        let data = CashIn.findOne(this._id);
+        let data = Exchange.findOne(this._id);
         return data;
     }
 });
@@ -94,24 +94,24 @@ editTmpl.helpers({
 // Show
 showTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('moneyTransfer.cashInById', this.data._id);
+        this.subscribe('moneyTransfer.exchange', this.data._id);
     });
 });
 
 showTmpl.helpers({
     i18nLabel(label){
-        let key = `moneyTransfer.cashIn.schema.${label}.label`;
+        let key = `moneyTransfer.exchange.schema.${label}.label`;
         return TAPi18n.__(key);
     },
     data () {
-        let data = CashIn.findOne(this._id);
-        // data.photoUrl = null;
-        // if (data.photo) {
-        //     let img = Files.findOne(data.photo);
-        //     if (img) {
-        //         data.photoUrl = img.url();
-        //     }
-        // }
+        let data = Exchange.findOne(this._id);
+        data.photoUrl = null;
+        if (data.photo) {
+            let img = Files.findOne(data.photo);
+            if (img) {
+                data.photoUrl = img.url();
+            }
+        }
 
         return data;
     }
@@ -121,7 +121,7 @@ showTmpl.helpers({
 let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
-            alertify.cashIn().close();
+            alertify.exchange().close();
         }
         displaySuccess();
     },
@@ -130,7 +130,8 @@ let hooksObject = {
     }
 };
 
+
 AutoForm.addHooks([
-    'MoneyTransfer_cashInNew',
-    'MoneyTransfer_cashInEdit'
+    'MoneyTransfer_exchangeNew',
+    'MoneyTransfer_exchangeEdit'
 ], hooksObject);

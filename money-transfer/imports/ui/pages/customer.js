@@ -109,7 +109,7 @@ indexTmpl.events({
         destroyAction(
             Customer,
             {_id: this._id},
-            {title: TAPi18n.__('moneyTransfer.customer.title'), itemTitle: this._id}
+            {title: TAPi18n.__('moneyTransfer.customer.title'), customerTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
@@ -127,7 +127,7 @@ newTmpl.helpers({
 // Edit
 editTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('moneyTransfer.customerById', this.data._id);
+        this.subscribe('moneyTransfer.customer', this.data._id);
     });
 });
 
@@ -144,7 +144,7 @@ editTmpl.helpers({
 // Show
 showTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('moneyTransfer.customerById', this.data._id);
+        this.subscribe('moneyTransfer.customer', this.data._id);
     });
 });
 

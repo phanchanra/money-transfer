@@ -1,0 +1,107 @@
+<!--Index-->
+<template name="MoneyTransfer_service">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Tabular-->
+        {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
+
+        <!--Reactive Table-->
+        <!--{{> reactiveTable settings=tableSettings}}-->
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="MoneyTransfer_serviceAction">
+    {{#columnAction}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Insert-->
+<template name="MoneyTransfer_serviceNew">
+    <div class="box-body">
+        {{#autoForm collection=collection id="MoneyTransfer_serviceNew" type="insert"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name='supplierId'}}
+                    {{> afQuickField name='registerDate'}}
+                    {{> afQuickField name='fromAmount'}}
+                    {{> afQuickField name='toAmount'}}
+                    {{> afQuickField name='fee'}}
+                    {{> afQuickField name='supplierFee'}}
+                    {{> afQuickField name='profit' readonly=true}}
+
+
+                </div>
+
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Update-->
+<template name="MoneyTransfer_serviceEdit">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm collection=collection id="MoneyTransfer_serviceEdit" doc=data type="update"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        {{> afQuickField name='supplierId'}}
+                        {{> afQuickField name='registerDate'}}
+                        {{> afQuickField name='fromAmount'}}
+                        {{> afQuickField name='toAmount'}}
+                        {{> afQuickField name='fee'}}
+                        {{> afQuickField name='supplierFee'}}
+                        {{> afQuickField name='profit' readonly=true}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
+
+
+<!--Show-->
+<template name="MoneyTransfer_serviceShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <dt>{{_ (i18nLabel "_id")}}</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>{{_ (i18nLabel "supplierId")}}</dt>
+                    <dd>{{supplierId}}</dd>
+                    <dt>{{_ (i18nLabel "registerDate")}}</dt>
+                    <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                    <dt>{{_ (i18nLabel "fromAmount")}}</dt>
+                    <dd>{{fromAmount}}</dd>
+                    <dt>{{_ (i18nLabel "toAmount")}}</dt>
+                    <dd>{{toAmount}}</dd>
+                    <dt>{{_ (i18nLabel "fee")}}</dt>
+                    <dd>{{fee}}</dd>
+                    <dt>{{_ (i18nLabel "supplierFee")}}</dt>
+                    <dd>{{supplierFee}}</dd>
+                    <dt>{{_ (i18nLabel "profit")}}</dt>
+                    <dd>{{profit}}</dd>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
