@@ -28,120 +28,66 @@ let MoneyTransferRoutes = FlowRouter.group({
 import '../imports/ui/pages/home.js';
 MoneyTransferRoutes.route('/home', {
     name: 'moneyTransfer.home',
-    title: __('moneyTransfer.home.title'),
+    title: 'Home',
     action(param, queryParam){
         Layout.main('MoneyTransfer_home');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.home.title'),
-        icon: 'home',
+        title: 'Home',
+        // icon: 'home',
         parent: 'core.welcome'
     }
 });
-// Cash In
-import '../imports/ui/pages/cash-in.js';
-MoneyTransferRoutes.route('/cash-in', {
-    name: 'moneyTransfer.cashIn',
-    title: __('moneyTransfer.cashIn.title'),
+
+// Product
+import '../imports/ui/pages/product.js';
+MoneyTransferRoutes.route('/product', {
+    name: 'moneyTransfer.product',
+    title: 'Product',
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_cashIn');
+        Layout.main('MoneyTransfer_product');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.cashIn.title'),
-        icon: 'product-hunt',
+        title: 'Product',
+        // icon: 'user',
         parent: 'moneyTransfer.home'
     }
 });
 
-
-// Customer
-import '../imports/ui/pages/customer.js';
-MoneyTransferRoutes.route('/customer', {
-    name: 'moneyTransfer.customer',
-    title: __('moneyTransfer.customer.title'),
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_customer');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.customer.title'),
-        icon: 'users',
-        parent: 'moneyTransfer.home'
-    }
-});
-
-// Transfer from Thai
-import '../imports/ui/pages/money-transfer';
-MoneyTransferRoutes.route('/transfer', {
-    name: 'moneyTransfer.transfer',
-    title: __('moneyTransfer.transfer.title'),
-
-    subscriptions: function (params, queryParams) {
-        this.register('moneyTransfer.supplier', Meteor.subscribe('moneyTransfer.supplier'));
-        this.register('moneyTransfer.customer', Meteor.subscribe('moneyTransfer.customer'));
-    },
-    action: function (params, queryParams) {
-        //console.log(Session.get('checkSessionOntabular'));
-        Layout.main('MoneyTransfer_transfer');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.transfer.title'),
-        icon: 'user',
-        parent: 'moneyTransfer.home'
-    }
-});
-// exchange
-import '../imports/ui/pages/exchange.js';
-MoneyTransferRoutes.route('/exchange', {
-    name: 'moneyTransfer.exchange',
-    title: __('moneyTransfer.exchange.title'),
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_exchange');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.exchange.title'),
-        icon: 'user',
-        parent: 'moneyTransfer.home'
-    }
-});
-// supplier
-import '../imports/ui/pages/supplier.js';
-MoneyTransferRoutes.route('/supplier', {
-    name: 'moneyTransfer.supplier',
-    title: __('moneyTransfer.supplier.title'),
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_supplier');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.supplier.title'),
-        icon: 'user',
-        parent: 'moneyTransfer.home'
-    }
-});
-// service
-import '../imports/ui/pages/service';
-MoneyTransferRoutes.route('/service', {
-    name: 'moneyTransfer.service',
-    title: __('moneyTransfer.service.title'),
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_service');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: __('moneyTransfer.service.title'),
-        icon: 'user',
-        parent: 'moneyTransfer.home'
-    }
-});
+// // Fee
+// import '../imports/ui/pages/fee.js';
+// MoneyTransferRoutes.route('/fee', {
+//     name: 'moneyTransfer.fee',
+//     title: 'Fee',
+//     action: function (params, queryParams) {
+//         Layout.main('MoneyTransfer_fee');
+//     },
+//     breadcrumb: {
+//         //params: ['id'],
+//         //queryParams: ['show', 'color'],
+//         title: 'Fee',
+//         // icon: 'user',
+//         parent: 'moneyTransfer.home'
+//     }
+// });
+//
+// // Customer
+// import '../imports/ui/pages/customer.js';
+// MoneyTransferRoutes.route('/customer', {
+//     name: 'moneyTransfer.customer',
+//     title: 'Customer',
+//     action: function (params, queryParams) {
+//         Layout.main('MoneyTransfer_customer');
+//     },
+//     breadcrumb: {
+//         //params: ['id'],
+//         //queryParams: ['show', 'color'],
+//         title: 'Customer',
+//         // icon: 'users',
+//         parent: 'moneyTransfer.home'
+//     }
+// });

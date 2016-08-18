@@ -1,18 +1,10 @@
 <template name="MoneyTransfer_sidebarMenu">
     <li class="{{isActiveRoute name='moneyTransfer.home'}}">
         <a href="{{pathFor 'moneyTransfer.home'}}">
-            <i class="fa fa-home"></i> <span>{{_ "moneyTransfer.sidebarMenu.home"}}</span>
+            <i class="fa fa-home"></i> <span>Home</span>
         </a>
     </li>
-    <!--Transaction-->
-    {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
-        <!--<li class="header"><i class="fa fa-file-o"></i> Transaction</li>-->
-        <li class="{{isActiveRoute name='moneyTransfer.transfer'}}">
-            <a href="{{pathFor 'moneyTransfer.transfer'}}">
-                <i class="fa fa-arrows"></i> <span>{{_ "moneyTransfer.sidebarMenu.transfer"}}</span>
-            </a>
-        </li>
-    {{/if}}
+
     <!--Data-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
         <li class="treeview">
@@ -64,14 +56,14 @@
             </span>
             </a>
             <ul class="treeview-menu">
-                <li class="{{isActiveRoute name='moneyTransfer.exchange'}}">
-                    <a href="{{pathFor 'moneyTransfer.exchange'}}">
-                        <i class="fa fa-exchange"></i> <span>{{_ "moneyTransfer.sidebarMenu.exchange"}}</span>
+                <li class="{{isActiveRoute name='core.exchange'}}">
+                    <a href="{{pathFor 'core.exchange'}}">
+                        <i class="fa fa-exchange"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
                     </a>
                 </li>
-                <li class="{{isActiveRoute name='moneyTransfer.supplier'}}">
-                    <a href="{{pathFor 'moneyTransfer.supplier'}}">
-                        <i class="fa fa-university"></i> <span>{{_ "moneyTransfer.sidebarMenu.supplier"}}</span>
+                <li class="{{isActiveRoute name='moneyTransfer.product'}}">
+                    <a href="{{pathFor 'moneyTransfer.product'}}">
+                        <i class="fa fa-university"></i> <span>Product</span>
                     </a>
                 </li>
             </ul>

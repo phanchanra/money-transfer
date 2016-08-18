@@ -7,27 +7,27 @@ import {moment} from 'meteor/momentjs:moment';
 import {__} from '../../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../ui/libs/select-opts.js';
 
-export const Customer = new Mongo.Collection("mt_customer");
+export const Customer = new Mongo.Collection("moneyTransfer_customer");
 
-Customer.schema = new SimpleSchema({
+Customer.generalSchema = new SimpleSchema({
     name: {
-        type: String
-    },
-    telephone: {
-        type: String
+        type: String,
+        label: 'Name',
+        max: 250
     },
     gender: {
         type: String,
-        optional:true,
+        label: 'Gender',
         autoform: {
-            type: "select2",
+            type: "select-radio-inline",
             options: function () {
-                return SelectOpts.gender();
+                return SelectOpts.gender(false);
             }
         }
     },
     dob: {
         type: Date,
+        label: 'Date of birth',
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
@@ -39,21 +39,35 @@ Customer.schema = new SimpleSchema({
             }
         }
     },
-    email: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Email,
-        optional: true
-    },
     address: {
         type: String,
-        optional:true
+        label: 'Address',
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                rows: 3
+            }
+        }
+    },
+    telephone: {
+        type: String,
+        label: 'Telephone',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.phone();
+            }
+        }
+    },
+    email: {
+        type: String,
+        label: 'Email',
+        regEx: SimpleSchema.RegEx.Email,
+        optional: true
     },
     branchId: {
         type: String
     }
 });
 
-Meteor.startup(function () {
-    Customer.schema.i18n("moneyTransfer.customer.schema");
-    Customer.attachSchema(Customer.schema);
-});
+Customer.attachSchema(Customer.schema);

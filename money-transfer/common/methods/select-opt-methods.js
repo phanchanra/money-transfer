@@ -7,8 +7,8 @@ import {moment} from  'meteor/momentjs:moment';
 
 // Collection
 import {Customer} from '../../imports/api/collections/customer.js';
-import {Supplier} from '../../imports/api/collections/supplier';
-import {MoneyTransfer} from '../../imports/api/collections/money-transfer';
+import {Product} from '../../imports/api/collections/product';
+import {MoneyTransfer} from '../../imports/api/collections/transfer';
 
 export let SelectOptMethods = {};
 
@@ -47,8 +47,8 @@ SelectOptMethods.customer = new ValidatedMethod({
     }
 });
 
-SelectOptMethods.supplier = new ValidatedMethod({
-    name: 'moneyTransfer.selectOptMethods.supplier',
+SelectOptMethods.product = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptMethods.product',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
@@ -69,7 +69,7 @@ SelectOptMethods.supplier = new ValidatedMethod({
                 selector = {_id: {$in: values}};
             }
 
-            let data = Supplier.find(selector, {limit: 10});
+            let data = Product.find(selector, {limit: 10});
             data.forEach(function (value) {
                 let label = value._id + ' : ' + value.name;
                 list.push({label: label, value: value._id});
@@ -112,8 +112,8 @@ SelectOptMethods.supplier = new ValidatedMethod({
 //     }
 // });
 
-// SelectOptMethods.supplier = new ValidatedMethod({
-//     name: 'moneyTransfer.selectOptMethods.supplier',
+// SelectOptMethods.product = new ValidatedMethod({
+//     name: 'moneyTransfer.selectOptMethods.product',
 //     validate: null,
 //     run(options) {
 //         if (!this.isSimulation) {
@@ -132,9 +132,9 @@ SelectOptMethods.supplier = new ValidatedMethod({
 //                 selector = {_id: {$in: values}};
 //             }
 //
-//             let data = Supplier.find(selector, {limit: 10});
+//             let data = Product.find(selector, {limit: 10});
 //             data.forEach(function (value) {
-//                 let label = value._id + ' | Date: ' + moment(value.supplierDate).format('DD/MM/YYYY');
+//                 let label = value._id + ' | Date: ' + moment(value.productDate).format('DD/MM/YYYY');
 //                 list.push({label: label, value: value._id});
 //             });
 //

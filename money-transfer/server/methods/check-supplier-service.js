@@ -1,13 +1,13 @@
-import {Supplier} from '../../imports/api/collections/supplier';
-//import {Service} from '../../imports/api/collections/service';
-Meteor.methods({
-    getSupplierId(supplierId){
-        let supplierStatus = Supplier.findOne({_id:supplierId});
-        if (supplierStatus) {
-            return supplierStatus.status;
-        }
-        else {
-            return '';
-        }
-    }
-});
+// import {Product} from '../../imports/api/collections/product';
+// //import {Service} from '../../imports/api/collections/service';
+// Meteor.methods({
+//     getProductId(productId){
+//         let productStatus = Product.findOne({_id:productId});
+//         if (productStatus) {
+//             return productStatus.status;
+//         }
+//         else {
+//             return '';
+//         }
+//     }
+// });

@@ -2,7 +2,7 @@
 
 // Collection
 // import {Customer} from '../../imports/api/collections/customer.js';
-// import {Supplier} from '../../imports/api/collections/supplier';
+// import {Product} from '../../imports/api/collections/product';
 //
 // Customer.cacheTimestamp();
-// Supplier.cacheCount('orderCount', Supplier, 'customerId');
+// Product.cacheCount('orderCount', Product, 'customerId');

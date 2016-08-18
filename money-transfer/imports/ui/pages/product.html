@@ -1,0 +1,90 @@
+<!--Index-->
+<template name="MoneyTransfer_product">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Tabular-->
+        {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="MoneyTransfer_productAction">
+    {{#columnAction}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> Show</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="MoneyTransfer_productForm">
+    {{#if Template.subscriptionsReady}}
+
+        <div class="box-body">
+            {{#autoForm collection=collection id="MoneyTransfer_productForm" doc=form.doc type=form.type}}
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>General</legend>
+                            {{> afQuickField name='name'}}
+                            {{> afQuickField name='registerDate'}}
+                            {{> afQuickField name='status'}}
+                            {{> afQuickField name='memo'}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>Contact</legend>
+                            {{> afQuickField name='address'}}
+                            {{> afQuickField name='telephone'}}
+                            {{> afQuickField name='email'}}
+                            {{> afQuickField name='website'}}
+                        </fieldset>
+                    </div>
+                </div>
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        </div>
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>
+
+<!--Show-->
+<template name="MoneyTransfer_productShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <fieldset>
+                        <legend>General</legend>
+                        <dt>ID</dt>
+                        <dd>{{_id}}</dd>
+                        <dt>Name</dt>
+                        <dd>{{name}}</dd>
+                        <dt>Register Date</dt>
+                        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{status}}</dd>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Contact</legend>
+                        <dt>Address</dt>
+                        <dd>{{address}}</dd>
+                    </fieldset>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>

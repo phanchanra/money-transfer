@@ -8,7 +8,7 @@
       "order": "Order",
       "sender": "Sender",
       "receiver": "Receiver",
-      "supplier": "Supplier",
+      "product": "Product",
       "service": "Service",
       "transfer": "Transfer",
       "exchange": "Exchange"
@@ -167,8 +167,8 @@
 
       }
     },
-    "supplier": {
-      "title": "Supplier",
+    "product": {
+      "title": "Product",
       "schema": {
         "_id": {
           "label": "ID"
@@ -196,8 +196,8 @@
         "_id": {
           "label": "ID"
         },
-        "supplierId":{
-          "label":"Supplier"
+        "productId":{
+          "label":"Product"
         },
         "registerDate": {
           "label": "Register Date"
@@ -211,8 +211,8 @@
         "fee": {
           "label": "Fee"
         },
-        "supplierFee": {
-          "label": "Supplier Fee"
+        "productFee": {
+          "label": "Product Fee"
         },
         "profit": {
           "label": "Profit"
