@@ -31,9 +31,9 @@ import {calculateIncome} from '../../../common/globalState/calculateIncome'
 let tmpCollection = new Mongo.Collection(null);
 // Page
 import './money-transfer.html';
-import './invoices/fromThaInvoice.html';
+import './invoices/invoice.html';
 // Declare template
-let fromThaiInvoice = Template.generateFromThaiInvoice;
+let transferInvoice = Template.generateInvoice;
 let indexTmpl = Template.MoneyTransfer_transfer,
     actionTmpl = Template.MoneyTransfer_transferAction,
     newTmpl = Template.MoneyTransfer_transferNew,
@@ -65,10 +65,10 @@ indexTmpl.helpers({
 indexTmpl.events({
 
     'click .js-create' (event, instance) {
-        alertify.transfer(fa('plus', TAPi18n.__('moneyTransfer.transfer.title')), renderTemplate(newTmpl));
+        alertify.transfer(fa('plus', TAPi18n.__('moneyTransfer.transfer.title')), renderTemplate(newTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        alertify.transfer(fa('pencil', TAPi18n.__('moneyTransfer.transfer.title')), renderTemplate(editTmpl, this));
+        alertify.transfer(fa('pencil', TAPi18n.__('moneyTransfer.transfer.title')), renderTemplate(editTmpl, this)).maximize();
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
@@ -82,14 +82,20 @@ indexTmpl.events({
     },
     'click .js-invoice' (event, instance) {
         let queryParams = this._id;
-        Meteor.call('fromThaiInvoice', queryParams, function (err, doc) {
-            alertify.fromThaiInvoice(fa('', 'Invoice'), renderTemplate(fromThaiInvoice, doc));
+        Meteor.call('moneyTransferInvoice', queryParams, function (err, doc) {
+            alertify.transferInvoice(fa('', 'Invoice'), renderTemplate(transferInvoice, doc));
+            //renderTemplate(transferInvoice, doc);
+            // let mode = 'iframe'; // popup
+            // let close = mode == "popup";
+            // let options = {mode: mode, popClose: close};
+            // $("div.print").printArea(options);
+            //printPageArea('print-invoice');
         });
     }
 
 });
 
-fromThaiInvoice.events({
+transferInvoice.events({
     'click #print' (e, instance) {
         //printDiv('print-invoice');
         var mode = 'iframe'; // popup
@@ -137,20 +143,14 @@ newTmpl.helpers({
         return collection ? collection.expend : 0;
     },
     income(){
-        let feeType=Session.get("feeTypeSession");
-        // let supplierId=Session.get("supplierId");
-        // Meteor.call("getSupplierId", supplierId, function (err, res) {
-        //     if (res == "Internal") {
-                if(feeType=="Default"){
-                    let collection = tmpCollection.findOne();
-                    return collection ? collection.income : 0;
-                }else{
-                    const income=Template.instance();
-                    return income.state.get();
-                }
-
-        //     }
-        // });
+        let feeType = Session.get("feeTypeSession");
+        if (feeType == "Default") {
+            let collection = tmpCollection.findOne();
+            return collection ? collection.income : 0;
+        } else {
+            const income = Template.instance();
+            return income.state.get();
+        }
     }
 
 });
@@ -193,8 +193,6 @@ newTmpl.events({
                 });
             }
         });
-
-
     },
     // check fee amount readonly
     'click [name="feeType"]'(e, instance){
@@ -208,16 +206,6 @@ newTmpl.events({
         let feeAmount = instance.$('[name="amountFee"]');
         let expend = instance.$('[name="expend"]');
         let income = instance.$('[name="income"]');
-        // if (checkReadOnly == 'Custom') {
-        //     feeAmount.prop("readonly", false);
-        //     expend.prop("readonly", false);
-        //     income.prop("readonly", false);
-        //     feeAmount.val(0);
-        //     expend.val(0);
-        //     income.val(0);
-        // } else {
-        //feeAmount.prop("readonly", true);
-        //expend.prop("readonly", true);
         Meteor.call("getSupplierId", supplierId, function (err, res) {
             //check internal
             if (res == "Internal") {
@@ -249,7 +237,6 @@ newTmpl.events({
                 }
             }
         });
-        //}
     },
     'change [name=supplierId]'(e, instance){
         let checkStatus = $(e.currentTarget).val();
@@ -262,7 +249,7 @@ newTmpl.events({
 
     },
     'keyup [name="amount"]'(e, instance){
-        let amount = parseFloat($(e.currentTarget).val());
+        let amount = $(e.currentTarget).val();
         Session.set("amount", amount);
         let supplierId = Session.get("supplierId");
 
@@ -370,15 +357,15 @@ newTmpl.onDestroyed(function () {
 // Edit
 editTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('moneyTransfer.fromThaiById', {fromThaiId: this.data._id});
+        this.subscribe('moneyTransfer.moneyTransferById', {moneyTransferById: this.data._id});
     });
 });
 editTmpl.helpers({
     collection(){
-        return FromThai;
+        return MoneyTransfer;
     },
     data () {
-        let data = FromThai.findOne(this._id);
+        let data = MoneyTransfer.findOne(this._id);
         Session.set('currencySession', data.currency);
         return data;
     },
@@ -536,8 +523,19 @@ showTmpl.helpers({
 let hooksObject = {
     before: {
         insert: function (doc) {
-            doc.status = "Thai";
-            return doc;
+            let supplierId = Session.get("supplierId");
+            debugger;
+            Meteor.call("getSupplierId", supplierId, function (err, res) {
+                if (res == "Internal") {
+                    doc.status = res;
+
+                } else {
+                    doc.status = res;
+
+                }
+                return doc;
+
+            });
         }
     },
 
@@ -568,9 +566,9 @@ let hooksObject = {
             $('[name="exchange.0.toAmount"]').val('0');
             $('[name="exchange.1.toAmount"]').val('0');
 
-            Meteor.call('fromThaiInvoice', result, function (err, doc) {
+            Meteor.call('moneyTransferInvoice', result, function (err, doc) {
                 //console.log(doc);
-                alertify.fromThaiInvoice(fa('', 'Invoice'), renderTemplate(fromThaiInvoice, doc));
+                alertify.transferInvoice(fa('', 'Invoice'), renderTemplate(transferInvoice, doc));
 
             });
         }
@@ -593,4 +591,13 @@ function insertTmpCollection({doc}) {
         tmpCollection.remove({});
         tmpCollection.insert({income: 0, fee: 0, expend: 0, amount: 0});
     }
+}
+function printPageArea(areaID) {
+    var printContent = document.getElementById(areaID);
+    var WinPrint = window.open('', '', 'width=900,height=650');
+    WinPrint.document.write(printContent.innerHTML);
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
 }

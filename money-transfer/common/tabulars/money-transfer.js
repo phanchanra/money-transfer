@@ -21,7 +21,7 @@ Meteor.isClient && require('../../imports/ui/pages/money-transfer.html');
 tabularOpts.name = 'moneyTransfer.moneyTransfer';
 tabularOpts.collection = MoneyTransfer;
 tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_fromThaiAction},
+    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_transferAction},
     {data: "_id", title: "ID"},
     {
         data: "transferDate",

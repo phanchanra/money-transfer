@@ -19,7 +19,6 @@ Meteor.methods({
                     });
                 }
             });
-
         } else {
             supplier.service.forEach(function (obj) {
                 if (amount >= obj.fromAmount && amount <= obj.toAmount) {

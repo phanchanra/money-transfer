@@ -1,5 +1,5 @@
 
-<template name="generateFromThaiInvoice">
+<template name="generateInvoice">
     {{#if Template.subscriptionsReady}}
     <div class="container print" id="print-invoice" style="width: 559px;">
         <div class="row">
@@ -7,7 +7,7 @@
                 <div class="invoice-title" align="center">
                     {{#with title}}
                         <h4>{{khName}}<br>{{enName}}</h4>
-                        <h3>វិក័យប័ត្រ<br>(Invoice)</h3>
+                        <h3>វិក័យប័ត្រ</h3>
                         <p align="center">អាស័យដ្ឋាន:{{khAddress}}&nbsp;&nbsp;<i class="fa fa-phone-square"></i>&nbsp;&nbsp;{{telephone}}</p>
                     {{/with}}
                 </div>

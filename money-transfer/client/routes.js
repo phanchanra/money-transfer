@@ -97,28 +97,6 @@ MoneyTransferRoutes.route('/transfer', {
         parent: 'moneyTransfer.home'
     }
 });
-
-// Transfer from Khmer
-// import '../imports/ui/pages/from-khmer.js';
-// MoneyTransferRoutes.route('/from-khmer', {
-//     name: 'moneyTransfer.fromKhmer',
-//     title: __('moneyTransfer.fromKhmer.title'),
-//     action: function (params, queryParams) {
-//         //console.log(Session.get('checkSessionOntabular'));
-//
-//         Layout.main('MoneyTransfer_fromKhmer');
-//
-//     },
-//     breadcrumb: {
-//         //params: ['id'],
-//         //queryParams: ['show', 'color'],
-//         title: __('moneyTransfer.fromKhmer.title'),
-//         icon: 'user',
-//         parent: 'moneyTransfer.home'
-//     }
-// });
-
-
 // exchange
 import '../imports/ui/pages/exchange.js';
 MoneyTransferRoutes.route('/exchange', {
