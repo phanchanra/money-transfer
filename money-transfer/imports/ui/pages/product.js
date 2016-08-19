@@ -86,11 +86,12 @@ formTmpl.helpers({
         return Product;
     },
     form(){
+        debugger;
         let data = {doc: {}, type: 'insert'};
-        let currentData = Template.currentData();
+        let currentData = this;
 
         if (currentData) {
-            data.doc = Product.findOne({_id: currentData._id});
+            data.doc = currentData;
             data.type = 'update';
         }
 

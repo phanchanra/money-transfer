@@ -27,4 +27,5 @@ tabularOpts.columns = [
     {data: "accountId", title: "Account"},
     {data: "openingAmount", title: "Opening balance"},
 ];
+tabularOpts.extraFields=['service'];
 export const FeeTabular = new Tabular.Table(tabularOpts);

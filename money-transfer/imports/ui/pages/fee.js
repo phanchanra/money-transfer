@@ -37,7 +37,7 @@ let indexTmpl = Template.MoneyTransfer_fee,
     actionTmpl = Template.MoneyTransfer_feeAction,
     formTmpl = Template.MoneyTransfer_feeForm,
     showTmpl = Template.MoneyTransfer_feeShow,
-    serviceTmpl=Template.customObjectFieldForService;
+    serviceTmpl = Template.customObjectFieldForService;
 
 
 // Index
@@ -81,7 +81,7 @@ formTmpl.onCreated(function () {
     });
 });
 serviceTmpl.onCreated(function () {
-    this.state = new ReactiveVar(0);
+    this.state = new ReactiveVar();
 });
 //helper
 formTmpl.helpers({
@@ -108,7 +108,6 @@ serviceTmpl.helpers({
     }
 });
 
-
 formTmpl.onRendered(function () {
     Session.set("currencySymbol", "$");
 });
@@ -126,9 +125,21 @@ formTmpl.events({
         Session.set("currencySymbol", symbol);
     }
 });
+
 serviceTmpl.events({
-    'keyup [name="ownerFee"]'(e, instance){
-        alert("he");
+    'keyup .customer-fee'(e, instance){
+        let customerFee = $(e.currentTarget).val();
+        let ownerFee = instance.$('.owner-fee').val();
+        instance.state.set(calculateAgentFee(customerFee, ownerFee));
+        // let agentFee=calculateAgentFee(customerFee, ownerFee);
+        // instance.$('.agent-fee').val(agentFee);
+    },
+    'keyup .owner-fee'(e, instance){
+        let ownerFee = $(e.currentTarget).val();
+        let customerFee = instance.$('.customer-fee').val();
+        instance.state.set(calculateAgentFee(customerFee, ownerFee));
+        // let agentFee=calculateAgentFee(customerFee, ownerFee);
+        // instance.$('.agent-fee').val(agentFee);
     },
 });
 // Show

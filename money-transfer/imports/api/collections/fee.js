@@ -66,30 +66,65 @@ Fee.serviceSchema = new SimpleSchema({
     'service.$.fromAmount': {
         type: Number,
         label: 'From amount',
-        decimal: true
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     'service.$.toAmount': {
         type: Number,
         label: 'To amount',
-        decimal: true
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     'service.$.customerFee': {
         type: Number,
         label: 'Customer fee',
         decimal: true,
-        min: 0.01
+        min: 0.01,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     'service.$.ownerFee': {
         type: Number,
         label: 'Owner fee',
         decimal: true,
-        min: 0
+        min: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     'service.$.agentFee': {
         type: Number,
         label: 'Agent fee',
         decimal: true,
-        min: 0
+        min: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
 });
 

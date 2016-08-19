@@ -25,6 +25,8 @@
 
 <!--Form-->
 <template name="MoneyTransfer_feeForm">
+    {{#if Template.subscriptionsReady}}
+
         <div class="box-body">
             {{#autoForm collection=collection id="MoneyTransfer_feeForm" doc=form.doc type=form.type}}
                 <div class="row">
@@ -48,6 +50,9 @@
                 {{> formFooterWithButton}}
             {{/autoForm}}
         </div>
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>
 
 <!--Show-->
@@ -126,16 +131,18 @@
 
 <template name="customObjectFieldForService">
     <div class="col-sm-3">
-        {{> afQuickField name=current.fromAmount template="bootstrap3" label=false class="input-sm" Placeholder="From amount"}}
+        {{> afQuickField name=current.fromAmount template="bootstrap3" label=false class="input-sm from-amount" Placeholder="From amount"}}
     </div>
     <div class="col-sm-3">
-        {{> afQuickField name=current.toAmount template="bootstrap3" label=false class="input-sm" Placeholder="To amount"}}
+        {{> afQuickField name=current.toAmount template="bootstrap3" label=false class="input-sm to-amount" Placeholder="To amount"}}
     </div>
     <div class="col-sm-3">
-        {{> afQuickField name=current.customerFee template="bootstrap3" label=false class="input-sm" Placeholder="Customer fee"}}
+        {{> afQuickField name=current.customerFee template="bootstrap3" label=false class="input-sm customer-fee" Placeholder="Customer fee"}}
     </div>
     <div class="col-sm-2">
-        {{> afQuickField name=current.ownerFee template="bootstrap3" label=false class="input-sm" Placeholder="Agent fee"}}
-        {{> afQuickField name=current.agentFee template="bootstrap3" label=false class="input-sm"}}
+        {{> afQuickField name=current.ownerFee template="bootstrap3" label=false class="input-sm owner-fee" Placeholder="Agent fee"}}
+        <span style="display: none;">
+            {{> afQuickField name=current.agentFee value=agentFee template="bootstrap3" label=false class="input-sm agent-fee"}}
+        </span>
     </div>
 </template>
