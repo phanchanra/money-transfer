@@ -23,51 +23,51 @@ import '../../../../core/client/components/column-action.js';
 import '../../../../core/client/components/form-footer.js';
 
 // Collection
-import {Product} from '../../api/collections/product';
+import {Customer} from '../../api/collections/customer';
 
 // Tabular
-import {ProductTabular} from '../../../common/tabulars/product';
+import {CustomerTabular} from '../../../common/tabulars/customer';
 //function
-import {calculateAgentFee} from '../../../common/globalState/calculateAgentFee'
+// import {calculateIncome} from '../../../common/globalState/calculateIncome'
 // Page
-import './product.html';
+import './customer.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_product,
-    actionTmpl = Template.MoneyTransfer_productAction,
-    formTmpl = Template.MoneyTransfer_productForm,
-    showTmpl = Template.MoneyTransfer_productShow;
+let indexTmpl = Template.MoneyTransfer_customer,
+    actionTmpl = Template.MoneyTransfer_customerAction,
+    formTmpl = Template.MoneyTransfer_customerForm,
+    showTmpl = Template.MoneyTransfer_customerShow;
 
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('product', {size: 'lg'});
-    createNewAlertify('productShow');
+    createNewAlertify('customer', {size: 'lg'});
+    createNewAlertify('customerShow');
 });
 
 indexTmpl.helpers({
     tabularTable(){
-        return ProductTabular;
+        return CustomerTabular;
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.product(fa('plus', 'Product'), renderTemplate(formTmpl));
+        alertify.customer(fa('plus', 'Customer'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.product(fa('pencil', 'Product'), renderTemplate(formTmpl, this));
+        alertify.customer(fa('pencil', 'Customer'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
-            Product,
+            Customer,
             {_id: this._id},
-            {title: 'Product', productTitle: this._id}
+            {title: 'Customer', customerTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.productShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
+        alertify.customerShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
     }
 });
 
@@ -76,21 +76,21 @@ formTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
-            this.subscribe('moneyTransfer.productById', currentData._id);
+            this.subscribe('moneyTransfer.customerById', currentData._id);
         }
     });
 });
 
 formTmpl.helpers({
     collection(){
-        return Product;
+        return Customer;
     },
     form(){
         let data = {doc: {}, type: 'insert'};
         let currentData = Template.currentData();
 
         if (currentData) {
-            data.doc = Product.findOne({_id: currentData._id});
+            data.doc = Customer.findOne({_id: currentData._id});
             data.type = 'update';
         }
 
@@ -102,14 +102,14 @@ formTmpl.helpers({
 showTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
-        this.subscribe('moneyTransfer.productById', currentData._id);
+        this.subscribe('moneyTransfer.customerById', currentData._id);
     });
 });
 
 showTmpl.helpers({
     data () {
         let currentData = Template.currentData();
-        return Product.findOne(currentData._id);
+        return Customer.findOne(currentData._id);
     }
 });
 
@@ -117,7 +117,7 @@ showTmpl.helpers({
 let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
-            alertify.product().close();
+            alertify.customer().close();
         }
         displaySuccess();
     },
@@ -126,4 +126,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks(['MoneyTransfer_productForm'], hooksObject);
+AutoForm.addHooks(['MoneyTransfer_customerForm'], hooksObject);

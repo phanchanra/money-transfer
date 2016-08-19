@@ -3,7 +3,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
 import {Branch} from '../../../../core/imports/api/collections/branch.js';
-
+import {Currency} from '../../../../core/imports/api/collections/currency';
 export const SelectOpts = {
     branch: function (selectOne = true) {
         let list = [];
@@ -28,13 +28,14 @@ export const SelectOpts = {
 
         return list;
     },
-    currency: function () {
-        let list = [
-            {label: "THB", value: "THB"},
-            {label: "KHR", value: "KHR"},
-            {label: "USD", value: "USD"}
-        ];
-
+    currency: function (selectOne=true) {
+        let list=[];
+        if(selectOne){
+            Currency.find()
+                .forEach(function (obj) {
+                    list.push({label: obj._id, value:obj._id});
+                });
+        }
         return list;
     }
 

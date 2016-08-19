@@ -18,10 +18,17 @@ Customer.generalSchema = new SimpleSchema({
     gender: {
         type: String,
         label: 'Gender',
+        defaultValue: "M",
         autoform: {
-            type: "select-radio-inline",
+             type: "select-radio-inline",
+            // options: function () {
+            //     return SelectOpts.gender(false);
+            // }
             options: function () {
-                return SelectOpts.gender(false);
+                return [
+                    {label: 'Male', value: 'M'},
+                    {label: 'Female', value: 'F'}
+                ];
             }
         }
     },
@@ -52,6 +59,7 @@ Customer.generalSchema = new SimpleSchema({
     telephone: {
         type: String,
         label: 'Telephone',
+        optional: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -70,4 +78,4 @@ Customer.generalSchema = new SimpleSchema({
     }
 });
 
-Customer.attachSchema(Customer.schema);
+Customer.attachSchema(Customer.generalSchema);

@@ -92,7 +92,4 @@ Product.contactSchema = new SimpleSchema({
     }
 });
 
-Product.attachSchema([
-    Product.generalSchema,
-    Product.contactSchema,
-]);
+Product.attachSchema([Product.generalSchema, Product.contactSchema,]);

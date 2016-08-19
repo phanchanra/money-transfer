@@ -2,11 +2,17 @@ import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {AutoForm} from 'meteor/aldeed:autoform';
 import {moment} from 'meteor/momentjs:moment';
-
 // Lib
 import {__} from '../../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../ui/libs/select-opts.js';
-
+let currencySymbol = new ReactiveVar();
+if (Meteor.isClient) {
+    Tracker.autorun(function () {
+        if (Session.get('currencySymbol')) {
+            currencySymbol.set(Session.get('currencySymbol'));
+        }
+    });
+}
 export const Fee = new Mongo.Collection("moneyTransfer_fee");
 
 Fee.generalSchema = new SimpleSchema({
@@ -28,7 +34,7 @@ Fee.generalSchema = new SimpleSchema({
         autoform: {
             type: "select-radio-inline",
             options: function () {
-                return SelectOpts.currency();
+                return SelectOpts.currency(true);
             }
         }
     },
@@ -40,7 +46,14 @@ Fee.generalSchema = new SimpleSchema({
     openingAmount: {
         type: Number,
         label: 'Opening amount',
-        decimal: true
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
 });
 

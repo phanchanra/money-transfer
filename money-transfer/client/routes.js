@@ -40,7 +40,55 @@ MoneyTransferRoutes.route('/home', {
         parent: 'core.welcome'
     }
 });
+// Transfer
+import '../imports/ui/pages/transfer';
+MoneyTransferRoutes.route('/transfer', {
+    name: 'moneyTransfer.transfer',
+    title: 'Transfer',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_transfer');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Transfer',
+        // icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Customer
+import '../imports/ui/pages/customer.js';
+MoneyTransferRoutes.route('/customer', {
+    name: 'moneyTransfer.customer',
+    title: 'Customer',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_customer');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Customer',
+        // icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
 
+// Product
+import '../imports/ui/pages/fee';
+MoneyTransferRoutes.route('/fee', {
+    name: 'moneyTransfer.fee',
+    title: 'Fee',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_fee');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Fee',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
 // Product
 import '../imports/ui/pages/product.js';
 MoneyTransferRoutes.route('/product', {
@@ -75,19 +123,3 @@ MoneyTransferRoutes.route('/product', {
 //     }
 // });
 //
-// // Customer
-// import '../imports/ui/pages/customer.js';
-// MoneyTransferRoutes.route('/customer', {
-//     name: 'moneyTransfer.customer',
-//     title: 'Customer',
-//     action: function (params, queryParams) {
-//         Layout.main('MoneyTransfer_customer');
-//     },
-//     breadcrumb: {
-//         //params: ['id'],
-//         //queryParams: ['show', 'color'],
-//         title: 'Customer',
-//         // icon: 'users',
-//         parent: 'moneyTransfer.home'
-//     }
-// });

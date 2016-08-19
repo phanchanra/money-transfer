@@ -16,14 +16,14 @@
             </span>
             </a>
             <ul class="treeview-menu">
-                <li class="{{isActiveRoute name='moneyTransfer.cashIn'}}">
-                    <a href="{{pathFor 'moneyTransfer.cashIn'}}">
-                        <i class="fa fa-money"></i> <span>{{_ "moneyTransfer.sidebarMenu.cashIn"}}</span>
+                <li class="{{isActiveRoute name='moneyTransfer.transfer'}}">
+                    <a href="{{pathFor 'moneyTransfer.transfer'}}">
+                        <i class="fa fa-sun-o"></i> <span>Transfer</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.customer'}}">
                     <a href="{{pathFor 'moneyTransfer.customer'}}">
-                        <i class="fa fa-users"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
+                        <i class="fa fa-sun-o"></i> <span>Customer</span>
                     </a>
                 </li>
             </ul>
@@ -58,12 +58,17 @@
             <ul class="treeview-menu">
                 <li class="{{isActiveRoute name='core.exchange'}}">
                     <a href="{{pathFor 'core.exchange'}}">
-                        <i class="fa fa-exchange"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+                        <i class="fa fa-sun-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.fee'}}">
+                    <a href="{{pathFor 'moneyTransfer.fee'}}">
+                        <i class="fa fa-sun-o"></i> <span>Fee</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.product'}}">
                     <a href="{{pathFor 'moneyTransfer.product'}}">
-                        <i class="fa fa-university"></i> <span>Product</span>
+                        <i class="fa fa-sun-o"></i> <span>Product</span>
                     </a>
                 </li>
             </ul>

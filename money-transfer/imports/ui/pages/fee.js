@@ -23,93 +23,126 @@ import '../../../../core/client/components/column-action.js';
 import '../../../../core/client/components/form-footer.js';
 
 // Collection
-import {Product} from '../../api/collections/product';
+import {Fee} from '../../api/collections/fee';
 
 // Tabular
-import {ProductTabular} from '../../../common/tabulars/product';
+import {FeeTabular} from '../../../common/tabulars/fee';
 //function
 import {calculateAgentFee} from '../../../common/globalState/calculateAgentFee'
 // Page
-import './product.html';
+import './fee.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_product,
-    actionTmpl = Template.MoneyTransfer_productAction,
-    formTmpl = Template.MoneyTransfer_productForm,
-    showTmpl = Template.MoneyTransfer_productShow;
+let indexTmpl = Template.MoneyTransfer_fee,
+    actionTmpl = Template.MoneyTransfer_feeAction,
+    formTmpl = Template.MoneyTransfer_feeForm,
+    showTmpl = Template.MoneyTransfer_feeShow,
+    serviceTmpl=Template.customObjectFieldForService;
 
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('product', {size: 'lg'});
-    createNewAlertify('productShow');
+    createNewAlertify('fee', {size: 'lg'});
+    createNewAlertify('feeShow');
 });
 
 indexTmpl.helpers({
     tabularTable(){
-        return ProductTabular;
+        return FeeTabular;
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.product(fa('plus', 'Product'), renderTemplate(formTmpl));
+        alertify.fee(fa('plus', 'Fee'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.product(fa('pencil', 'Product'), renderTemplate(formTmpl, this));
+        alertify.fee(fa('pencil', 'Fee'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
-            Product,
+            Fee,
             {_id: this._id},
-            {title: 'Product', productTitle: this._id}
+            {title: 'Fee', feeTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.productShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
+        alertify.feeShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
     }
 });
-
 // Form
 formTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
-            this.subscribe('moneyTransfer.productById', currentData._id);
+            this.subscribe('moneyTransfer.feeById', currentData._id);
         }
     });
 });
-
+serviceTmpl.onCreated(function () {
+    this.state = new ReactiveVar(0);
+});
+//helper
 formTmpl.helpers({
     collection(){
-        return Product;
+        return Fee;
     },
     form(){
         let data = {doc: {}, type: 'insert'};
         let currentData = Template.currentData();
 
         if (currentData) {
-            data.doc = Product.findOne({_id: currentData._id});
+            data.doc = Fee.findOne({_id: currentData._id});
             data.type = 'update';
         }
 
         return data;
     }
+
+});
+serviceTmpl.helpers({
+    agentFee(){
+        const agentFee = Template.instance();
+        return agentFee.state.get();
+    }
 });
 
+
+formTmpl.onRendered(function () {
+    Session.set("currencySymbol", "$");
+});
+formTmpl.events({
+    'click [name="currencyId"]'(e, instance){
+        let currencySymbol = $(e.currentTarget).val();
+        let symbol;
+        if (currencySymbol == 'USD') {
+            symbol = '$'
+        } else if (currencySymbol == 'KHR') {
+            symbol = '៛'
+        } else {
+            symbol = 'B'
+        }
+        Session.set("currencySymbol", symbol);
+    }
+});
+serviceTmpl.events({
+    'keyup [name="ownerFee"]'(e, instance){
+        alert("he");
+    },
+});
 // Show
 showTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
-        this.subscribe('moneyTransfer.productById', currentData._id);
+        this.subscribe('moneyTransfer.feeById', currentData._id);
     });
 });
 
 showTmpl.helpers({
     data () {
         let currentData = Template.currentData();
-        return Product.findOne(currentData._id);
+        return Fee.findOne(currentData._id);
     }
 });
 
@@ -117,7 +150,7 @@ showTmpl.helpers({
 let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
-            alertify.product().close();
+            alertify.fee().close();
         }
         displaySuccess();
     },
@@ -126,4 +159,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks(['MoneyTransfer_productForm'], hooksObject);
+AutoForm.addHooks(['MoneyTransfer_feeForm'], hooksObject);

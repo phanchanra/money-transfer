@@ -6,6 +6,7 @@ import {Transfer} from '../../imports/api/collections/transfer';
 
 Meteor.publish('moneyTransfer.transferById', function moneyTransferTransfer(transferId) {
     this.unblock();
+    Meteor._sleepForMs(500);
 
     new SimpleSchema({
         transferId: {type: String}
