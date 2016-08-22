@@ -49,6 +49,9 @@ indexTmpl.onCreated(function () {
 indexTmpl.helpers({
     tabularTable(){
         return TransferTabular;
+    },
+    senderPhone(){
+        return Template.instance().senderPhone.get();
     }
 });
 
@@ -79,6 +82,8 @@ formTmpl.onCreated(function () {
             this.subscribe('moneyTransfer.transferById', currentData._id);
         }
     });
+    this.senderPhone = new ReactiveVar();
+
 });
 
 formTmpl.helpers({
@@ -97,7 +102,21 @@ formTmpl.helpers({
         return data;
     }
 });
-
+formTmpl.events({
+    'change [name="senderId"]'(e, instance){
+        let senderId = $(e.currentTarget).val();
+        Meteor.call("getCustomerInfo", senderId, function (error, result) {
+            instance.$('[name="senderTelephone"]').val(result);
+            // instance.senderPhone.set(result);
+        });
+    },
+    'change [name="receiverId"]'(e, instance){
+        let receiverId = $(e.currentTarget).val();
+        Meteor.call("getCustomerInfo", receiverId, function (error, result) {
+            instance.$('[name="receiverTelephone"]').val(result);
+        });
+    }
+});
 // Show
 showTmpl.onCreated(function () {
     this.autorun(()=> {
@@ -109,7 +128,7 @@ showTmpl.onCreated(function () {
 showTmpl.helpers({
     data () {
         let currentData = Template.currentData();
-        return  Transfer.findOne(currentData._id);
+        return Transfer.findOne(currentData._id);
     }
 });
 

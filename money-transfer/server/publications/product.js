@@ -6,7 +6,7 @@ import {Product} from '../../imports/api/collections/product';
 
 Meteor.publish('moneyTransfer.productById', function moneyTransferProductById(productId) {
     this.unblock();
-    Meteor._sleepForMs(1000);
+    Meteor._sleepForMs(200);
 
     new SimpleSchema({
         productId: {type: String}

@@ -6,7 +6,7 @@ import {Fee} from '../../imports/api/collections/fee';
 
 Meteor.publish('moneyTransfer.feeById', function moneyTransferFee(feeId) {
     this.unblock();
-    Meteor._sleepForMs(500);
+    Meteor._sleepForMs(200);
 
     new SimpleSchema({
         feeId: {type: String}

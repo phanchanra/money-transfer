@@ -52,29 +52,7 @@
 
                     <div class="col-md-6">
                         <fieldset>
-                            <legend>Service</legend>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    {{> afQuickField name='amount' readonly=true}}
-                                </div>
-                                <div class="col-md-2">
-                                    {{> afQuickField name='amountFee' value=fee readonly=true}}
-                                </div>
-                                <div class="col-md-2">
-                                    {{> afQuickField name='expend' value=expend readonly=true}}
-                                </div>
-                                <div class="col-md-2">
-                                    {{> afQuickField name='income' value=income readonly=true}}
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-                <!--sender and receiver-->
-                <div class="row">
-                    <div class="col-md-6">
-                        <fieldset>
-                            <legend>Sender & </legend>
+                            <legend>Sender</legend>
                             <div class="row">
                                 <div class="col-md-6">
                                     {{> afQuickField name='senderId'}}
@@ -82,20 +60,6 @@
                                 <div class="col-md-6">
                                     {{> afQuickField name='senderTelephone'}}
 
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    <div class="col-md-6">
-                        <fieldset>
-                            <legend>Receiver</legend>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    {{> afQuickField name='receiverId'}}
-                                </div>
-                                <div class="col-md-6">
-                                    {{> afQuickField name='receiverTelephone'}}
                                 </div>
                             </div>
                         </fieldset>
@@ -120,25 +84,55 @@
 
                     <div class="col-md-6">
                         <fieldset>
-                            <legend>Amount & Fee</legend>
+                            <legend>Receiver</legend>
                             <div class="row">
-                                <div class="col-md-4">
-                                    {{> afQuickField name='amount'}}
+                                <div class="col-md-6">
+                                    {{> afQuickField name='receiverId'}}
                                 </div>
-                                <div class="col-md-4">
-                                    {{> afQuickField name='customerFee' readonly=true}}
-                                </div>
-                                <div class="col-md-4">
-                                    {{> afQuickField name='discountFee'}}
-                                    {{> afQuickField name='totalFee'}}
-                                    {{> afQuickField name='totalAmount'}}
-                                    {{> afQuickField name='feeDoc'}}
-                                    {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+                                <div class="col-md-6">
+                                    {{> afQuickField name='receiverTelephone'}}
                                 </div>
                             </div>
                         </fieldset>
                     </div>
                 </div>
+                <!--sender and receiver-->
+                <fieldset>
+                    <legend>Amount & Fee</legend>
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{> afQuickField name='amount'}}
+                                </div>
+                                <div class="col-md-6">
+                                    {{> afQuickField name='customerFee' readonly=true}}
+                                </div>
+                            </div>
+                            <!--</fieldset>-->
+                        </div>
+                        <div class="col-md-6">
+                            <!--<fieldset>-->
+                            <!--<legend>Amount & Fee</legend>-->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{> afQuickField name='discountFee'}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{> afQuickField name='totalFee'}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{> afQuickField name='totalAmount'}}
+                                    {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+                                </div>
+                            </div>
+                            <!--</fieldset>-->
+                        </div>
+                    </div>
+                </fieldset>
+
                 {{> formFooterWithButton}}
             {{/autoForm}}
         </div>

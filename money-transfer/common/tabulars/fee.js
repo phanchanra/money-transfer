@@ -13,6 +13,7 @@ import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
 import {Fee} from '../../imports/api/collections/fee';
+import {Product} from '../../imports/api/collections/product';
 
 // Page
 Meteor.isClient && require('../../imports/ui/pages/fee');
@@ -22,10 +23,19 @@ tabularOpts.collection = Fee;
 tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_feeAction},
     {data: "_id", title: "ID"},
-    {data: "productId", title: "Product"},
+    {
+        data:'productId',
+        title: "Product",
+        tmpl: Meteor.isClient && Template.MoneyTransfer_feeProduct},
     {data: "currencyId", title: "Currency"},
     {data: "accountId", title: "Account"},
-    {data: "openingAmount", title: "Opening balance"},
+    {
+        data: "openingAmount",
+        title: "Opening balance",
+        render:function (val, type, doc) {
+            return numeral(val).format('0,000.00')
+        }
+    }
 ];
 tabularOpts.extraFields=['service'];
 export const FeeTabular = new Tabular.Table(tabularOpts);

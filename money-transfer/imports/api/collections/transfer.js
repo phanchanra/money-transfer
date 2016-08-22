@@ -116,9 +116,8 @@ Transfer.accountSchema = new SimpleSchema({
     currencyId: {
         type: String,
         label: 'Currency',
-        defaultValue: 'USD',
         autoform: {
-            type: 'select-radio-inline',
+            type: 'universe-select',
             options: function () {
                 return SelectOpts.currency();
             }

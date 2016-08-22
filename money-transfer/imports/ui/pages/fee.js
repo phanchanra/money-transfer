@@ -31,10 +31,11 @@ import {FeeTabular} from '../../../common/tabulars/fee';
 import {calculateAgentFee} from '../../../common/globalState/calculateAgentFee'
 // Page
 import './fee.html';
-
 // Declare template
 let indexTmpl = Template.MoneyTransfer_fee,
     actionTmpl = Template.MoneyTransfer_feeAction,
+    productTmpl = Template.MoneyTransfer_feeProduct,
+    //productShowTmpl=Template.MoneyTransfer_productShow,
     formTmpl = Template.MoneyTransfer_feeForm,
     showTmpl = Template.MoneyTransfer_feeShow,
     serviceTmpl = Template.customObjectFieldForService;
@@ -71,8 +72,17 @@ indexTmpl.events({
         alertify.feeShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
     }
 });
+
+// Product
+productTmpl.events({
+    'click .js-display-product' (event, instance) {
+        alertify.feeShow(fa('eye', 'Product'), renderTemplate(productTmpl, {_id: this.productId}));
+    }
+});
+
 // Form
 formTmpl.onCreated(function () {
+    Session.set("currencyId", 'USD');
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
@@ -95,6 +105,20 @@ formTmpl.helpers({
         if (currentData) {
             data.doc = Fee.findOne({_id: currentData._id});
             data.type = 'update';
+            let currencySymbol = data.doc.currencyId;
+            if (currencySymbol == 'USD') {
+                symbol = '$';
+                Session.set("currencySymbol", symbol);
+
+            } else if (currencySymbol == 'KHR') {
+                symbol = '៛';
+                Session.set("currencySymbol", symbol);
+
+            } else {
+                symbol = 'B';
+                Session.set("currencySymbol", symbol);
+
+            }
         }
 
         return data;
@@ -107,11 +131,29 @@ serviceTmpl.helpers({
         return agentFee.state.get();
     }
 });
-
 formTmpl.onRendered(function () {
     Session.set("currencySymbol", "$");
+
 });
 formTmpl.events({
+    'change [name="productId"]'(e, instance){
+        let productId = $(e.currentTarget).val();
+        Session.set("productId", productId);
+        let currencySymbol = Session.get("currencyId");
+        Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
+            if (result) {
+                console.log(result);
+                instance.$('[name="save"]').prop('disabled', true);
+            } else {
+
+                console.log(result);
+                instance.$('[name="save"]').prop('disabled', false);
+
+            }
+
+        });
+
+    },
     'click [name="currencyId"]'(e, instance){
         let currencySymbol = $(e.currentTarget).val();
         let symbol;
@@ -123,6 +165,18 @@ formTmpl.events({
             symbol = 'B'
         }
         Session.set("currencySymbol", symbol);
+
+        Session.set("currencyId", currencySymbol);
+        let productId = Session.get("productId");
+        Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
+            if (result) {
+                instance.$('[name="save"]').prop('disabled', true);
+            } else {
+                instance.$('[name="save"]').prop('disabled', false);
+            }
+
+        });
+
     }
 });
 
@@ -130,6 +184,7 @@ serviceTmpl.events({
     'keyup .customer-fee'(e, instance){
         let customerFee = $(e.currentTarget).val();
         let ownerFee = instance.$('.owner-fee').val();
+
         instance.state.set(calculateAgentFee(customerFee, ownerFee));
         // let agentFee=calculateAgentFee(customerFee, ownerFee);
         // instance.$('.agent-fee').val(agentFee);
@@ -137,6 +192,9 @@ serviceTmpl.events({
     'keyup .owner-fee'(e, instance){
         let ownerFee = $(e.currentTarget).val();
         let customerFee = instance.$('.customer-fee').val();
+        if (ownerFee > customerFee) {
+            alertify.error("Owner Fee must be less than customer fee!");
+        }
         instance.state.set(calculateAgentFee(customerFee, ownerFee));
         // let agentFee=calculateAgentFee(customerFee, ownerFee);
         // instance.$('.agent-fee').val(agentFee);
@@ -159,6 +217,7 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
+
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.fee().close();
@@ -166,7 +225,8 @@ let hooksObject = {
         displaySuccess();
     },
     onError (formType, error) {
-        displayError();
+        displayError(error.message);
+
     }
 };
 

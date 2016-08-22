@@ -28,7 +28,7 @@ import {Product} from '../../api/collections/product';
 // Tabular
 import {ProductTabular} from '../../../common/tabulars/product';
 //function
-import {calculateAgentFee} from '../../../common/globalState/calculateAgentFee'
+// import {calculateIncome} from '../../../common/globalState/calculateIncome'
 // Page
 import './product.html';
 
@@ -86,12 +86,11 @@ formTmpl.helpers({
         return Product;
     },
     form(){
-        debugger;
         let data = {doc: {}, type: 'insert'};
-        let currentData = this;
+        let currentData = Template.currentData();
 
         if (currentData) {
-            data.doc = currentData;
+            data.doc = Product.findOne({_id: currentData._id});
             data.type = 'update';
         }
 

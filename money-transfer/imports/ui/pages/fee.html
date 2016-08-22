@@ -23,12 +23,17 @@
     {{/columnAction}}
 </template>
 
+<!--Product-->
+<template name="MoneyTransfer_feeProduct">
+    <a href="#" class="js-display-product">{{productId}}</a>
+</template>
+
 <!--Form-->
 <template name="MoneyTransfer_feeForm">
     {{#if Template.subscriptionsReady}}
 
         <div class="box-body">
-            {{#autoForm collection=collection id="MoneyTransfer_feeForm" doc=form.doc type=form.type}}
+            {{#autoForm collection=collection validation="blur" id="MoneyTransfer_feeForm" doc=form.doc type=form.type}}
                 <div class="row">
                     <div class="col-md-3">
                         <fieldset>
@@ -42,12 +47,33 @@
                     <div class="col-md-9">
                         <fieldset>
                             <legend>Fee</legend>
+                            <div class="col-sm-3">
+                                From Amount
+                            </div>
+                            <div class="col-sm-3">
+                                To Amount
+                            </div>
+                            <div class="col-sm-3">
+                                Customer Fee
+                            </div>
+                            <div class="col-sm-2">
+                                Owner Fee
+                            </div>
+                            <div class="col-sm-1">
+                                Action
+                            </div>
                             {{> afArrayField name="service" id="service" template="customArrayFieldForService" subtemplate="customObjectFieldForService"}}
 
                         </fieldset>
                     </div>
                 </div>
-                {{> formFooterWithButton}}
+                <div class="form-footer">
+                    <button type="submit" name="save" class="btn btn-primary"><i
+                            class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
+                    <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}
+                    </button>
+                </div>
+                <!--{{> formFooterWithButton}}-->
             {{/autoForm}}
         </div>
     {{else}}
@@ -62,21 +88,33 @@
             {{#with data}}
                 <dl class="dl-horizontal">
                     <fieldset>
-                        <legend>General</legend>
+                        <legend>Fee</legend>
                         <dt>ID</dt>
                         <dd>{{_id}}</dd>
-                        <dt>Name</dt>
-                        <dd>{{name}}</dd>
-                        <dt>Register Date</dt>
-                        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
-                        <dt>Status</dt>
-                        <dd>{{status}}</dd>
+                        <dt>Product</dt>
+                        <dd>{{productId}}</dd>
+                        <dt>Currency</dt>
+                        <dd>{{currencyId}}</dd>
+                        <dt>Account Id</dt>
+                        <dd>{{accountId}}</dd>
+                        <dt>Opening Amount</dt>
+                        <dd>{{openingAmount}}</dd>
                     </fieldset>
 
                     <fieldset>
-                        <legend>Contact</legend>
-                        <dt>Address</dt>
-                        <dd>{{address}}</dd>
+                        <legend>Service</legend>
+                        {{#each service}}
+                            <dt>From Amount</dt>
+                            <dd>{{fromAmount}}</dd>
+                            <dt>To Amount</dt>
+                            <dd>{{toAmount}}</dd>
+                            <dt>Customer Fee</dt>
+                            <dd>{{customerFee}}</dd>
+                            <dt>Owner Fee</dt>
+                            <dd>{{ownerFee}}</dd>
+                            <dt>Agent Fee</dt>
+                            <dd>{{agentFee}}</dd>
+                        {{/each}}
                     </fieldset>
                 </dl>
             {{/with}}
@@ -88,7 +126,8 @@
 <!------------Custom contact array field-------------------->
 <template name="afArrayField_customArrayFieldForService">
     <div class="panel panel-default">
-        <div class="panel-heading">{{afFieldLabelText name=this.atts.name}}</div>
+        <div class="panel-heading"></div>
+        <!--{{afFieldLabelText name=this.atts.name}}-->
         <div class="panel-body">
 
             {{#if afFieldIsInvalid name=this.atts.name}}

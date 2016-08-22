@@ -1,4 +1,4 @@
+import BigNumber from 'bignumber.js';
 export const calculateAgentFee = function (customerFee, ownerFee) {
-    let agentFee = customerFee - ownerFee;
-    return agentFee;
+    return new BigNumber (customerFee).minus(ownerFee).toNumber();
 };

@@ -26,6 +26,21 @@ Fee.generalSchema = new SimpleSchema({
                 optionsMethod: 'moneyTransfer.selectOptMethods.product'
             }
         }
+//         ,
+//         custom: function() { //Custom method could be used to do a server side check,
+//                              //like below.
+// //Here we’re making sure that this field is having a value and we want it to be
+// //validated on the client side only.
+//             if (Meteor.isClient && this.isSet) {
+//                 Meteor.call("productAvailable", this.value, function (error, result) {
+//                     if (result) {
+//                         console.log("Found duplicate id");
+//                         Fee.generalSchema().addInvalidKeys([{_id: "id", type: "duplicateId"}]);
+//                     }
+//                 });
+//             }
+//         }
+
     },
     currencyId: {
         type: String,
@@ -36,7 +51,8 @@ Fee.generalSchema = new SimpleSchema({
             options: function () {
                 return SelectOpts.currency(true);
             }
-        }
+        },
+
     },
     accountId: {
         type: String,
@@ -125,10 +141,15 @@ Fee.serviceSchema = new SimpleSchema({
                 return inputmaskOptions.currency({prefix: `${symbol} `});
             }
         }
-    },
+    }
 });
 
 Fee.attachSchema([
     Fee.generalSchema,
     Fee.serviceSchema,
 ]);
+// SimpleSchema.messages({
+//     duplicateId: 'Id already in use',
+//     notUnique: 'Please use another Id, this is already in use',
+// });
+
