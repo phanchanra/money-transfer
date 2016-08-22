@@ -101,6 +101,20 @@ formTmpl.helpers({
         if (currentData) {
             data.doc = Transfer.findOne({_id: currentData._id});
             data.type = 'update';
+            let currencySymbol = data.doc.currencyId;
+            if (currencySymbol == 'USD') {
+                symbol = '$';
+                Session.set("currencySymbol", symbol);
+
+            } else if (currencySymbol == 'KHR') {
+                symbol = '៛';
+                Session.set("currencySymbol", symbol);
+
+            } else {
+                symbol = 'B';
+                Session.set("currencySymbol", symbol);
+
+            }
         }
 
         return data;
@@ -158,7 +172,18 @@ formTmpl.events({
     },
     'change [name="currencyId"]'(e, instance){
         let currencyId = $(e.currentTarget).val();
+        //let currencySymbol = $(e.currentTarget).val();
+        let symbol;
+        if (currencyId == 'USD') {
+            symbol = '$'
+        } else if (currencyId == 'KHR') {
+            symbol = '៛'
+        } else {
+            symbol = 'B'
+        }
         Session.set("currencyId", currencyId);
+        Session.set("currencySymbol", symbol);
+
         instance.$('[name="amount"]').val(0);
         tmpCollection.remove({});
         if (currencyId) {
@@ -168,11 +193,11 @@ formTmpl.events({
         }
     },
     'change [name="amount"]'(e, instance){
-        let amount = $(e.currentTarget).val();
-        let productId = Session.get("productId");
-        let currencyId = Session.get("currencyId");
-        console.log(amount + productId + currencyId);
-        Meteor.call("getFee", productId, currencyId, amount, function (error, result) {
+        // let amount = $(e.currentTarget).val();
+        // let productId = Session.get("productId");
+        // let currencyId = Session.get("currencyId");
+        //console.log(amount + productId + currencyId);
+        Meteor.call("getFee", Session.get("productId"), Session.get("currencyId"), $(e.currentTarget).val(), function (error, result) {
             tmpCollection.remove({});
             tmpCollection.insert(result);
         })

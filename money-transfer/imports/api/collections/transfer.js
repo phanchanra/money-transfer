@@ -6,7 +6,14 @@ import {moment} from 'meteor/momentjs:moment';
 // Lib
 import {__} from '../../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../ui/libs/select-opts.js';
-
+let currencySymbol = new ReactiveVar();
+if (Meteor.isClient) {
+    Tracker.autorun(function () {
+        if (Session.get('currencySymbol')) {
+            currencySymbol.set(Session.get('currencySymbol'));
+        }
+    });
+}
 export const Transfer = new Mongo.Collection('moneyTransfer_transfer');
 
 Transfer.generalSchema = new SimpleSchema({
@@ -135,13 +142,27 @@ Transfer.accountSchema = new SimpleSchema({
     amount: {
         type: Number,
         decimal: true,
-        label: 'Amount'
+        label: 'Amount',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     customerFee: {
         type: Number,
         label: 'Customer fee',
         decimal: true,
-        min: 0
+        min: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     discountFee: {
         type: Number,
@@ -153,13 +174,27 @@ Transfer.accountSchema = new SimpleSchema({
         type: Number,
         label: 'Total fee',
         decimal: true,
-        min: 0
+        min: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     totalAmount: {
         type: Number,
         label: 'Total amount',
         decimal: true,
-        min: 0
+        min: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `});
+            }
+        }
     },
     refCode: {
         type: String,
