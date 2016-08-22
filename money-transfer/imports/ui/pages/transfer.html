@@ -58,7 +58,7 @@
                                     {{> afQuickField name='senderId'}}
                                 </div>
                                 <div class="col-md-6">
-                                    {{> afQuickField name='senderTelephone'}}
+                                    {{> afQuickField name='senderTelephone' value=senderPhone}}
 
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                     {{> afQuickField name='productId'}}
                                 </div>
                                 <div class="col-md-6">
-                                    {{> afQuickField name='currencyId'}}
+                                    {{> afQuickField name='currencyId' options=currencyList }}
 
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                                     {{> afQuickField name='receiverId'}}
                                 </div>
                                 <div class="col-md-6">
-                                    {{> afQuickField name='receiverTelephone'}}
+                                    {{> afQuickField name='receiverTelephone' value=receiverPhone}}
                                 </div>
                             </div>
                         </fieldset>
@@ -105,10 +105,10 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    {{> afQuickField name='amount'}}
+                                    {{> afQuickField name='amount' readonly=true value=amount}}
                                 </div>
                                 <div class="col-md-6">
-                                    {{> afQuickField name='customerFee' readonly=true}}
+                                    {{> afQuickField name='customerFee' readonly=true value=customerFee}}
                                 </div>
                             </div>
                             <!--</fieldset>-->
@@ -121,10 +121,10 @@
                                     {{> afQuickField name='discountFee'}}
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='totalFee'}}
+                                    {{> afQuickField name='totalFee' readonly=true}}
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='totalAmount'}}
+                                    {{> afQuickField name='totalAmount' readonly=true}}
                                     {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                                 </div>
                             </div>

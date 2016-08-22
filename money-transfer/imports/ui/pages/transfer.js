@@ -24,6 +24,7 @@ import '../../../../core/client/components/form-footer.js';
 
 // Collection
 import {Transfer} from '../../api/collections/transfer';
+let tmpCollection = new Mongo.Collection(null);
 
 // Tabular
 import {TransferTabular} from '../../../common/tabulars/transfer';
@@ -82,7 +83,10 @@ formTmpl.onCreated(function () {
             this.subscribe('moneyTransfer.transferById', currentData._id);
         }
     });
+    insertTmpCollection({});
     this.senderPhone = new ReactiveVar();
+    this.receiverPhone = new ReactiveVar();
+    this.currencyList = new ReactiveVar();
 
 });
 
@@ -100,22 +104,80 @@ formTmpl.helpers({
         }
 
         return data;
+    },
+    currencyList(){
+        let instance = Template.instance();
+        let currencies = instance.currencyList.get();
+        if (currencies) {
+            return currencies.map(function (c) {
+                return {value: c, label: c}
+            });
+        } else {
+            return [];
+        }
+    },
+    senderPhone(){
+        let instance = Template.instance();
+        return instance.senderPhone.get();
+    },
+    receiverPhone(){
+        let instance = Template.instance();
+        return instance.receiverPhone.get();
+    },
+    customerFee(){
+        let collection = tmpCollection.findOne();
+        return collection ? collection.customerFee : 0;
     }
 });
 formTmpl.events({
     'change [name="senderId"]'(e, instance){
         let senderId = $(e.currentTarget).val();
         Meteor.call("getCustomerInfo", senderId, function (error, result) {
-            instance.$('[name="senderTelephone"]').val(result);
-            // instance.senderPhone.set(result);
+            instance.senderPhone.set(result);
         });
     },
     'change [name="receiverId"]'(e, instance){
         let receiverId = $(e.currentTarget).val();
         Meteor.call("getCustomerInfo", receiverId, function (error, result) {
-            instance.$('[name="receiverTelephone"]').val(result);
+            instance.receiverPhone.set(result);
         });
+    },
+    'change [name="productId"]'(e, instance){
+        let productId = $(e.currentTarget).val();
+        Session.set("productId", productId);
+        instance.$('[name="amount"]').val(0);
+        tmpCollection.remove({});
+        Meteor.call("getCurrency", productId, function (error, result) {
+            if (result) {
+                instance.currencyList.set(result);
+                instance.$('[name="amount"]').prop("readonly", true);
+            } else {
+                instance.$('[name="amount"]').prop("readonly", true);
+            }
+        });
+    },
+    'change [name="currencyId"]'(e, instance){
+        let currencyId = $(e.currentTarget).val();
+        Session.set("currencyId", currencyId);
+        instance.$('[name="amount"]').val(0);
+        tmpCollection.remove({});
+        if (currencyId) {
+            instance.$('[name="amount"]').prop("readonly", false);
+        } else {
+            instance.$('[name="amount"]').prop("readonly", true);
+        }
+    },
+    'change [name="amount"]'(e, instance){
+        let amount = $(e.currentTarget).val();
+        let productId = Session.get("productId");
+        let currencyId = Session.get("currencyId");
+        console.log(amount + productId + currencyId);
+        Meteor.call("getFee", productId, currencyId, amount, function (error, result) {
+            tmpCollection.remove({});
+            tmpCollection.insert(result);
+        })
     }
+
 });
 // Show
 showTmpl.onCreated(function () {
@@ -146,3 +208,9 @@ let hooksObject = {
 };
 
 AutoForm.addHooks(['MoneyTransfer_transferForm'], hooksObject);
+function insertTmpCollection({doc}) {
+    if (_.isEmpty(doc)) {
+        tmpCollection.remove({});
+        tmpCollection.insert({fromAmount: 0, toAmount: 0, customerFee: 0, ownerFee: 0, agentFee: 0});
+    }
+}

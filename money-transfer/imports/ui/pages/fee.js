@@ -142,13 +142,10 @@ formTmpl.events({
         let currencySymbol = Session.get("currencyId");
         Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
             if (result) {
-                console.log(result);
                 instance.$('[name="save"]').prop('disabled', true);
+
             } else {
-
-                console.log(result);
                 instance.$('[name="save"]').prop('disabled', false);
-
             }
 
         });

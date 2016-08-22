@@ -26,20 +26,6 @@ Fee.generalSchema = new SimpleSchema({
                 optionsMethod: 'moneyTransfer.selectOptMethods.product'
             }
         }
-//         ,
-//         custom: function() { //Custom method could be used to do a server side check,
-//                              //like below.
-// //Here we’re making sure that this field is having a value and we want it to be
-// //validated on the client side only.
-//             if (Meteor.isClient && this.isSet) {
-//                 Meteor.call("productAvailable", this.value, function (error, result) {
-//                     if (result) {
-//                         console.log("Found duplicate id");
-//                         Fee.generalSchema().addInvalidKeys([{_id: "id", type: "duplicateId"}]);
-//                     }
-//                 });
-//             }
-//         }
 
     },
     currencyId: {
