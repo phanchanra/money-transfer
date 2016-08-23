@@ -75,7 +75,7 @@
                                     {{> afQuickField name='productId'}}
                                 </div>
                                 <div class="col-md-6">
-                                    {{> afQuickField name='currencyId' options=currencyList }}
+                                    {{> afQuickField name='currencyId' id='currencyId' options=currencyList }}
 
                                 </div>
                             </div>
@@ -108,6 +108,7 @@
                                     {{> afQuickField name='amount' readonly=true value=amount}}
                                 </div>
                                 <div class="col-md-6">
+
                                     {{> afQuickField name='customerFee' readonly=true value=customerFee}}
                                 </div>
                             </div>
@@ -121,10 +122,10 @@
                                     {{> afQuickField name='discountFee'}}
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='totalFee' readonly=true}}
+                                    {{> afQuickField name='totalFee' readonly=true value=afterDisAmountFee}}
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='totalAmount' readonly=true}}
+                                    {{> afQuickField name='totalAmount' readonly=true value=totalAmount}}
                                     {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                                 </div>
                             </div>
@@ -152,18 +153,34 @@
                         <legend>General</legend>
                         <dt>ID</dt>
                         <dd>{{_id}}</dd>
-                        <dt>Name</dt>
-                        <dd>{{name}}</dd>
-                        <dt>Gender</dt>
-                        <dd>{{gender}}</dd>
-                        <dt>Date of birth</dt>
-                        <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
-                        <dt>Address</dt>
-                        <dd>{{address}}</dd>
+                        <dt>Transfer Type</dt>
+                        <dd>{{transferType}}</dd>
+                        <dt>Ref Code</dt>
+                        <dd>{{refCode}}</dd>
+                        <dt>Transfer DAte</dt>
+                        <dd>{{moFormat transferDate "DD/MM/YYYY"}}</dd>
+                        <dt>Sender</dt>
+                        <dd>{{senderId}}</dd>
                         <dt>telephone</dt>
-                        <dd>{{telephone}}</dd>
-                        <dt>E-mail</dt>
-                        <dd>{{email}}</dd>
+                        <dd>{{senderTelephone}}</dd>
+                        <dt>ReceiverId</dt>
+                        <dd>{{receiverId}}</dd>
+                        <dt>telephone</dt>
+                        <dd>{{receiverTelephone}}</dd>
+                        <dt>Product</dt>
+                        <dd>{{productId}}</dd>
+                        <dt>Currency</dt>
+                        <dd>{{currencyId}}</dd>
+                        <dt>Amount</dt>
+                        <dd>{{amount}}</dd>
+                        <dt>Customer Fee</dt>
+                        <dd>{{customerFee}}</dd>
+                        <dt>Discount</dt>
+                        <dd>{{discountFee}}</dd>
+                        <dt>Total Fee</dt>
+                        <dd>{{totalFee}}</dd>
+                        <dt>Total Amount</dt>
+                        <dd>{{totalAmount}}</dd>
                     </fieldset>
 
 

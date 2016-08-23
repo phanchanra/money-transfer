@@ -11,11 +11,14 @@ Meteor.methods({
                         toAmount:obj.toAmount,
                         customerFee: obj.customerFee,
                         ownerFee: obj.ownerFee,
-                        agentFee: obj.agentFee
+                        agentFee: obj.agentFee,
+                        totalFee:obj.customerFee,
+                        totalAmount:obj.totalAmount
                     });
+                    console.log(_.last(tmpFee));
+
                 }
             });
-            console.log(_.last(tmpFee));
             return _.last(tmpFee);
         }else{
             return false;

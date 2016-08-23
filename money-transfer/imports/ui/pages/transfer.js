@@ -8,6 +8,7 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {TAPi18n} from 'meteor/tap:i18n';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {moment} from 'meteor/momentjs:moment';
+import BigNumber from 'bignumber.js';
 
 // Lib
 import {createNewAlertify} from '../../../../core/client/libs/create-new-alertify.js';
@@ -61,6 +62,13 @@ indexTmpl.events({
         alertify.transfer(fa('plus', 'Transfer'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
+
+        tmpCollection.insert({
+                customerFee: this.customerFee,
+                totalFee: this.totalFee,
+                totalAmount: this.totalAmount
+            }
+        );
         alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -83,10 +91,12 @@ formTmpl.onCreated(function () {
             this.subscribe('moneyTransfer.transferById', currentData._id);
         }
     });
-    insertTmpCollection({});
+    //insertTmpCollection({});
     this.senderPhone = new ReactiveVar();
     this.receiverPhone = new ReactiveVar();
     this.currencyList = new ReactiveVar();
+    //this.afterDisAmountFee = new ReactiveVar();
+    this.totalAmount = new ReactiveVar();
 
 });
 
@@ -101,6 +111,7 @@ formTmpl.helpers({
         if (currentData) {
             data.doc = Transfer.findOne({_id: currentData._id});
             data.type = 'update';
+            console.log(data.doc);
             let currencySymbol = data.doc.currencyId;
             if (currencySymbol == 'USD') {
                 symbol = '$';
@@ -139,9 +150,21 @@ formTmpl.helpers({
         return instance.receiverPhone.get();
     },
     customerFee(){
+        debugger;
         let collection = tmpCollection.findOne();
         return collection ? collection.customerFee : 0;
-    }
+    },
+    afterDisAmountFee(){
+        let collection = tmpCollection.findOne();
+        return collection ? collection.totalFee : 0;
+    },
+    totalAmount(){
+        // let instance = Template.instance();
+        // return instance.totalAmount.get();
+        let collection = tmpCollection.findOne();
+        return collection ? collection.totalAmount : 0;
+    },
+
 });
 formTmpl.events({
     'change [name="senderId"]'(e, instance){
@@ -159,7 +182,7 @@ formTmpl.events({
     'change [name="productId"]'(e, instance){
         let productId = $(e.currentTarget).val();
         Session.set("productId", productId);
-        instance.$('[name="amount"]').val(0);
+        clearOnchange();
         tmpCollection.remove({});
         Meteor.call("getCurrency", productId, function (error, result) {
             if (result) {
@@ -167,6 +190,7 @@ formTmpl.events({
                 instance.$('[name="amount"]').prop("readonly", true);
             } else {
                 instance.$('[name="amount"]').prop("readonly", true);
+
             }
         });
     },
@@ -183,8 +207,7 @@ formTmpl.events({
         }
         Session.set("currencyId", currencyId);
         Session.set("currencySymbol", symbol);
-
-        instance.$('[name="amount"]').val(0);
+        clearOnchange();
         tmpCollection.remove({});
         if (currencyId) {
             instance.$('[name="amount"]').prop("readonly", false);
@@ -193,14 +216,32 @@ formTmpl.events({
         }
     },
     'change [name="amount"]'(e, instance){
-        // let amount = $(e.currentTarget).val();
-        // let productId = Session.get("productId");
-        // let currencyId = Session.get("currencyId");
-        //console.log(amount + productId + currencyId);
+        let amount = Number($(e.currentTarget).val());
+        if (amount == "") {
+            clearOnKeyupAmount();
+        }
+        let customerFee = instance.$('[name="customerFee"]').val();
+        let discountFee = instance.$('[name="discountFee"]').val();
+        Session.set("amount", amount);
+        instance.totalAmount.set(calculateTotalAmount(amount, calculateAfterDiscount(customerFee, discountFee)));
         Meteor.call("getFee", Session.get("productId"), Session.get("currencyId"), $(e.currentTarget).val(), function (error, result) {
-            tmpCollection.remove({});
-            tmpCollection.insert(result);
-        })
+            if (result) {
+                tmpCollection.remove({});
+                tmpCollection.insert(result);
+            }
+        });
+    },
+    'keyup [name="discountFee"]'(e, instance){
+        let discountFee = $(e.currentTarget).val();
+        let amount = Number(Session.get("amount"));
+        let customerFee = instance.$('[name="customerFee"]').val();
+        //instance.$('[name="totalFee"]').val(calculateAfterDiscount(customerFee, discountFee));
+        let totalFee = calculateAfterDiscount(customerFee, discountFee);
+        //instance.afterDisAmountFee.set(calculateAfterDiscount(customerFee, discountFee));
+        //instance.totalAmount.set(calculateTotalAmount(amount, calculateAfterDiscount(customerFee, discountFee)));
+        let totalAmount = calculateTotalAmount(amount, totalFee);
+        //instance.totalAmount.set(totalAmountWithFee);
+        tmpCollection.update({}, {$set: {totalFee: totalFee, totalAmount: totalAmount}});
     }
 
 });
@@ -221,10 +262,17 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
+    before: {
+        insert(doc){
+            doc.feeDoc = tmpCollection.findOne();
+            return doc;
+        }
+    },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.transfer().close();
         }
+
         displaySuccess();
     },
     onError (formType, error) {
@@ -236,6 +284,33 @@ AutoForm.addHooks(['MoneyTransfer_transferForm'], hooksObject);
 function insertTmpCollection({doc}) {
     if (_.isEmpty(doc)) {
         tmpCollection.remove({});
-        tmpCollection.insert({fromAmount: 0, toAmount: 0, customerFee: 0, ownerFee: 0, agentFee: 0});
+        tmpCollection.insert({
+            fromAmount: 0,
+            toAmount: 0,
+            customerFee: 0,
+            ownerFee: 0,
+            agentFee: 0,
+            totalFee: 0,
+            totalAmount: 0
+        });
     }
+}
+function clearOnchange() {
+    $('[name="amount"]').val(0);
+    $('[name="customerFee"]').val(0);
+    $('[name="discountFee"]').val(0);
+    $('[name="totalFee"]').val(0);
+    $('[name="totalAmount"]').val(0);
+}
+function clearOnKeyupAmount() {
+    $('[name="customerFee"]').val(0);
+    $('[name="discountFee"]').val(0);
+    $('[name="totalFee"]').val(0);
+    $('[name="totalAmount"]').val(0);
+}
+function calculateAfterDiscount(customerFee, discountFee) {
+    return customerFee * (1 - discountFee / 100);
+}
+function calculateTotalAmount(amount, disAmountFee) {
+    return amount + disAmountFee;
 }

@@ -168,7 +168,8 @@ Transfer.accountSchema = new SimpleSchema({
         type: Number,
         label: 'Discount fee',
         decimal: true,
-        min: 0
+        min: 0,
+        max:100
     },
     totalFee: {
         type: Number,
