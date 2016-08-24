@@ -16,7 +16,6 @@ Meteor.methods({
                         totalAmount:obj.totalAmount
                     });
                     console.log(_.last(tmpFee));
-
                 }
             });
             return _.last(tmpFee);

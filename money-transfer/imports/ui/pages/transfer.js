@@ -33,12 +33,13 @@ import {TransferTabular} from '../../../common/tabulars/transfer';
 // import {calculateIncome} from '../../../common/globalState/calculateIncome'
 // Page
 import './transfer.html';
-
+import './invoices/invoice.html';
 // Declare template
 let indexTmpl = Template.MoneyTransfer_transfer,
     actionTmpl = Template.MoneyTransfer_transferAction,
     formTmpl = Template.MoneyTransfer_transferForm,
-    showTmpl = Template.MoneyTransfer_transferShow;
+    showTmpl = Template.MoneyTransfer_transferShow,
+    invoice = Template.generateInvoice;
 
 
 // Index
@@ -46,14 +47,12 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('transfer', {size: 'lg'});
     createNewAlertify('transferShow');
+    createNewAlertify('invoice', {size: 'lg'});
 });
 
 indexTmpl.helpers({
     tabularTable(){
         return TransferTabular;
-    },
-    senderPhone(){
-        return Template.instance().senderPhone.get();
     }
 });
 
@@ -69,6 +68,7 @@ indexTmpl.events({
                 totalAmount: this.totalAmount
             }
         );
+
         alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -80,6 +80,12 @@ indexTmpl.events({
     },
     'click .js-display' (event, instance) {
         alertify.transferShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
+    },
+    'click .js-invoice' (event, instance) {
+        let queryParams = this._id;
+        Meteor.call('invoice', queryParams, function (err, doc) {
+            alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
+        });
     }
 });
 
@@ -96,7 +102,7 @@ formTmpl.onCreated(function () {
     this.receiverPhone = new ReactiveVar();
     this.currencyList = new ReactiveVar();
     //this.afterDisAmountFee = new ReactiveVar();
-    this.totalAmount = new ReactiveVar();
+    //this.totalAmount = new ReactiveVar();
 
 });
 
@@ -111,7 +117,6 @@ formTmpl.helpers({
         if (currentData) {
             data.doc = Transfer.findOne({_id: currentData._id});
             data.type = 'update';
-            console.log(data.doc);
             let currencySymbol = data.doc.currencyId;
             if (currencySymbol == 'USD') {
                 symbol = '$';
@@ -150,7 +155,6 @@ formTmpl.helpers({
         return instance.receiverPhone.get();
     },
     customerFee(){
-        debugger;
         let collection = tmpCollection.findOne();
         return collection ? collection.customerFee : 0;
     },
@@ -159,12 +163,19 @@ formTmpl.helpers({
         return collection ? collection.totalFee : 0;
     },
     totalAmount(){
-        // let instance = Template.instance();
-        // return instance.totalAmount.get();
         let collection = tmpCollection.findOne();
         return collection ? collection.totalAmount : 0;
     },
 
+});
+invoice.events({
+    'click #print' (e, instance) {
+        //printDiv('print-invoice');
+        var mode = 'iframe'; // popup
+        var close = mode == "popup";
+        var options = {mode: mode, popClose: close};
+        $("div.print").printArea(options);
+    }
 });
 formTmpl.events({
     'change [name="senderId"]'(e, instance){
@@ -220,27 +231,30 @@ formTmpl.events({
         if (amount == "") {
             clearOnKeyupAmount();
         }
-        let customerFee = instance.$('[name="customerFee"]').val();
-        let discountFee = instance.$('[name="discountFee"]').val();
+        //let customerFee = instance.$('[name="customerFee"]').val();
+        //let discountFee = instance.$('[name="discountFee"]').val();
         Session.set("amount", amount);
-        instance.totalAmount.set(calculateTotalAmount(amount, calculateAfterDiscount(customerFee, discountFee)));
+        //instance.totalAmount.set(calculateTotalAmount(amount, calculateAfterDiscount(customerFee, discountFee)));
         Meteor.call("getFee", Session.get("productId"), Session.get("currencyId"), $(e.currentTarget).val(), function (error, result) {
             if (result) {
                 tmpCollection.remove({});
                 tmpCollection.insert(result);
+
+                let totalAmount = calculateTotalAmount(amount, result.customerFee);
+                tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
             }
         });
     },
     'keyup [name="discountFee"]'(e, instance){
         let discountFee = $(e.currentTarget).val();
-        let amount = Number(Session.get("amount"));
+        let amount = parseFloat(instance.$('[name="amount"]').val());
         let customerFee = instance.$('[name="customerFee"]').val();
-        //instance.$('[name="totalFee"]').val(calculateAfterDiscount(customerFee, discountFee));
         let totalFee = calculateAfterDiscount(customerFee, discountFee);
-        //instance.afterDisAmountFee.set(calculateAfterDiscount(customerFee, discountFee));
-        //instance.totalAmount.set(calculateTotalAmount(amount, calculateAfterDiscount(customerFee, discountFee)));
         let totalAmount = calculateTotalAmount(amount, totalFee);
-        //instance.totalAmount.set(totalAmountWithFee);
+        console.log(discountFee);
+        console.log(amount);
+        console.log(customerFee);
+        console.log(totalFee);
         tmpCollection.update({}, {$set: {totalFee: totalFee, totalAmount: totalAmount}});
     }
 

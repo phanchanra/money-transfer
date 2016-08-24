@@ -16,58 +16,33 @@
                     <div class="col-xs-6">
                         <address>
                             <strong>ID: </strong> {{_id}}<br>
+                            <strong>Transfer Type:</strong> {{transferType}}<br>
                             <strong>Date: </strong> {{moFormat transferDate "DD/MM/YYYY"}}<br>
-                            <strong>Invoice: </strong> {{invoice}}<br>
-                            <strong>Account Number: </strong> {{code}}<br>
-                            <strong>Status: </strong>{{status}}<br>
+                            <strong>Ref Code: </strong> {{refCode}}<br>
                             <strong>Sender: </strong> {{sender._id}}-{{sender.name}}<br>
-                            <strong>Receiver: </strong> {{receiver._id}}-{{receiver.name}}
+                            <strong>Sender Phone :</strong> {{senderTelephone}}<br>
+                            <strong>Receiver: </strong> {{receiver._id}}-{{receiver.name}}<br>
+                            <strong>Receiver Phone :</strong> {{receiverTelephone}}
+
                         </address>
                     </div>
                     <div class="col-xs-6 text-right">
                         <address>
-                            <strong>Transfer Type:</strong> {{transferType}}<br>
-                            <strong>Fee Type:</strong> {{feeType}}<br>
-                            <strong>Amount:</strong>{{amount}}<br>
-                            <strong>Fee Amount:</strong> {{amountFee}}<br>
-                            <strong>Partner:</strong> {{thaiBank._id}}-{{thaiBank.name}}<br>
-                            <strong>Currency:</strong> {{currency}}<br>
-                            <strong>Remain Amount:</strong> {{remainAmount}}:
+                            <strong>Product:</strong> {{product._id}}-{{product.name}}<br>
+                            <strong>Currency:</strong> {{currencyId}}<br>
+                            <strong>Amount:</strong>​ {{amount}}<br>
+                            <strong>Fee Amount:</strong> {{customerFee}}<br>
+                            <strong>Discount Fee:</strong> {{discountFee}}<br>
+                            <strong>Total Fee:</strong> {{totalFee}}<br>
+                            <strong>Total Amount:</strong> {{totalAmount}}:
                         </address>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><strong>Exchange Amount</strong></h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table width="100%" border="1" style="border-collapse: collapse;">
-                                <thead>
-                                <tr>
-                                    <td class="text-center"><strong>From Amount</strong></td>
-                                    <td class="text-center"><strong>To Amount</strong></td>
-                                    <td class="text-center"><strong>Currency</strong></td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {{#each exchange}}
-                                <tr>
-                                    <td class="text-center">{{fromAmount}}</td>
-                                    <td class="text-center">{{toAmount}}</td>
-                                    <td class="text-center">{{currency}}</td>
-                                </tr>
-                                {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <span>Thank you Please see you again!</span>
+            <div class="col-md-12" style="text-align: center;">
+                <span >Thank you Please see you again!</span>
                 <br>
                 <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;">
                     <p style="text-align: center;">Powered by <a href="rabbitis.com" target="_blank">Rabbit Technology</a>&nbsp;&nbsp;&nbsp;<i class="fa fa-phone-square"></i> 053 50 66 777</p>
