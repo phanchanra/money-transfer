@@ -23,6 +23,7 @@ tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_transferAction},
     {data: "_id", title: "ID"},
     {data: "transferType", title: "Transfer type"},
+    {data: "productId", title: "Product"},
     {
         data: "transferDate",
         title: "Transfer date",
@@ -34,5 +35,11 @@ tabularOpts.columns = [
     {data: "senderTelephone", title: "Telephone"},
     {data: "receiverId", title: "Receiver"},
     {data: "receiverTelephone", title: "Telephone"},
+    {data: "currencyId", title: "Currency"},
+    {data: "amount", title: "Amount"},
+    {data: "customerFee", title: "Customer Fee"},
+    {data: "discountFee", title: "Discount Fee"},
+    {data: "totalFee", title: "Total Fee"},
+    {data: "totalAmount", title: "Total Amount"},
 ];
 export const TransferTabular = new Tabular.Table(tabularOpts);

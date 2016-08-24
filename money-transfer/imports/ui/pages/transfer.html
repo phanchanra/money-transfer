@@ -107,7 +107,7 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    {{> afQuickField name='amount' readonly=true value=amount}}
+                                    {{> afQuickField name='amount' value=amount}}
                                 </div>
                                 <div class="col-md-6">
 
@@ -135,8 +135,12 @@
                         </div>
                     </div>
                 </fieldset>
-
-                {{> formFooterWithButton}}
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-print"></i>&nbsp;Submit & Print</button>
+                    <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}</button>
+                </div>
+                <!--{{> formFooterWithButton}}-->
             {{/autoForm}}
         </div>
 

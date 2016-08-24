@@ -1,55 +1,65 @@
-
 <template name="generateInvoice">
     {{#if Template.subscriptionsReady}}
-    <div class="container print" id="print-invoice" style="width: 559px;">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="invoice-title" align="center">
-                    {{#with title}}
-                        <h4>{{khName}}<br>{{enName}}</h4>
-                        <h3>វិក័យប័ត្រ</h3>
-                        <p align="center">អាស័យដ្ឋាន:{{khAddress}}&nbsp;&nbsp;<i class="fa fa-phone-square"></i>&nbsp;&nbsp;{{telephone}}</p>
-                    {{/with}}
-                </div>
-                <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;"></div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <address>
-                            <strong>ID: </strong> {{_id}}<br>
-                            <strong>Transfer Type:</strong> {{transferType}}<br>
-                            <strong>Date: </strong> {{moFormat transferDate "DD/MM/YYYY"}}<br>
-                            <strong>Ref Code: </strong> {{refCode}}<br>
-                            <strong>Sender: </strong> {{sender._id}}-{{sender.name}}<br>
-                            <strong>Sender Phone :</strong> {{senderTelephone}}<br>
-                            <strong>Receiver: </strong> {{receiver._id}}-{{receiver.name}}<br>
-                            <strong>Receiver Phone :</strong> {{receiverTelephone}}
+        <div class="container print" id="print-invoice" style="width: 559px;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="invoice-title" align="center">
+                        {{#with title}}
+                            <h4>{{khName}}<br>{{enName}}</h4>
+                            <h3>វិក័យប័ត្រ</h3>
+                            <p align="center">អាស័យដ្ឋាន:{{khAddress}}&nbsp;&nbsp;<i class="fa fa-phone-square"></i>&nbsp;&nbsp;{{telephone}}
+                            </p>
+                        {{/with}}
+                    </div>
+                    <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;"></div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <address>
+                                <strong>ID: </strong> {{_id}}<br>
+                                <strong>Transfer Type:</strong> {{transferType}}<br>
+                                <strong>Date: </strong> {{moFormat transferDate "DD/MM/YYYY"}}<br>
+                                <strong>Ref Code: </strong> {{refCode}}<br>
+                                <strong>Sender: </strong> {{sender._id}}-{{sender.name}}<br>
+                                <strong>Sender Phone :</strong> {{senderTelephone}}<br>
+                                <strong>Receiver: </strong> {{receiver._id}}-{{receiver.name}}<br>
+                                <strong>Receiver Phone :</strong> {{receiverTelephone}}
 
-                        </address>
+                            </address>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <address>
+                                <strong>Product:</strong> {{product._id}}-{{product.name}}<br>
+                                <strong>Currency:</strong> {{currencyId}}<br>
+                                <strong>Amount:</strong>​ {{amount}}<br>
+                                <strong>Fee Amount:</strong> {{customerFee}}<br>
+                                <strong>Discount Fee:</strong> {{discountFee}}<br>
+                                <strong>Total Fee:</strong> {{totalFee}}<br>
+                                <strong>Total Amount:</strong> {{totalAmount}}:
+                            </address>
+                        </div>
                     </div>
-                    <div class="col-xs-6 text-right">
-                        <address>
-                            <strong>Product:</strong> {{product._id}}-{{product.name}}<br>
-                            <strong>Currency:</strong> {{currencyId}}<br>
-                            <strong>Amount:</strong>​ {{amount}}<br>
-                            <strong>Fee Amount:</strong> {{customerFee}}<br>
-                            <strong>Discount Fee:</strong> {{discountFee}}<br>
-                            <strong>Total Fee:</strong> {{totalFee}}<br>
-                            <strong>Total Amount:</strong> {{totalAmount}}:
-                        </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="text-align: center; width: 50%; float: right;">
+                        <span>Cashier Sign</span>
+                        <br><br><br><br><br>
+                        Date:............/............./.............
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="text-align: center;">
+                    <span>Thank you Please see you again!</span>
+                    <br>
+                    <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;">
+                        <p style="text-align: center;">Powered by <a href="rabbitis.com" target="_blank">Rabbit
+                            Technology</a>&nbsp;&nbsp;&nbsp;<i class="fa fa-phone-square"></i> 053 50 66 777</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12" style="text-align: center;">
-                <span >Thank you Please see you again!</span>
-                <br>
-                <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;">
-                    <p style="text-align: center;">Powered by <a href="rabbitis.com" target="_blank">Rabbit Technology</a>&nbsp;&nbsp;&nbsp;<i class="fa fa-phone-square"></i> 053 50 66 777</p>
-                </div>
-            </div>
-        </div>
-    </div>
         <div class="container" style="width: 559px;">
             <div class="row">
                 <div class="col-xs-12">
@@ -60,7 +70,8 @@
                         </div>
                         <div class="col-xs-11">
                             <address class="text-right">
-                                <button type="button" id="print" class="btn btn-primary fa fa-print"><span style="font-family: Arial;">Print</span></button>
+                                <button type="button" id="print" class="btn btn-primary fa fa-print"><span
+                                        style="font-family: Arial;">Print</span></button>
                             </address>
                         </div>
                     </div>

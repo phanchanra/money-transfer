@@ -90,6 +90,9 @@ indexTmpl.events({
 });
 
 // Form
+formTmpl.onRendered(function () {
+    $('[name="amount"]').prop("readonly", true);
+});
 formTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
@@ -192,7 +195,8 @@ formTmpl.events({
     },
     'change [name="productId"]'(e, instance){
         let productId = $(e.currentTarget).val();
-        Session.set("productId", productId);
+        //Session.set("productId", productId);
+        $('[name="currencyId"]').val('');
         clearOnchange();
         tmpCollection.remove({});
         Meteor.call("getCurrency", productId, function (error, result) {
@@ -227,15 +231,14 @@ formTmpl.events({
         }
     },
     'change [name="amount"]'(e, instance){
-        let amount = Number($(e.currentTarget).val());
+        let amount = parseFloat($(e.currentTarget).val());
+        let productId=instance.$('[name="productId"]').val();
+        let currencyId=instance.$('[name="currencyId"]').val();
         if (amount == "") {
             clearOnKeyupAmount();
         }
-        //let customerFee = instance.$('[name="customerFee"]').val();
-        //let discountFee = instance.$('[name="discountFee"]').val();
         Session.set("amount", amount);
-        //instance.totalAmount.set(calculateTotalAmount(amount, calculateAfterDiscount(customerFee, discountFee)));
-        Meteor.call("getFee", Session.get("productId"), Session.get("currencyId"), $(e.currentTarget).val(), function (error, result) {
+        Meteor.call("getFee", productId, currencyId, amount, function (error, result) {
             if (result) {
                 tmpCollection.remove({});
                 tmpCollection.insert(result);
@@ -251,10 +254,6 @@ formTmpl.events({
         let customerFee = instance.$('[name="customerFee"]').val();
         let totalFee = calculateAfterDiscount(customerFee, discountFee);
         let totalAmount = calculateTotalAmount(amount, totalFee);
-        console.log(discountFee);
-        console.log(amount);
-        console.log(customerFee);
-        console.log(totalFee);
         tmpCollection.update({}, {$set: {totalFee: totalFee, totalAmount: totalAmount}});
     }
 
@@ -280,8 +279,13 @@ let hooksObject = {
         insert(doc){
             doc.feeDoc = tmpCollection.findOne();
             return doc;
+        },
+        update(doc){
+            doc.$set.feeDoc = tmpCollection.findOne();
+            return doc;
         }
     },
+
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.transfer().close();
