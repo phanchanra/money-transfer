@@ -290,7 +290,11 @@ let hooksObject = {
         if (formType == 'update') {
             alertify.transfer().close();
         }
+        Meteor.call('invoice', result, function (err, doc) {
+            //console.log(doc);
+            alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
 
+        });
         displaySuccess();
     },
     onError (formType, error) {
