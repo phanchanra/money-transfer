@@ -19,6 +19,7 @@ Fee.generalSchema = new SimpleSchema({
     productId: {
         type: String,
         label: 'Product',
+        index:true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -32,6 +33,7 @@ Fee.generalSchema = new SimpleSchema({
         type: String,
         label: "Currency",
         defaultValue: "USD",
+        index:true,
         autoform: {
             type: "select-radio-inline",
             options: function () {

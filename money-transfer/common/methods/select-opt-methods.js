@@ -63,11 +63,15 @@ SelectOptMethods.product = new ValidatedMethod({
                     $or: [
                         {_id: {$regex: searchText, $options: 'i'}},
                         {name: {$regex: searchText, $options: 'i'}}
-                    ]
+                    ],
+                    status:"E"
                 };
             } else if (values.length) {
-                selector = {_id: {$in: values}};
+                selector = {_id: {$in: values},status:"E"};
+            }else{
+                selector={status:"E"}
             }
+
 
             let data = Product.find(selector, {limit: 10});
             data.forEach(function (value) {

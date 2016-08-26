@@ -53,6 +53,10 @@ indexTmpl.onCreated(function () {
 indexTmpl.helpers({
     tabularTable(){
         return TransferTabular;
+    },
+    selector() {
+        return {branchId: Session.get('currentBranch')};
+        // return {branchId: Session.get('currentBranch'), status: 'Thai'};
     }
 });
 
@@ -61,7 +65,7 @@ indexTmpl.events({
         alertify.transfer(fa('plus', 'Transfer'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-
+        Session.set("transferId", this._id);
         tmpCollection.insert({
                 customerFee: this.customerFee,
                 totalFee: this.totalFee,
@@ -85,6 +89,12 @@ indexTmpl.events({
         let queryParams = this._id;
         Meteor.call('invoice', queryParams, function (err, doc) {
             alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
+            // renderTemplate(invoice, doc);
+            // let mode = 'iframe'; // popup
+            // let close = mode == "popup";
+            // let options = {mode: mode, popClose: close};
+            // $("div.print").printArea(options);
+            // printPageArea('print-invoice');
         });
     }
 });
@@ -106,6 +116,20 @@ formTmpl.onCreated(function () {
     this.currencyList = new ReactiveVar();
     //this.afterDisAmountFee = new ReactiveVar();
     //this.totalAmount = new ReactiveVar();
+    // console.log(Session.get("productId"));
+    // if (Session.get("productId")) {
+    //     debugger;
+    //     Meteor.call("getCurrency", Session.get("productId"), function (error, result) {
+    //         if (result) {
+    //             currencyList.set(result);
+    //             $('[name="amount"]').prop("readonly", true);
+    //         } else {
+    //             $('[name="amount"]').prop("readonly", true);
+    //
+    //         }
+    //     });
+    // }
+
 
 });
 
@@ -232,8 +256,8 @@ formTmpl.events({
     },
     'change [name="amount"]'(e, instance){
         let amount = parseFloat($(e.currentTarget).val());
-        let productId=instance.$('[name="productId"]').val();
-        let currencyId=instance.$('[name="currencyId"]').val();
+        let productId = instance.$('[name="productId"]').val();
+        let currencyId = instance.$('[name="currencyId"]').val();
         if (amount == "") {
             clearOnKeyupAmount();
         }
@@ -255,8 +279,10 @@ formTmpl.events({
         let totalFee = calculateAfterDiscount(customerFee, discountFee);
         let totalAmount = calculateTotalAmount(amount, totalFee);
         tmpCollection.update({}, {$set: {totalFee: totalFee, totalAmount: totalAmount}});
+    },
+    'click .js-print'(e, instance){
+        Session.set("savePrint", true);
     }
-
 });
 // Show
 showTmpl.onCreated(function () {
@@ -289,12 +315,23 @@ let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.transfer().close();
-        }
-        Meteor.call('invoice', result, function (err, doc) {
-            //console.log(doc);
-            alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
+            console.log(Session.get("transferId"));
+            console.log(Session.get("savePrint"));
+            if (Session.get("savePrint")) {
+                Meteor.call('invoice', Session.get("transferId"), function (err, doc) {
+                    alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
 
-        });
+                });
+            }
+        } else {
+            if (Session.get("savePrint")) {
+                Meteor.call('invoice', result, function (err, doc) {
+                    alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
+                });
+            }
+        }
+
+
         displaySuccess();
     },
     onError (formType, error) {

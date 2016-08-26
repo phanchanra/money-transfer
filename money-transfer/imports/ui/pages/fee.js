@@ -81,6 +81,8 @@ productTmpl.events({
 });
 
 // Form
+formTmpl.onRendered(function () {
+});
 formTmpl.onCreated(function () {
     Session.set("currencyId", 'USD');
     this.autorun(()=> {
@@ -143,7 +145,7 @@ formTmpl.events({
         Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
             if (result) {
                 instance.$('[name="save"]').prop('disabled', true);
-
+                swal("Please check", "Product and currency are already exist!");
             } else {
                 instance.$('[name="save"]').prop('disabled', false);
             }
@@ -168,6 +170,7 @@ formTmpl.events({
         Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
             if (result) {
                 instance.$('[name="save"]').prop('disabled', true);
+                swal("Please check", "Product and currency are already exist!");
             } else {
                 instance.$('[name="save"]').prop('disabled', false);
             }
@@ -190,7 +193,9 @@ serviceTmpl.events({
         let ownerFee = $(e.currentTarget).val();
         let customerFee = instance.$('.customer-fee').val();
         if (ownerFee > customerFee) {
-            alertify.error("Owner Fee must be less than customer fee!");
+            //alertify.error("Owner Fee must be less than customer fee!");
+            swal("Please check owner fee", "Owner Fee must be less than customer fee!");
+            instance.$(".owner-fee").val(0);
         }
         instance.state.set(calculateAgentFee(customerFee, ownerFee));
         // let agentFee=calculateAgentFee(customerFee, ownerFee);

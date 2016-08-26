@@ -73,7 +73,7 @@ MoneyTransferRoutes.route('/customer', {
     }
 });
 
-// Product
+// Fee
 import '../imports/ui/pages/fee';
 MoneyTransferRoutes.route('/fee', {
     name: 'moneyTransfer.fee',
@@ -106,20 +106,3 @@ MoneyTransferRoutes.route('/product', {
     }
 });
 
-// // Fee
-// import '../imports/ui/pages/fee.js';
-// MoneyTransferRoutes.route('/fee', {
-//     name: 'moneyTransfer.fee',
-//     title: 'Fee',
-//     action: function (params, queryParams) {
-//         Layout.main('MoneyTransfer_fee');
-//     },
-//     breadcrumb: {
-//         //params: ['id'],
-//         //queryParams: ['show', 'color'],
-//         title: 'Fee',
-//         // icon: 'user',
-//         parent: 'moneyTransfer.home'
-//     }
-// });
-//

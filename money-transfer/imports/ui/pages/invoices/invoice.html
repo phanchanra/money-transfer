@@ -30,11 +30,11 @@
                             <address>
                                 <strong>Product:</strong> {{product._id}}-{{product.name}}<br>
                                 <strong>Currency:</strong> {{currencyId}}<br>
-                                <strong>Amount:</strong>​ {{amount}}<br>
-                                <strong>Fee Amount:</strong> {{customerFee}}<br>
+                                <strong>Amount:</strong>​ {{numFormat amount "0,0.00"}}<br>
+                                <strong>Fee Amount:</strong> {{numFormat customerFee "0,0.00"}}<br>
                                 <strong>Discount Fee:</strong> {{discountFee}}<br>
-                                <strong>Total Fee:</strong> {{totalFee}}<br>
-                                <strong>Total Amount:</strong> {{totalAmount}}:
+                                <strong>Total Fee:</strong> {{numFormat totalFee "0,0.00"}}<br>
+                                <strong>Total Amount:</strong> {{numFormat totalAmount "0,0.00"}}
                             </address>
                         </div>
                     </div>

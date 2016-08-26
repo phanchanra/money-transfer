@@ -23,52 +23,51 @@ let MoneyTransferRoutes = FlowRouter.group({
     }
 });
 
-// // Customer list
-// import '../imports/ui/reports/customer.js';
-// MoneyTransferRoutes.route('/customer-report', {
-//     name: 'moneyTransfer.customerReport',
-//     title: __('moneyTransfer.customerReport.title'),
-//     action: function (params, queryParams) {
-//         Layout.main('MoneyTransfer_customerReport');
-//     },
-//     breadcrumb: {
-//         //params: ['id'],
-//         //queryParams: ['show', 'color'],
-//         title: __('moneyTransfer.customerReport.title'),
-//         icon: 'users',
-//         parent: 'moneyTransfer.home'
-//     }
-// });
-//
-// MoneyTransferRoutes.route('/customer-report-gen', {
-//     name: 'moneyTransfer.customerReportGen',
-//     title: __('moneyTransfer.customerReport.title'),
-//     action: function (params, queryParams) {
-//         Layout.report('MoneyTransfer_customerReportGen');
-//     }
-// });
-//
-// // Order
-// import '../imports/ui/reports/order.js';
-// MoneyTransferRoutes.route('/order-report', {
-//     name: 'moneyTransfer.orderReport',
-//     title: __('moneyTransfer.orderReport.title'),
-//     action: function (params, queryParams) {
-//         Layout.main('MoneyTransfer_orderReport');
-//     },
-//     breadcrumb: {
-//         //params: ['id'],
-//         //queryParams: ['show', 'color'],
-//         title: __('moneyTransfer.orderReport.title'),
-//         icon: 'cart-plus',
-//         parent: 'moneyTransfer.home'
-//     }
-// });
-//
-// MoneyTransferRoutes.route('/order-report-gen', {
-//     name: 'moneyTransfer.orderReportGen',
-//     title: __('moneyTransfer.orderReport.title'),
-//     action: function (params, queryParams) {
-//         Layout.report('MoneyTransfer_orderReportGen');
-//     }
-// });
+// Customer list
+import '../imports/ui/pages/reports/customer';
+MoneyTransferRoutes.route('/customer-report', {
+    name: 'moneyTransfer.customerReport',
+    title: 'Customer Report',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_customerReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Customer Report',
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Transfer In
+import '../imports/ui/pages/reports/transfer-in';
+MoneyTransferRoutes.route('/transfer-in-report', {
+    name: 'moneyTransfer.transferInReport',
+    title: "Transfer In",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_transferInReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Transfer In Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Transfer Out
+import '../imports/ui/pages/reports/transfer-out';
+MoneyTransferRoutes.route('/transfer-out-report', {
+    name: 'moneyTransfer.transferOutReport',
+    title: "Transfer Out",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_transferOutReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Transfer Out Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});

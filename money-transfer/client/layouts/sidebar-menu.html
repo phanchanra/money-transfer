@@ -31,19 +31,35 @@
     {{/if}}
 
     <!--Report-->
-        <!--{{#if isInRole 'reporter' 'MoneyTransfer'}}-->
-    <!--<li class="header"><i class="fa fa-file-o"></i> REPORT</li>-->
-    <!--<li class="{{isActiveRoute name='moneyTransfer.customerReport'}}">-->
-    <!--<a href="{{pathFor 'moneyTransfer.customerReport'}}">-->
-    <!--<i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--<li class="{{isActiveRoute name='moneyTransfer.orderReport'}}">-->
-    <!--<a href="{{pathFor 'moneyTransfer.orderReport'}}">-->
-    <!--<i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.order"}}</span>-->
-    <!--</a>-->
-    <!--</li>-->
-        <!--{{/if}}-->
+    {{#if isInRole 'reporter' 'MoneyTransfer'}}
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-database"></i>
+                <span>Report</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+            <ul class="treeview-menu">
+                <li class="{{isActiveRoute name='moneyTransfer.transferInReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.transferInReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Transfer In</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.transferOutReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.transferOutReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Transfer Out</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.customerReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.customerReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>{{_ "moneyTransfer.sidebarMenu.customer"}}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+    {{/if}}
 
     <!--Settings-->
     {{#if isInRole 'setting' 'MoneyTransfer'}}

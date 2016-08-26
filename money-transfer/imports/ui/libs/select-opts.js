@@ -4,6 +4,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 // Collection
 import {Branch} from '../../../../core/imports/api/collections/branch.js';
 import {Currency} from '../../../../core/imports/api/collections/currency';
+import {Product} from '../../../imports/api/collections/product';
 export const SelectOpts = {
     branch: function (selectOne = true) {
         let list = [];
@@ -28,15 +29,26 @@ export const SelectOpts = {
 
         return list;
     },
-    currency: function (selectOne=true) {
-        let list=[];
-        if(selectOne){
+    currency: function (selectOne = true) {
+        let list = [];
+        if (selectOne) {
             Currency.find()
                 .forEach(function (obj) {
-                    list.push({label: obj._id, value:obj._id});
+                    list.push({label: obj._id, value: obj._id});
                 });
         }
         return list;
-    }
+    },
+    product: function (selectOne = true) {
+        let list = [];
+        if (selectOne) {
+            Product.find()
+                .forEach(function (obj) {
+                    list.push({label: obj._id + "-" + obj.name, value: obj._id});
+                });
+        }
+        return list;
+    },
+
 
 };
