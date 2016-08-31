@@ -39,34 +39,34 @@ MoneyTransferRoutes.route('/customer-report', {
         parent: 'moneyTransfer.home'
     }
 });
-// Transfer In
-import '../imports/ui/pages/reports/transfer-in';
-MoneyTransferRoutes.route('/transfer-in-report', {
-    name: 'moneyTransfer.transferInReport',
-    title: "Transfer In",
+// Summary Transfer
+import '../imports/ui/pages/reports/summary-transfer';
+MoneyTransferRoutes.route('/summary-transfer-report', {
+    name: 'moneyTransfer.summaryTransferReport',
+    title: "Summary Transfer",
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_transferInReport');
+        Layout.main('MoneyTransfer_summaryTransferReport');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: "Transfer In Report",
+        title: "Summary Transfer Report",
         //icon: 'users',
         parent: 'moneyTransfer.home'
     }
 });
-// Transfer Out
-import '../imports/ui/pages/reports/transfer-out';
-MoneyTransferRoutes.route('/transfer-out-report', {
-    name: 'moneyTransfer.transferOutReport',
-    title: "Transfer Out",
+// Detail Transfer
+import '../imports/ui/pages/reports/detail-transfer';
+MoneyTransferRoutes.route('/detail-transfer-report', {
+    name: 'moneyTransfer.detailTransferReport',
+    title: "Detail Transfer",
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_transferOutReport');
+        Layout.main('MoneyTransfer_detailTransferReport');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: "Transfer Out Report",
+        title: "Detail Transfer Report",
         //icon: 'users',
         parent: 'moneyTransfer.home'
     }

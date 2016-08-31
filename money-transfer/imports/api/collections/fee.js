@@ -19,7 +19,7 @@ Fee.generalSchema = new SimpleSchema({
     productId: {
         type: String,
         label: 'Product',
-        index:true,
+        index: true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -33,7 +33,7 @@ Fee.generalSchema = new SimpleSchema({
         type: String,
         label: "Currency",
         defaultValue: "USD",
-        index:true,
+        index: true,
         autoform: {
             type: "select-radio-inline",
             options: function () {
@@ -59,6 +59,34 @@ Fee.generalSchema = new SimpleSchema({
             }
         }
     },
+    lastOpeningAmount: {
+        type: Number,
+        decimal: true,
+        min: 0
+    },
+    lastCustomerFee: {
+        type: Number,
+        decimal: true,
+        optional: true,
+        min: 0
+    },
+    lastOwnerFee: {
+        type: Number,
+        decimal: true,
+        optional: true,
+        min: 0
+    },
+    lastAgentFee: {
+        type: Number,
+        decimal: true,
+        optional: true,
+        min: 0
+    },
+    lastOpeningAmountFee: {
+        type: Number,
+        decimal: true,
+        min: 0
+    }
 });
 
 Fee.serviceSchema = new SimpleSchema({

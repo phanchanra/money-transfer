@@ -32,6 +32,10 @@ Customer.generalSchema = new SimpleSchema({
             }
         }
     },
+    notificationDay:{
+        type:Number,
+        label:"Notification Day",
+    },
     dob: {
         type: Date,
         label: 'Date of birth',

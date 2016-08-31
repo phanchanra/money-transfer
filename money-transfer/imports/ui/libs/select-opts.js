@@ -49,6 +49,15 @@ export const SelectOpts = {
         }
         return list;
     },
+    transfer: function (selectOne = true) {
+        let list = [];
+        if (selectOne) {
+            list.push({label: '(Select One)', value: ''});
+        }
+        list.push({label: "In", value: "In"});
+        list.push({label: "Out", value: "Out"});
 
+        return list;
+    },
 
 };

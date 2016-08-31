@@ -124,19 +124,18 @@ Transfer.accountSchema = new SimpleSchema({
         type: String,
         label: 'Currency',
         autoform: {
-            type: 'universe-select'
-            //,
-            // options: function () {
-            //      return SelectOpts.currency();
-            //     // if (Meteor.isClient && this.isSet) {
-            //     //
-            //     //     Meteor.call("getCurrency", this.field('productId').value, function (error, result) {
-            //     //         if (result) {
-            //     //             return result;
-            //     //         }
-            //     //     });
-            //     // }
-            // }
+            type: 'universe-select',
+            options: function () {
+                 return SelectOpts.currency();
+                // if (Meteor.isClient && this.isSet) {
+                //
+                //     Meteor.call("getCurrency", this.field('productId').value, function (error, result) {
+                //         if (result) {
+                //             return result;
+                //         }
+                //     });
+                // }
+            }
         }
     },
     amount: {
@@ -205,6 +204,58 @@ Transfer.accountSchema = new SimpleSchema({
         type: Object,
         optional: true,
         blackbox: true
+    },
+    //last balance
+    lastOpeningAmountFee : {
+        type: Number,
+        decimal:true,
+        optional: true
+    },
+    lastOpeningAmount: {
+        type: Number,
+        decimal:true,
+        optional: true
+    },
+    lastCustomerFee: {
+        type: Number,
+        decimal:true,
+        optional: true
+    },
+    lastOwnerFee:{
+        type: Number,
+        optional: true,
+        decimal:true
+    },
+    lastAgentFee: {
+        type: Number,
+        optional: true,
+        decimal:true
+    },
+    //tmp
+    tmpOpeningAmount: {
+        type: Number,
+        decimal:true,
+        optional:true
+    },
+    tmpCustomerFee: {
+        type: Number,
+        decimal: true,
+        optional:true
+    },
+    tmpOwnerFee: {
+        type: Number,
+        decimal:true,
+        optional:true
+    },
+    tmpAgentFee: {
+        type: Number,
+        decimal: true,
+        optional:true
+    },
+    tmpOpeningAmountFee: {
+        type: Number,
+        decimal:true,
+        optional:true
     }
 });
 

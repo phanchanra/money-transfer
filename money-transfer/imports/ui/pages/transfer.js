@@ -25,6 +25,7 @@ import '../../../../core/client/components/form-footer.js';
 
 // Collection
 import {Transfer} from '../../api/collections/transfer';
+import {Fee} from '../../api/collections/fee';
 let tmpCollection = new Mongo.Collection(null);
 
 // Tabular
@@ -66,10 +67,12 @@ indexTmpl.events({
     },
     'click .js-update' (event, instance) {
         Session.set("transferId", this._id);
+        //tmpCollection.findOne();
         tmpCollection.insert({
                 customerFee: this.customerFee,
                 totalFee: this.totalFee,
-                totalAmount: this.totalAmount
+                totalAmount: this.totalAmount,
+                feeDoc:{fromAmount: this.fromAmount, toAmount:this.toAmount, customerFee:this.customerFee, ownerFee:this.ownerFee, agentFee:this.agentFee}
             }
         );
 
@@ -205,6 +208,9 @@ invoice.events({
     }
 });
 formTmpl.events({
+    'change [name="transferType"]'(e, instance){
+        Session.set("transferType", $(e.currentTarget).val());
+    },
     'change [name="senderId"]'(e, instance){
         let senderId = $(e.currentTarget).val();
         Meteor.call("getCustomerInfo", senderId, function (error, result) {
@@ -219,7 +225,7 @@ formTmpl.events({
     },
     'change [name="productId"]'(e, instance){
         let productId = $(e.currentTarget).val();
-        //Session.set("productId", productId);
+        Session.set("productId", productId);
         $('[name="currencyId"]').val('');
         clearOnchange();
         tmpCollection.remove({});
@@ -269,6 +275,7 @@ formTmpl.events({
 
                 let totalAmount = calculateTotalAmount(amount, result.customerFee);
                 tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+                //, feeDoc: result
             }
         });
     },
@@ -304,10 +311,13 @@ let hooksObject = {
     before: {
         insert(doc){
             doc.feeDoc = tmpCollection.findOne();
+
             return doc;
         },
         update(doc){
+            console.log(tmpCollection.findOne());
             doc.$set.feeDoc = tmpCollection.findOne();
+
             return doc;
         }
     },
@@ -315,8 +325,8 @@ let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.transfer().close();
-            console.log(Session.get("transferId"));
-            console.log(Session.get("savePrint"));
+            //console.log(Session.get("transferId"));
+            //console.log(Session.get("savePrint"));
             if (Session.get("savePrint")) {
                 Meteor.call('invoice', Session.get("transferId"), function (err, doc) {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));

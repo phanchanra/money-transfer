@@ -7,7 +7,8 @@ import {moment} from  'meteor/momentjs:moment';
 
 // Collection
 import {Company} from '../../../../core/imports/api/collections/company.js';
-import {Customer} from '../../../imports/api/collections/customer.js';
+import {Transfer} from '../../../imports/api/collections/transfer';
+
 
 export const customerReport = new ValidatedMethod({
     name: 'moneyTransfer.customerReport',
@@ -49,7 +50,7 @@ export const customerReport = new ValidatedMethod({
             }
 
             let index = 1;
-            Customer.find(selector)
+            Transfer.find(selector)
                 .forEach(function (obj) {
                     // Do something
                     obj.index = index;

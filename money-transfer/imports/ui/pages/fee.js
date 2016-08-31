@@ -21,7 +21,7 @@ import {__} from '../../../../core/common/libs/tapi18n-callback-helper.js';
 import '../../../../core/client/components/loading.js';
 import '../../../../core/client/components/column-action.js';
 import '../../../../core/client/components/form-footer.js';
-
+import BigNumber from 'bignumber.js';
 // Collection
 import {Fee} from '../../api/collections/fee';
 
@@ -219,7 +219,19 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
+    before: {
+        insert(doc){
+            doc.lastOpeningAmount = $('[name="openingAmount"]').val();
+            doc.lastOpeningAmountFee = $('[name="openingAmount"]').val();
+            return doc;
+        },
+        update(doc){
+            doc.$set.lastOpeningAmount = $('[name="openingAmount"]').val();
+            doc.$set.lastOpeningAmountFee = $('[name="openingAmount"]').val();
 
+            return doc;
+        }
+    },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.fee().close();

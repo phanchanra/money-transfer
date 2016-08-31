@@ -89,15 +89,7 @@
                             <legend>Receiver</legend>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Reveiver</label>
-                                        <div class="input-group">
-                                            <!--{{> afFieldInput name='discountFee'}}-->
-                                            {{> afFieldInput name='receiverId'}}
-                                            <span class="input-group-addon input-sm">%</span>
-                                        </div>
-                                    </div>
-
+                                    {{> afQuickField name='receiverId'}}
                                 </div>
                                 <div class="col-md-6">
                                     {{> afQuickField name='receiverTelephone' value=receiverPhone}}

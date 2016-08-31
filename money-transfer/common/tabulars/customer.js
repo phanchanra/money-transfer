@@ -24,6 +24,7 @@ tabularOpts.columns = [
     {data: "_id", title: "ID"},
     {data: "name", title: "Name"},
     {data: "gender", title: "Gender"},
+    {data: "notificationDay", title: "Notification"},
     {
         data: "dob",
         title: "Date of birth",
