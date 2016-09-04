@@ -42,51 +42,46 @@ Fee.generalSchema = new SimpleSchema({
         },
 
     },
-    accountId: {
-        type: String,
-        label: 'Account ID',
+    // openingAmount: {
+    //     type: Number,
+    //     label: 'Opening amount',
+    //     decimal: true,
+    //     autoform: {
+    //         type: 'inputmask',
+    //         inputmaskOptions: function () {
+    //             let symbol = currencySymbol.get();
+    //             return inputmaskOptions.currency({prefix: `${symbol} `});
+    //         }
+    //     }
+    // },
+    'os': {
+        type: Object,
         optional: true,
     },
-    openingAmount: {
+    'os.openingBalance': {
         type: Number,
-        label: 'Opening amount',
-        decimal: true,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let symbol = currencySymbol.get();
-                return inputmaskOptions.currency({prefix: `${symbol} `});
-            }
-        }
+        decimal:true
     },
-    lastOpeningAmount: {
+    'os.customerFee': {
         type: Number,
-        decimal: true,
-        min: 0
+        decimal:true,
+        optional: true
     },
-    lastCustomerFee: {
+    'os.ownerFee': {
         type: Number,
-        decimal: true,
-        optional: true,
-        min: 0
+        decimal:true,
+        optional: true
     },
-    lastOwnerFee: {
+    'os.agentFee': {
         type: Number,
-        decimal: true,
-        optional: true,
-        min: 0
+        decimal:true,
+        optional: true
     },
-    lastAgentFee: {
+    'os.balanceAmountFee': {
         type: Number,
-        decimal: true,
-        optional: true,
-        min: 0
+        decimal:true,
+        optional: true
     },
-    lastOpeningAmountFee: {
-        type: Number,
-        decimal: true,
-        min: 0
-    }
 });
 
 Fee.serviceSchema = new SimpleSchema({

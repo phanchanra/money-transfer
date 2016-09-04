@@ -72,23 +72,6 @@ MoneyTransferRoutes.route('/customer', {
         parent: 'moneyTransfer.home'
     }
 });
-
-// Fee
-import '../imports/ui/pages/fee';
-MoneyTransferRoutes.route('/fee', {
-    name: 'moneyTransfer.fee',
-    title: 'Fee',
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_fee');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: 'Fee',
-        // icon: 'user',
-        parent: 'moneyTransfer.home'
-    }
-});
 // Product
 import '../imports/ui/pages/product.js';
 MoneyTransferRoutes.route('/product', {
@@ -105,4 +88,37 @@ MoneyTransferRoutes.route('/product', {
         parent: 'moneyTransfer.home'
     }
 });
+// Fee
+import '../imports/ui/pages/fee';
+MoneyTransferRoutes.route('/fee', {
+    name: 'moneyTransfer.fee',
+    title: 'Fee',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_fee');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Fee',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Bank Account
+import '../imports/ui/pages/bank-account';
+MoneyTransferRoutes.route('/bank-account/:productId/:currencyId', {
+    name: 'moneyTransfer.bankAccount',
+    title: 'Bank Account',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_bankAccount');
+    },
+    breadcrumb: {
+        params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Bank Account',
+        // icon: 'user',
+        parent: 'moneyTransfer.fee'
+    }
+});
+
 

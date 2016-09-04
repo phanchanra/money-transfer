@@ -1,7 +1,7 @@
 # Money Transfer
 
 ## Todo
-* [ ] Product
+* [X] Product
 ****
     Product.schema = new SimpleSchema({
         name: {
@@ -78,7 +78,7 @@
     
     });
 ****
-* [ ] Customer
+* [X] Customer
 ****
     Customer.schema = new SimpleSchema({
         name: {
@@ -296,7 +296,7 @@
         }
     });
 ****
-* [ ] Exchange
+* [X] Exchange
 ****
     Exchange.schema = new SimpleSchema({
         date: {
@@ -386,10 +386,10 @@
         }
     });
 ****
-* [ ] CashIn
+* [X] BankAccount
 ****
-    CashIn.schema = new SimpleSchema({
-        cashInDate: {
+    BankAccount.schema = new SimpleSchema({
+        inputDate: {
             type: Date,
             defaultValue: moment().toDate(),
             autoform: {
@@ -402,19 +402,23 @@
                 }
             }
         },
-        'cash':{
-            type:Object
+        type:{
+            type:String
         },
-        'cash.KHR': {
+        amount: {
             type: Number,
             label:"KHR"
         },
-        'cash.USD': {
+        agentFee: {
             type: Number,
             decimal:true,
             label:"USD"
         },
-        'cash.THB': {
+        balanceagentFee: {
+            type: Number,
+            label:"THB"
+        },
+        balanceAmount: {
             type: Number,
             label:"THB"
         },

@@ -113,6 +113,7 @@ formTmpl.onCreated(function () {
             this.subscribe('moneyTransfer.transferById', currentData._id);
         }
     });
+    Session.set("type", false);
     //insertTmpCollection({});
     this.senderPhone = new ReactiveVar();
     this.receiverPhone = new ReactiveVar();
@@ -132,8 +133,6 @@ formTmpl.onCreated(function () {
     //         }
     //     });
     // }
-
-
 });
 
 formTmpl.helpers({
@@ -208,9 +207,10 @@ invoice.events({
     }
 });
 formTmpl.events({
-    'change [name="transferType"]'(e, instance){
-        Session.set("transferType", $(e.currentTarget).val());
-    },
+    // 'change [name="type"]'(e, instance){
+    //     Session.set("transferType", $(e.currentTarget).val());
+    //     alert(Session.get("transferType"));
+    // },
     'change [name="senderId"]'(e, instance){
         let senderId = $(e.currentTarget).val();
         Meteor.call("getCustomerInfo", senderId, function (error, result) {
@@ -311,11 +311,11 @@ let hooksObject = {
     before: {
         insert(doc){
             doc.feeDoc = tmpCollection.findOne();
-
+            //console.log(doc);
             return doc;
         },
         update(doc){
-            console.log(tmpCollection.findOne());
+            //console.log(tmpCollection.findOne());
             doc.$set.feeDoc = tmpCollection.findOne();
 
             return doc;

@@ -24,7 +24,7 @@ import '../../../../core/client/components/form-footer.js';
 import BigNumber from 'bignumber.js';
 // Collection
 import {Fee} from '../../api/collections/fee';
-
+import {Transfer} from '../../api/collections/transfer';
 // Tabular
 import {FeeTabular} from '../../../common/tabulars/fee';
 //function
@@ -39,7 +39,6 @@ let indexTmpl = Template.MoneyTransfer_fee,
     formTmpl = Template.MoneyTransfer_feeForm,
     showTmpl = Template.MoneyTransfer_feeShow,
     serviceTmpl = Template.customObjectFieldForService;
-
 
 // Index
 indexTmpl.onCreated(function () {
@@ -70,7 +69,13 @@ indexTmpl.events({
     },
     'click .js-display' (event, instance) {
         alertify.feeShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
-    }
+    },
+    'click .add-balance': function (e, t) {
+        //var productId = FlowRouter.getParam('productId');
+        let productId = this.productId;
+        let currencyId = this.currencyId;
+        FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
+    },
 });
 
 // Product

@@ -22,7 +22,10 @@
         <li><a href="#" class="js-display"><i class="fa fa-eye"></i> Show</a></li>
     {{/columnAction}}
 </template>
-
+<!--Action-->
+<template name="MoneyTransfer_addOpeningBalance">
+    <button type="button" class="btn btn-primary add-balance" title="Add opening balance">+</button>
+</template>
 <!--Product-->
 <template name="MoneyTransfer_feeProduct">
     <a href="#" class="js-display-product">{{productId}}</a>
@@ -40,8 +43,6 @@
                             <legend>General</legend>
                             {{> afQuickField name='productId'}}
                             {{> afQuickField name='currencyId'}}
-                            {{> afQuickField name='accountId'}}
-                            {{> afQuickField name='openingAmount'}}
                         </fieldset>
                     </div>
                     <div class="col-md-9">

@@ -17,17 +17,25 @@ if (Meteor.isClient) {
 export const Transfer = new Mongo.Collection('moneyTransfer_transfer');
 
 Transfer.generalSchema = new SimpleSchema({
-    transferType: {
+    type: {
         type: String,
-        optional: true,
-        defaultValue: 'In',
         autoform: {
             type: 'select-radio-inline',
             options: function () {
-                return [
-                    {label: 'In', value: 'In'},
-                    {label: 'Out', value: 'Out'}
-                ];
+                if (Meteor.isClient) {
+                    if (Session.get("type")) {
+                        return [
+                            {label: 'CD', value: 'CD'},
+                            {label: 'CW', value: 'CW'},
+                        ];
+                    } else {
+                        return [
+                            {label: 'IN', value: 'IN'},
+                            {label: 'OUT', value: 'OUT'}
+                        ];
+
+                    }
+                }
             }
         }
     },
@@ -47,6 +55,7 @@ Transfer.generalSchema = new SimpleSchema({
     senderId: {
         type: String,
         label: 'Sender',
+        optional: true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -64,6 +73,7 @@ Transfer.generalSchema = new SimpleSchema({
     senderTelephone: {
         type: String,
         label: 'Sender telephone',
+        optional: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -74,6 +84,7 @@ Transfer.generalSchema = new SimpleSchema({
     receiverId: {
         type: String,
         label: 'Receiver',
+        optional: true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -91,6 +102,7 @@ Transfer.generalSchema = new SimpleSchema({
     receiverTelephone: {
         type: String,
         label: 'Receiver telephone',
+        optional: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -104,7 +116,8 @@ Transfer.generalSchema = new SimpleSchema({
         optional: true
     },
     branchId: {
-        type: String
+        type: String,
+        optional: true,
     }
 });
 
@@ -126,7 +139,7 @@ Transfer.accountSchema = new SimpleSchema({
         autoform: {
             type: 'universe-select',
             options: function () {
-                 return SelectOpts.currency();
+                return SelectOpts.currency();
                 // if (Meteor.isClient && this.isSet) {
                 //
                 //     Meteor.call("getCurrency", this.field('productId').value, function (error, result) {
@@ -137,6 +150,11 @@ Transfer.accountSchema = new SimpleSchema({
                 // }
             }
         }
+    },
+    accountId: {
+        type: String,
+        label: "Account Id",
+        optional: true
     },
     amount: {
         type: Number,
@@ -150,10 +168,26 @@ Transfer.accountSchema = new SimpleSchema({
             }
         }
     },
+    balanceAmount: {
+        type: Number,
+        decimal: true,
+        optional: true,
+    },
+    agentFee: {
+        type: Number,
+        decimal: true,
+        optional: true
+    },
+    balanceAgentFee: {
+        type: Number,
+        decimal: true,
+        optional: true
+    },
     customerFee: {
         type: Number,
         label: 'Customer fee',
         decimal: true,
+        optional: true,
         min: 0,
         autoform: {
             type: 'inputmask',
@@ -167,13 +201,15 @@ Transfer.accountSchema = new SimpleSchema({
         type: Number,
         label: 'Discount fee',
         decimal: true,
+        optional: true,
         min: 0,
-        max:100
+        max: 100
     },
     totalFee: {
         type: Number,
         label: 'Total fee',
         decimal: true,
+        optional: true,
         min: 0,
         autoform: {
             type: 'inputmask',
@@ -187,6 +223,7 @@ Transfer.accountSchema = new SimpleSchema({
         type: Number,
         label: 'Total amount',
         decimal: true,
+        optional: true,
         min: 0,
         autoform: {
             type: 'inputmask',
@@ -198,6 +235,7 @@ Transfer.accountSchema = new SimpleSchema({
     },
     refCode: {
         type: String,
+        optional: true,
         label: 'Ref code'
     },
     feeDoc: {
@@ -205,58 +243,11 @@ Transfer.accountSchema = new SimpleSchema({
         optional: true,
         blackbox: true
     },
-    //last balance
-    lastOpeningAmountFee : {
-        type: Number,
-        decimal:true,
-        optional: true
-    },
-    lastOpeningAmount: {
-        type: Number,
-        decimal:true,
-        optional: true
-    },
-    lastCustomerFee: {
-        type: Number,
-        decimal:true,
-        optional: true
-    },
-    lastOwnerFee:{
-        type: Number,
-        optional: true,
-        decimal:true
-    },
-    lastAgentFee: {
-        type: Number,
-        optional: true,
-        decimal:true
-    },
-    //tmp
-    tmpOpeningAmount: {
-        type: Number,
-        decimal:true,
-        optional:true
-    },
-    tmpCustomerFee: {
-        type: Number,
-        decimal: true,
-        optional:true
-    },
-    tmpOwnerFee: {
-        type: Number,
-        decimal:true,
-        optional:true
-    },
-    tmpAgentFee: {
-        type: Number,
-        decimal: true,
-        optional:true
-    },
-    tmpOpeningAmountFee: {
-        type: Number,
-        decimal:true,
+    tmpBalance:{
+        type:Object,
         optional:true
     }
+
 });
 
 Transfer.attachSchema([

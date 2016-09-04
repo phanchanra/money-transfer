@@ -15,31 +15,23 @@ import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 import {Transfer} from '../../imports/api/collections/transfer';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/transfer.html');
+Meteor.isClient && require('../../imports/ui/pages/bank-account.html');
 
-tabularOpts.name = 'moneyTransfer.transfer';
+tabularOpts.name = 'moneyTransfer.bankAccount';
 tabularOpts.collection = Transfer;
 tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_transferAction},
+    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_bankAccountAction},
     {data: "_id", title: "ID"},
-    {data: "type", title: "type"},
-    {data: "productId", title: "Product"},
+    {data: "type", title: "Type"},
+    {data: "accountId", title: "Account"},
     {
         data: "transferDate",
-        title: "Transfer date",
+        title: "Input Date",
         render: function (val, type, doc) {
             return moment(val).format('DD/MM/YYYY');
         }
     },
-    {data: "senderId", title: "Sender"},
-    {data: "senderTelephone", title: "Tel"},
-    {data: "receiverId", title: "Receiver"},
-    {data: "receiverTelephone", title: "Tel"},
-    {data: "currencyId", title: "Cur"},
     {data: "amount", title: "Amount"},
-    {data: "customerFee", title: "Cus Fee"},
-    {data: "discountFee", title: "Dis Fee"},
-    {data: "totalFee", title: "Total Fee"},
-    {data: "totalAmount", title: "Total Amount"},
+    {data: "balanceAmount", title: "Balance Amount"},
 ];
-export const TransferTabular = new Tabular.Table(tabularOpts);
+export const BankAccountTabular = new Tabular.Table(tabularOpts);

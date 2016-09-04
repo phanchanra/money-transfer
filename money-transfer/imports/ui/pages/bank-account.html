@@ -1,0 +1,85 @@
+<!--Index-->
+<template name="MoneyTransfer_bankAccount">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+        <label class="pull-right" style="color: #0a6ebd;">{{label}}</label>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Tabular-->
+        {{> tabular table=tabularTable selector=selector class="table table-striped table-bordered table-condensed"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="MoneyTransfer_bankAccountAction">
+    {{#columnAction}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> Show</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="MoneyTransfer_bankAccountForm">
+    {{#if Template.subscriptionsReady}}
+
+        <div class="box-body">
+            {{#autoForm collection=collection id="MoneyTransfer_bankAccountForm" doc=form.doc type=form.type}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend>Bank Account->{{label}}</legend>
+                            <b>Input Date</b>
+                            {{> afQuickField name='transferDate' label=false}}
+                            {{> afQuickField name='type'}}
+                            {{> afQuickField name='accountId'}}
+                            {{> afQuickField name='amount'}}
+                            {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
+
+                        </fieldset>
+                    </div>
+                </div>
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        </div>
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>
+
+<!--Show-->
+<template name="MoneyTransfer_bankAccountShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <fieldset>
+                        <legend>General</legend>
+                        <dt>ID</dt>
+                        <dd>{{_id}}</dd>
+                        <dt>Name</dt>
+                        <dd>{{name}}</dd>
+                        <dt>Register Date</dt>
+                        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{status}}</dd>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Contact</legend>
+                        <dt>Address</dt>
+                        <dd>{{address}}</dd>
+                    </fieldset>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
