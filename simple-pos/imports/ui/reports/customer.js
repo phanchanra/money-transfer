@@ -76,7 +76,8 @@ indexTmpl.helpers({
 });
 
 indexTmpl.events({
-    'click .btn-print'(event, instance){
+    'click .btn-print-this'(event, instance){
+        // Print This Package
         let opts = {
             // debug: true,               // show the iframe for debugging
             // importCSS: true,            // import page CSS
@@ -90,8 +91,15 @@ indexTmpl.events({
             // formValues: true            // preserve input/form values
         };
 
+        $('#print-data').printThis(opts);
+    },
+    'click .btn-print-area'(event, instance){
+        // Print Area Package
+        let opts = {
+            //
+        };
 
-        $('#print-data').printThis();
+        $('#print-data').printArea(opts);
     }
 });
 
