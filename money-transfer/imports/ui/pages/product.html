@@ -25,9 +25,9 @@
 
 <!--Form-->
 <template name="MoneyTransfer_productForm">
-    {{#if Template.subscriptionsReady}}
+    <div class="box-body">
 
-        <div class="box-body">
+        {{#if Template.subscriptionsReady}}
             {{#autoForm collection=collection id="MoneyTransfer_productForm" doc=form.doc type=form.type}}
                 <div class="row">
                     <div class="col-md-6">
@@ -51,11 +51,11 @@
                 </div>
                 {{> formFooterWithButton}}
             {{/autoForm}}
-        </div>
+        {{else}}
+            {{> loading}}
+        {{/if}}
 
-    {{else}}
-        {{> loading}}
-    {{/if}}
+    </div>
 </template>
 
 <!--Show-->
