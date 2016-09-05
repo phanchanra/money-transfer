@@ -13,33 +13,55 @@ Transfer.before.insert(function (userId, doc) {
     doc._id = idGenerator.genWithPrefix(Transfer, prefix, 8);
 
     if (doc.type == "CD") {
-        doc.type = "CD";
         if (checkBalanceAmount) {
             doc.balanceAmount = checkBalanceAmount.balanceAmount + doc.amount;
         } else {
             doc.balanceAmount = doc.amount;
         }
-    } else {
-        doc.type = "CW";
+    } else if (doc.type == "CW") {
         if (checkBalanceAmount) {
             doc.balanceAmount = checkBalanceAmount.balanceAmount - doc.amount;
         } else {
             doc.balanceAmount = -doc.amount;
         }
     }
+    // else if (doc.type == "IN") {
+    //     doc.balanceAmount = checkBalanceAmount.balanceAmount + doc.amount;
+    // } else if (doc.type == "OUT") {
+    //     doc.balanceAmount = checkBalanceAmount.balanceAmount - doc.amount;
+    // }
 });
 
 Transfer.after.insert(function (userId, doc) {
     let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId});
     if (fee.productId == doc.productId && fee.currencyId == doc.currencyId) {
-        Fee.direct.update(
-            fee._id,
-            {
-                $set: {
-                    os: {openingBalance: doc.balanceAmount}
+        if (doc.type == "CD") {
+            Fee.direct.update(
+                fee._id,
+                {
+                    $set: {
+                        os: {
+                            date: doc.transferDate,
+                            balanceAmount: doc.balanceAmount,
+                            balanceAmountFee: doc.balanceAmount
+                        }
+                    }
                 }
-            }
-        );
+            );
+        } else if (doc.type == "CW") {
+            Fee.direct.update(
+                fee._id,
+                {
+                    $set: {
+                        os: {
+                            date: doc.transferDate,
+                            balanceAmount: doc.balanceAmount,
+                            balanceAmountFee: doc.balanceAmount
+                        }
+                    }
+                }
+            );
+        }
     }
 });
 
@@ -74,7 +96,10 @@ Transfer.after.update(function (userId, doc) {
                 fee._id,
                 {
                     $set: {
-                        os: {openingBalance: newBalanceAmountCDCD}
+                        os: {
+                            balanceAmount: newBalanceAmountCDCD,
+                            balanceAmountFee: newBalanceAmountCDCD
+                        }
                     }
                 }
             );
@@ -92,7 +117,10 @@ Transfer.after.update(function (userId, doc) {
                 fee._id,
                 {
                     $set: {
-                        os: {openingBalance: newBalanceAmountCDCW}
+                        os: {
+                            balanceAmount: newBalanceAmountCDCW,
+                            balanceAmountFee: newBalanceAmountCDCW,
+                        }
                     }
                 }
             );
@@ -110,7 +138,10 @@ Transfer.after.update(function (userId, doc) {
                 fee._id,
                 {
                     $set: {
-                        os: {openingBalance: newBalanceAmountCWCW}
+                        os: {
+                            balanceAmount: newBalanceAmountCWCW,
+                            balanceAmountFee: newBalanceAmountCWCW,
+                        }
                     }
                 }
             );
@@ -128,7 +159,10 @@ Transfer.after.update(function (userId, doc) {
                 fee._id,
                 {
                     $set: {
-                        os: {openingBalance: newBalanceAmountCWCD}
+                        os: {
+                            balanceAmount: newBalanceAmountCWCD,
+                            balanceAmountFee: newBalanceAmountCWCD,
+                        }
                     }
                 }
             );
@@ -143,7 +177,10 @@ Transfer.after.remove(function (userId, doc) {
             fee._id,
             {
                 $set: {
-                    os: {openingBalance: transfer.balanceAmount}
+                    os: {
+                        balanceAmount: transfer.balanceAmount,
+                        balanceAmountFee: transfer.balanceAmount
+                    }
                 }
             }
         );

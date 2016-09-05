@@ -56,7 +56,7 @@ indexTmpl.helpers({
         return TransferTabular;
     },
     selector() {
-        return {branchId: Session.get('currentBranch')};
+        return {branchId: Session.get('currentBranch'), type: {$in: ['IN', 'OUT']}};
         // return {branchId: Session.get('currentBranch'), status: 'Thai'};
     }
 });

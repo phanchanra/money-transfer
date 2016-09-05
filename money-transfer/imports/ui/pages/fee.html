@@ -29,6 +29,26 @@
 <!--Product-->
 <template name="MoneyTransfer_feeProduct">
     <a href="#" class="js-display-product">{{productId}}</a>
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with productShow}}
+                <dl class="dl-horizontal">
+                    <fieldset>
+                        <legend>Fee</legend>
+                        <dt>Product</dt>
+                        <dd>{{productId}}</dd>
+                        <dt>Name</dt>
+                        <dd>{{name}}</dd>
+                        <dt>Status</dt>
+                        <dd>{{status}}</dd>
+                    </fieldset>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+
 </template>
 
 <!--Form-->
@@ -99,7 +119,7 @@
                         <dt>Account Id</dt>
                         <dd>{{accountId}}</dd>
                         <dt>Opening Amount</dt>
-                        <dd>{{openingAmount}}</dd>
+                        <dd>{{balanceAmount}}</dd>
                     </fieldset>
 
                     <fieldset>

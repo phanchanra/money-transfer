@@ -54,7 +54,11 @@ indexTmpl.helpers({
         return BankAccountTabular;
     },
     selector() {
-        return {productId: FlowRouter.getParam('productId'), currencyId: FlowRouter.getParam('currencyId')};
+        return {
+            productId: FlowRouter.getParam('productId'),
+            currencyId: FlowRouter.getParam('currencyId'),
+            type: {$in: ['CD', 'CW']}
+        };
         // return {branchId: Session.get('currentBranch'), status: 'Thai'};
     },
     label(){
@@ -171,6 +175,7 @@ let hooksObject = {
 
             return doc;
         }
+
     },
     onSuccess (formType, result) {
         if (formType == 'update') {

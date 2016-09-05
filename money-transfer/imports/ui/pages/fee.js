@@ -24,7 +24,7 @@ import '../../../../core/client/components/form-footer.js';
 import BigNumber from 'bignumber.js';
 // Collection
 import {Fee} from '../../api/collections/fee';
-import {Transfer} from '../../api/collections/transfer';
+import {Product} from '../../api/collections/product';
 // Tabular
 import {FeeTabular} from '../../../common/tabulars/fee';
 //function
@@ -45,6 +45,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('fee', {size: 'lg'});
     createNewAlertify('feeShow');
+
 });
 
 indexTmpl.helpers({
@@ -52,7 +53,16 @@ indexTmpl.helpers({
         return FeeTabular;
     }
 });
-
+productTmpl.onCreated(function () {
+    this.autorun(()=> {
+        this.subscribe('moneyTransfer.productById', this.productId);
+    });
+});
+productTmpl.helpers({
+    productShow(){
+        return Product.findOne({_id: this.productId});
+    }
+});
 indexTmpl.events({
     'click .js-create' (event, instance) {
         alertify.fee(fa('plus', 'Fee'), renderTemplate(formTmpl));

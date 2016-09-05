@@ -243,9 +243,10 @@ Transfer.accountSchema = new SimpleSchema({
         optional: true,
         blackbox: true
     },
-    tmpBalance:{
+    lastBalance:{
         type:Object,
-        optional:true
+        optional:true,
+        blackbox: true
     }
 
 });

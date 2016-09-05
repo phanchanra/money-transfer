@@ -42,23 +42,12 @@ Fee.generalSchema = new SimpleSchema({
         },
 
     },
-    // openingAmount: {
-    //     type: Number,
-    //     label: 'Opening amount',
-    //     decimal: true,
-    //     autoform: {
-    //         type: 'inputmask',
-    //         inputmaskOptions: function () {
-    //             let symbol = currencySymbol.get();
-    //             return inputmaskOptions.currency({prefix: `${symbol} `});
-    //         }
-    //     }
-    // },
+
     'os': {
         type: Object,
         optional: true,
     },
-    'os.openingBalance': {
+    'os.balanceAmount': {
         type: Number,
         decimal:true
     },

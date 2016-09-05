@@ -37,6 +37,7 @@ tabularOpts.columns = [
     {data: "receiverTelephone", title: "Tel"},
     {data: "currencyId", title: "Cur"},
     {data: "amount", title: "Amount"},
+    {data: "balanceAmount", title: "Bal Amount"},
     {data: "customerFee", title: "Cus Fee"},
     {data: "discountFee", title: "Dis Fee"},
     {data: "totalFee", title: "Total Fee"},
