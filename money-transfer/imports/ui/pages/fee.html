@@ -24,31 +24,11 @@
 </template>
 <!--Action-->
 <template name="MoneyTransfer_addOpeningBalance">
-    <button type="button" class="btn btn-primary add-balance" title="Add opening balance">+</button>
+    <button type="button" class="btn btn-default add-balance" title="Add opening balance">+</button>
 </template>
 <!--Product-->
 <template name="MoneyTransfer_feeProduct">
     <a href="#" class="js-display-product">{{productId}}</a>
-    <div class="box-body">
-        {{#if Template.subscriptionsReady}}
-            {{#with productShow}}
-                <dl class="dl-horizontal">
-                    <fieldset>
-                        <legend>Fee</legend>
-                        <dt>Product</dt>
-                        <dd>{{productId}}</dd>
-                        <dt>Name</dt>
-                        <dd>{{name}}</dd>
-                        <dt>Status</dt>
-                        <dd>{{status}}</dd>
-                    </fieldset>
-                </dl>
-            {{/with}}
-        {{else}}
-            {{> loading}}
-        {{/if}}
-    </div>
-
 </template>
 
 <!--Form-->
@@ -142,6 +122,32 @@
         {{else}}
             {{> loading}}
         {{/if}}
+    </div>
+</template>
+<!--Show-->
+<template name="MoneyTransfer_showProduct">
+    <div class="box-body">
+        <!--{{#if Template.subscriptionsReady}}-->
+
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>Product</legend>
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Product </dt>
+                    <dd>{{name}}</dd>
+                    <dt>Date</dt>
+                    <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                    <dt>Status</dt>
+                    <dd>{{status}}</dd>
+                    <dt>Address</dt>
+                    <dd>{{address}}</dd>
+                </fieldset>
+            </dl>
+
+        <!--{{else}}-->
+            <!--{{> loading}}-->
+        <!--{{/if}}-->
     </div>
 </template>
 <!------------Custom contact array field-------------------->

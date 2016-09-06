@@ -35,7 +35,7 @@ import './fee.html';
 let indexTmpl = Template.MoneyTransfer_fee,
     actionTmpl = Template.MoneyTransfer_feeAction,
     productTmpl = Template.MoneyTransfer_feeProduct,
-    //productShowTmpl=Template.MoneyTransfer_productShow,
+    productShowTmpl = Template.MoneyTransfer_showProduct,
     formTmpl = Template.MoneyTransfer_feeForm,
     showTmpl = Template.MoneyTransfer_feeShow,
     serviceTmpl = Template.customObjectFieldForService;
@@ -53,16 +53,7 @@ indexTmpl.helpers({
         return FeeTabular;
     }
 });
-productTmpl.onCreated(function () {
-    this.autorun(()=> {
-        this.subscribe('moneyTransfer.productById', this.productId);
-    });
-});
-productTmpl.helpers({
-    productShow(){
-        return Product.findOne({_id: this.productId});
-    }
-});
+
 indexTmpl.events({
     'click .js-create' (event, instance) {
         alertify.fee(fa('plus', 'Fee'), renderTemplate(formTmpl));
@@ -85,13 +76,15 @@ indexTmpl.events({
         let productId = this.productId;
         let currencyId = this.currencyId;
         FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
-    },
+    }
 });
 
 // Product
 productTmpl.events({
     'click .js-display-product' (event, instance) {
-        alertify.feeShow(fa('eye', 'Product'), renderTemplate(productTmpl, {_id: this.productId}));
+        Meteor.call("getProduct", this.productId, function (error, result) {
+            alertify.feeShow(fa('eye', 'Product'), renderTemplate(productShowTmpl, result));
+        });
     }
 });
 

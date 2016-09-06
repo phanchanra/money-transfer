@@ -25,44 +25,42 @@ Transfer.before.insert(function (userId, doc) {
             doc.balanceAmount = -doc.amount;
         }
     }
-    // else if (doc.type == "IN") {
-    //     doc.balanceAmount = checkBalanceAmount.balanceAmount + doc.amount;
-    // } else if (doc.type == "OUT") {
-    //     doc.balanceAmount = checkBalanceAmount.balanceAmount - doc.amount;
-    // }
 });
 
 Transfer.after.insert(function (userId, doc) {
-    let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId});
-    if (fee.productId == doc.productId && fee.currencyId == doc.currencyId) {
-        if (doc.type == "CD") {
-            Fee.direct.update(
-                fee._id,
-                {
-                    $set: {
-                        os: {
-                            date: doc.transferDate,
-                            balanceAmount: doc.balanceAmount,
-                            balanceAmountFee: doc.balanceAmount
+    Meteor.defer(function () {
+        let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId});
+        if (fee.productId == doc.productId && fee.currencyId == doc.currencyId) {
+            if (doc.type == "CD") {
+                Fee.direct.update(
+                    fee._id,
+                    {
+                        $set: {
+                            os: {
+                                date: doc.transferDate,
+                                balanceAmount: doc.balanceAmount,
+                                balanceAmountFee: doc.balanceAmount
+                            }
                         }
                     }
-                }
-            );
-        } else if (doc.type == "CW") {
-            Fee.direct.update(
-                fee._id,
-                {
-                    $set: {
-                        os: {
-                            date: doc.transferDate,
-                            balanceAmount: doc.balanceAmount,
-                            balanceAmountFee: doc.balanceAmount
+                );
+            } else if (doc.type == "CW") {
+                Fee.direct.update(
+                    fee._id,
+                    {
+                        $set: {
+                            os: {
+                                date: doc.transferDate,
+                                balanceAmount: doc.balanceAmount,
+                                balanceAmountFee: doc.balanceAmount
+                            }
                         }
                     }
-                }
-            );
+                );
+            }
         }
-    }
+    });
+
 });
 
 Transfer.after.update(function (userId, doc) {
