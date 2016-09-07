@@ -230,125 +230,41 @@ Transfer.after.update(function (userId, doc) {
 
         }
     );
-    // let prevDoc = this.previous;
-    // let setObj = {};
-    // let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId});
-    //
-    // //condition 1 IN => IN
-    // let resultAmountInIn = prevDoc.amount - (prevDoc.feeDoc.agentFee + doc.amount);
-    // let newBalanceAmountInIn = (prevDoc.balanceAmount + doc.feeDoc.agentFee) - resultAmountInIn;
-    // //condition 2 IN => OUT
-    // let resultAmountInOut = preDoc.amount + doc.amount;
-    // let newBalanceAmountInOut = preDoc.balanceAmount - resultAmountInOut;
-    // //condition 3 OUT => OUT
-    // let resultAmountOutOut = preDoc.balanceAmount - doc.amount;
-    // let newBalanceAmountOutOut = preDoc.amount + resultAmountOutOut;
-    // //condition 4 OUT => IN
-    // let resultAmountOutIn = preDoc.amount + preDoc.balanceAmount;
-    // let newBalanceAmountOutIn = resultAmountOutIn + doc.amount;
-    //
-    // Meteor.defer(function () {
-    //     if (prevDoc.type == doc.type && doc.type == "IN") {
-    //         setObj.balanceAmount = newBalanceAmountInIn;
-    //         setObj['lastBalance.balanceAmount'] = newBalanceAmountInIn;
-    //         setObj['lastBalance.customerFee'] = doc.customerFee;
-    //         setObj['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-    //         setObj['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-    //         setObj['lastBalance.balanceAmountFee'] = newBalanceAmountInIn + doc.feeDoc.agentFee;
-    //         Transfer.direct.update(
-    //             doc._id, {
-    //                 $set: setObj
-    //             }
-    //         );
-    //     } else if (prevDoc.type != doc.type && doc.type == "OUT") {
-    //         setObj.balanceAmount = newBalanceAmountInOut;
-    //         setObj['lastBalance.balanceAmount'] = newBalanceAmountInOut;
-    //         setObj['lastBalance.customerFee'] = doc.customerFee;
-    //         setObj['lastBalance.ownerFee'] = doc.ownerFee;
-    //         setObj['lastBalance.agentFee'] = doc.agentFee;
-    //         setObj['lastBalance.balanceAmountFee'] = newBalanceAmountInOut + doc.agentFee;
-    //         Transfer.direct.update(
-    //             doc._id, {
-    //                 $set: setObj
-    //             }
-    //         );
-    //     } else if (prevDoc.type == doc.type && doc.type == "OUT") {
-    //         setObj.balanceAmount = newBalanceAmountOutOut;
-    //         setObj['lastBalance.balanceAmount'] = newBalanceAmountOutOut;
-    //         setObj['lastBalance.customerFee'] = doc.customerFee;
-    //         setObj['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-    //         setObj['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-    //         setObj['lastBalance.balanceAmountFee'] = newBalanceAmountOutOut + doc.feeDoc.agentFee;
-    //         Transfer.direct.update(
-    //             doc._id, {
-    //                 $set: setObj
-    //             }
-    //         );
-    //
-    //     } else if (prevDoc.type != doc.type && doc.type == "IN") {
-    //         setObj.balanceAmount = newBalanceAmountOutIn;
-    //         setObj['lastBalance.balanceAmount'] = newBalanceAmountOutIn;
-    //         setObj['lastBalance.customerFee'] = doc.customerFee;
-    //         setObj['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-    //         setObj['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-    //         setObj['lastBalance.balanceAmountFee'] = newBalanceAmountOutIn + doc.feeDoc.agentFee;
-    //         Transfer.direct.update(
-    //             doc._id, {
-    //                 $set: setObj
-    //             }
-    //         );
-    //
-    //     }
-    // if (doc.type == "In") {
-    //     // Transfer.update(
-    //     //     doc._id,
-    //     //     {
-    //     //         $set: {
-    //     //             lastOpeningAmount: doc.tmpOpeningAmount + doc.amount,
-    //     //             lastCustomerFee: doc.tmpCustomerFee + doc.customerFee,
-    //     //             lastOwnerFee: doc.tmpOwnerFee + doc.feeDoc.ownerFee,
-    //     //             lastAgentFee: doc.tmpAgentFee + doc.feeDoc.agentFee,
-    //     //             lastOpeningAmountFee: doc.tmpOpeningAmountFee + totalInAmountAgentFee
-    //     //         }
-    //     //     }
-    //     // );
-    //     //update Fee in
-    //     Fee.update(
-    //         fee._id,
-    //         {
-    //             $set: {
-    //                 lastOpeningAmount: doc.tmpOpeningAmount + doc.amount,
-    //                 lastCustomerFee: doc.tmpCustomerFee + doc.customerFee,
-    //                 lastOwnerFee: doc.tmpOwnerFee + doc.feeDoc.ownerFee,
-    //                 lastAgentFee: doc.tmpAgentFee + doc.feeDoc.agentFee,
-    //                 lastOpeningAmountFee: doc.tmpOpeningAmountFee + doc.feeDoc.agentFee
-    //             }
-    //         }
-    //     );
-    // } else {
-    //     //update Transfer out
-    //     // Transfer.update(doc._id, {
-    //     //     $set: {
-    //     //         lastOpeningAmount: doc.tmpOpeningAmount - doc.amount,
-    //     //         lastCustomerFee: doc.tmpCustomerFee + doc.customerFee,
-    //     //         lastOwnerFee: doc.tmpOwnerFee + doc.feeDoc.ownerFee,
-    //     //         lastAgentFee: doc.tmpAgentFee + doc.feeDoc.agentFee,
-    //     //         lastOpeningAmountFee: totalOutAmountAgentFee - doc.amount
-    //     //     }
-    //     // });
-    //     //update Fee in
-    //     Fee.update(
-    //         fee._id,
-    //         {
-    //             $set: {
-    //                 lastOpeningAmount: doc.tmpOpeningAmount - doc.amount,
-    //                 lastCustomerFee: doc.tmpCustomerFee + doc.customerFee,
-    //                 lastOwnerFee: doc.tmpOwnerFee + doc.feeDoc.ownerFee,
-    //                 lastAgentFee: doc.tmpAgentFee + doc.feeDoc.agentFee,
-    //                 lastOpeningAmountFee: doc.tmpOpeningAmountFee + doc.agentFee
-    //             }
-    //         }
-    //     );
-    // }
-    //});
+});
+Transfer.after.remove(function (userId, doc) {
+    let feeUpdateOnTransfer = {};
+    let transferOnTransfer = Transfer.findOne({
+        productId: doc.productId,
+        currencyId: doc.currencyId,
+        _id: {$ne: doc._id}
+    }, {sort: {_id: -1}});
+    let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
+
+    Meteor.defer(function () {
+        if (transferOnTransfer == null || transferOnTransfer == "undefined") {
+            Fee.direct.update(
+                fee._id,
+                {
+                    $set: {
+                        os: {
+                            balanceAmount: 0,
+                            balanceAmountFee: 0
+                        }
+                    }
+                }
+            );
+        } else {
+            feeUpdateOnTransfer['os.balanceAmount'] = transferOnTransfer.lastBalance.balanceAmount;
+            feeUpdateOnTransfer['os.balanceAmountFee'] = transferOnTransfer.lastBalance.balanceAmountFee;
+            feeUpdateOnTransfer['os.customerFee'] = transferOnTransfer.lastBalance.customerFee;
+            feeUpdateOnTransfer['os.ownerFee'] = transferOnTransfer.lastBalance.ownerFee;
+            feeUpdateOnTransfer['os.agentFee'] = transferOnTransfer.lastBalance.agentFee;
+            Fee.direct.update(
+                fee._id,
+                {
+                    $set: feeUpdateOnTransfer
+                }
+            );
+        }
+    });
 });

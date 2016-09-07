@@ -167,23 +167,7 @@ Transfer.after.update(function (userId, doc) {
         }
     });
 });
-Transfer.after.remove(function (userId, doc) {
-    // let transfer = Transfer.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
-    // let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
-    // Meteor.defer(function () {
-    //     Fee.direct.update(
-    //         fee._id,
-    //         {
-    //             $set: {
-    //                 os: {
-    //                     balanceAmount: transfer.balanceAmount,
-    //                     balanceAmountFee: transfer.balanceAmount
-    //                 }
-    //             }
-    //         }
-    //     );
-    // });
-});
+
 
 
 

@@ -108,7 +108,8 @@ export const detailTransferReport = new ValidatedMethod({
                             }
                         }
                     }
-                }, {
+                },
+                {
                     $group: {
                         _id: null,
                         data: {
