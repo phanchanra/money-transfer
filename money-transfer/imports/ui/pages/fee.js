@@ -150,7 +150,7 @@ formTmpl.events({
         let productId = $(e.currentTarget).val();
         Session.set("productId", productId);
         let currencySymbol = Session.get("currencyId");
-        Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
+        Meteor.call("productAvailable", productId, currencySymbol, this._id, function (error, result) {
             if (result) {
                 instance.$('[name="save"]').prop('disabled', true);
                 swal("Please check", "Product and currency are already exist!");
@@ -175,7 +175,7 @@ formTmpl.events({
 
         Session.set("currencyId", currencySymbol);
         let productId = Session.get("productId");
-        Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
+        Meteor.call("productAvailable", productId, currencySymbol, this._id, function (error, result) {
             if (result) {
                 instance.$('[name="save"]').prop('disabled', true);
                 swal("Please check", "Product and currency are already exist!");
