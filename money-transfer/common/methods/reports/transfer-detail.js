@@ -10,8 +10,8 @@ import {Company} from '../../../../core/imports/api/collections/company.js';
 import {Transfer} from '../../../imports/api/collections/transfer';
 import {Exchange} from '../../../../core/imports/api/collections/exchange'
 
-export const summaryTransferReport = new ValidatedMethod({
-    name: 'moneyTransfer.sumTransferReport',
+export const transferDetailReport = new ValidatedMethod({
+    name: 'moneyTransfer.transferDetailReport',
     mixins: [CallPromiseMixin],
     validate: null,
     run(params) {
@@ -28,7 +28,7 @@ export const summaryTransferReport = new ValidatedMethod({
             // let date = _.trim(_.words(params.date, /[^To]+/g));
             let branch = params.branch;
             let product = params.product;
-            let transferType = params.transferType;
+            let type = params.type;
             let date = params.repDate;
             let fDate = moment(date[0]).toDate();
             let tDate = moment(date[1]).add(1, 'days').toDate();
@@ -52,10 +52,9 @@ export const summaryTransferReport = new ValidatedMethod({
             if (!_.isEmpty(product)) {
                 selector.productId = {$in: product};
             }
-            if (!_.isEmpty(transferType)) {
-                selector.transferType = {$in: transferType};
+            if (!_.isEmpty(type)) {
+                selector.type = {$in: type};
             }
-
             //let index = 1;
             // Transfer.find(selector)
             //     .forEach(function (obj) {
@@ -70,42 +69,37 @@ export const summaryTransferReport = new ValidatedMethod({
             // if (content.length > 0) {
             //     data.content = content;
             // }
+            ////
             let transfers = Transfer.aggregate([
                 {
                     $match: selector
                 },
                 {
-                    //lookup for product
                     $lookup: {
-                        from: "moneyTransfer_product",//collection name
-                        localField: "productId", //via id
-                        foreignField: "_id",//id product
-                        as: "productDoc"//get doc
+                        from: "moneyTransfer_product",
+                        localField: "productId",
+                        foreignField: "_id",
+                        as: "productDoc"
                     }
                 },
-                {$unwind: {path: '$productDoc'}},
+                { $unwind: { path: '$productDoc' } },
                 {
-                    $group: {
-                        _id: {
-                            currencyId: "$currencyId",//group by currency
-                            productId: "$productId"//group by productId
-                        },
-
-                        originCustomerFee: {$sum: '$customerFee'},
-                        origintotalFee: {$sum: '$totalFee'},
-                        originAmount: {$sum: '$amount'},
-                        productDoc: {$last: "$productDoc"},
+                    $project: {
+                        currencyId: 1,
+                        productId: 1,
+                        productDoc: 1,
+                        transferDate: 1,
                         sumProduct: {
                             $sum: {
                                 $cond: {//condition sum by currency and product
-                                    if: {$eq: ["$currencyId", "THB"]},
-                                    then: {$divide: ["$amount", 4000]},
+                                    if: { $eq: ["$currencyId", "THB"] },
+                                    then: { $divide: ["$amount", 40] },
                                     else: {
                                         $cond: {
                                             if: {
                                                 $eq: ['$currencyId', 'KHR']
                                             },
-                                            then: {$divide: ["$amount", 4000]},
+                                            then: { $divide: ["$amount", 4000] },
                                             else: "$amount"
 
                                         }
@@ -113,19 +107,6 @@ export const summaryTransferReport = new ValidatedMethod({
                                 }
                             }
                         }
-                    }
-
-                },
-                {
-                    $group: {
-                        _id: '$_id.currencyId',//group by currency for sum
-                        data: {
-                            $addToSet: {
-                                productDoc: '$productDoc',//add to array
-                                sumProduct: '$sumProduct'//
-                            }
-                        },
-                        totalSumProduct: {$sum: '$sumProduct'}
                     }
                 },
                 {
@@ -135,16 +116,16 @@ export const summaryTransferReport = new ValidatedMethod({
                             $addToSet: "$$ROOT"
                         },
                         total: {
-                            $sum: "$totalSumProduct"
+                            $sum: "$sumProduct"
                         }
                     }
                 }
-
             ]);
             if(transfers.length > 0) {
                 data.content = transfers[0].data;
                 data.footer.total = transfers[0].total;
             }
+            console.log(data);
             return data
         }
     }

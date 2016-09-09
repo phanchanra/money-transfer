@@ -54,8 +54,8 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({label: '(Select One)', value: ''});
         }
-        list.push({label: "In", value: "In"});
-        list.push({label: "Out", value: "Out"});
+        list.push({label: "IN", value: "IN"});
+        list.push({label: "OUT", value: "OUT"});
 
         return list;
     },

@@ -25,6 +25,7 @@ import BigNumber from 'bignumber.js';
 // Collection
 import {Fee} from '../../api/collections/fee';
 import {Product} from '../../api/collections/product';
+import {Transfer} from '../../api/collections/transfer';
 // Tabular
 import {FeeTabular} from '../../../common/tabulars/fee';
 //function
@@ -52,6 +53,7 @@ indexTmpl.helpers({
     tabularTable(){
         return FeeTabular;
     }
+
 });
 
 indexTmpl.events({
@@ -78,7 +80,8 @@ indexTmpl.events({
         FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
     }
 });
-
+Template.MoneyTransfer_addOpeningBalance.helpers({
+});
 // Product
 productTmpl.events({
     'click .js-display-product' (event, instance) {

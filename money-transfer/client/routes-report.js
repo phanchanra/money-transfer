@@ -23,50 +23,50 @@ let MoneyTransferRoutes = FlowRouter.group({
     }
 });
 
-// Customer list
-import '../imports/ui/pages/reports/customer';
-MoneyTransferRoutes.route('/customer-report', {
-    name: 'moneyTransfer.customerReport',
-    title: 'Customer Report',
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_customerReport');
-    },
-    breadcrumb: {
-        //params: ['id'],
-        //queryParams: ['show', 'color'],
-        title: 'Customer Report',
-        //icon: 'users',
-        parent: 'moneyTransfer.home'
-    }
-});
-// Summary Transfer
-import '../imports/ui/pages/reports/summary-transfer';
-MoneyTransferRoutes.route('/summary-transfer-report', {
-    name: 'moneyTransfer.summaryTransferReport',
+// Transfer Summary
+import '../imports/ui/pages/reports/transfer-summary';
+MoneyTransferRoutes.route('/transfer-summary-report', {
+    name: 'moneyTransfer.transferSummaryReport',
     title: "Summary Transfer",
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_summaryTransferReport');
+        Layout.main('MoneyTransfer_transferSummaryReport');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: "Summary Transfer Report",
+        title: "Transfer Summary  Report",
         //icon: 'users',
         parent: 'moneyTransfer.home'
     }
 });
 // Detail Transfer
-import '../imports/ui/pages/reports/detail-transfer';
-MoneyTransferRoutes.route('/detail-transfer-report', {
-    name: 'moneyTransfer.detailTransferReport',
+import '../imports/ui/pages/reports/transfer-detail';
+MoneyTransferRoutes.route('/transfer-detail-report', {
+    name: 'moneyTransfer.transferDetailReport',
     title: "Detail Transfer",
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_detailTransferReport');
+        Layout.main('MoneyTransfer_transferDetailReport');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: "Detail Transfer Report",
+        title: "Transfer Detail Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Transfer Transaction
+import '../imports/ui/pages/reports/transfer-transaction';
+MoneyTransferRoutes.route('/transfer-transaction-report', {
+    name: 'moneyTransfer.transferTransactionReport',
+    title: "Transfer Transaction",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_transferTransactionReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Transfer Transaction Report",
         //icon: 'users',
         parent: 'moneyTransfer.home'
     }

@@ -69,16 +69,13 @@ indexTmpl.events({
         Session.set("transferId", this._id);
         //tmpCollection.findOne();
         tmpCollection.insert({
-                customerFee: this.customerFee,
                 totalFee: this.totalFee,
                 totalAmount: this.totalAmount,
-                feeDoc: {
-                    fromAmount: this.fromAmount,
-                    toAmount: this.toAmount,
-                    customerFee: this.customerFee,
-                    ownerFee: this.ownerFee,
-                    agentFee: this.agentFee
-                }
+                fromAmount: this.feeDoc.fromAmount,
+                toAmount: this.feeDoc.toAmount,
+                customerFee: this.feeDoc.customerFee,
+                ownerFee: this.feeDoc.ownerFee,
+                agentFee: this.feeDoc.agentFee
             }
         );
 
@@ -113,6 +110,7 @@ formTmpl.onRendered(function () {
     $('[name="amount"]').prop("readonly", true);
 });
 formTmpl.onCreated(function () {
+
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
@@ -330,11 +328,9 @@ let hooksObject = {
         update(doc){
             //console.log(doc);
             doc.$set.feeDoc = tmpCollection.findOne();
-
             return doc;
         }
     },
-
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.transfer().close();

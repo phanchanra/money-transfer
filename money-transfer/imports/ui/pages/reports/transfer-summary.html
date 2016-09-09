@@ -1,16 +1,18 @@
 <!--Report-->
-<template name="MoneyTransfer_summaryTransferReport">
+<template name="MoneyTransfer_transferSummaryReport">
     <div class="box-body">
         <!--Form-->
-        {{#autoForm schema=schema id="MoneyTransfer_summaryTransferReport" type="normal"}}
+        {{#autoForm schema=schema id="MoneyTransfer_transferSummaryReport" type="normal"}}
             <div class="row">
                 <div class="col-md-6">
                     {{> afQuickField name="product"}}
+                    {{> afQuickField name="type"}}
                     {{> afQuickField name="branch"}}
                 </div>
                 <div class="col-md-6">
                     {{> afQuickField name="repDate"}}
-                    {{> afQuickField name="transferType"}}
+                    {{> afQuickField name="exchange"}}
+
                 </div>
             </div>
             {{> formFooterWithButton}}
@@ -39,7 +41,7 @@
                                 <div style="width: 100%">
                                     <div style="width: 50%; float: left">
                                         <div><strong>Branch:</strong> {{branch}}</div>
-                                        <div><strong>Product Type:</strong> {{transferType}}</div>
+                                        <div><strong>Type:</strong> {{type}}</div>
                                     </div>
 
                                     <div style="width: 50%; float: right">
@@ -47,6 +49,9 @@
                                             {{moFormat repDate.[0] "DD/MM/YYYY"}}
                                             -
                                             {{moFormat repDate.[1] "DD/MM/YYYY"}}
+                                        </div>
+                                        <div><strong>Exchange:</strong>
+                                            {{exchangeObj}}
                                         </div>
                                     </div>
                                 </div>
@@ -60,37 +65,67 @@
                                     <th>Currency</th>
                                     <th>Product</th>
                                     <th>Amount</th>
+                                    <th>Cus Fee</th>
+                                    <th>Dis%</th>
+                                    <th>To Fee</th>
+                                    <th>To Amount</th>
                                 </tr>
                                 </thead>
 
                                 <tbody class="rpt-content-body">
                                 {{#each content}}
-                                    <tr>
-                                        <td rowspan="2">{{no @index}}</td>
-                                        <td rowspan="2">{{_id}}</td>
-                                        <!--<td></td>-->
-                                        <!--<td></td>-->
+                                    <tr style="background-color: lightyellow;">
+                                        <td align="center">{{no @index}}</td>
+                                        <td colspan="7">{{_id}}</td>
                                     </tr>
                                     {{#each obj in data}}
                                         <tr>
-                                            <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                            <!--{{#if obj.count}}-->
-                                                <!--<td rowspan="{{count}}"></td>-->
-                                                <td>{{obj.productDoc._id}}-{{obj.productDoc.name}}</td>
-                                                <td>{{obj.sumProduct}}</td>
-                                            <!--{{/if}}-->
+                                            <td colspan="2"></td>
+                                            <td>{{obj.productDoc._id}}-{{obj.productDoc.name}}</td>
+                                            <td align="right">{{numFormat obj.amount "0,0.00"}}</td>
+                                            <td align="right">{{numFormat obj.customerFee "0,0.00"}}</td>
+                                            <td align="right">{{obj.discountFee}}</td>
+                                            <td align="right">{{numFormat obj.totalFee "0,0.00"}}</td>
+                                            <td align="right">{{numFormat obj.totalAmount "0,0.00"}}</td>
+
                                         </tr>
                                     {{/each}}
                                     <tr>
                                         <td colspan="3" style="text-align: right;">Sub Total:</td>
-
-                                        <td style="background-color: lightgrey;">{{totalSumProduct}}</td>
+                                        <td align="right" style="background-color: lightgrey;">
+                                            {{numFormat totalAmount "0,0.00"}}
+                                        </td>
+                                        <td align="right" style="background-color: lightgrey;">
+                                            {{numFormat totalCustomerFee "0,0.00"}}
+                                        </td>
+                                        <td align="right" style="background-color: lightgrey;">
+                                            {{totalDiscountFee}}
+                                        </td>
+                                        <td align="right" style="background-color: lightgrey;">
+                                            {{numFormat totalTotalFee "0,0.00"}}
+                                        </td>
+                                        <td align="right" style="background-color: lightgrey;">
+                                            {{numFormat totalTotalAmount "0,0.00"}}
+                                        </td>
                                     </tr>
                                 {{/each}}
                                 <tr>
                                     <td colspan="3" style="text-align: right;">Grand Total:</td>
-
-                                    <td style="background-color: lightgrey;">{{footer.total}}</td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.total "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalCustomerFee "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{footer.totalDiscountFee}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalTotalFee "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalTotalAmount "0,0.00"}}
+                                    </td>
                                 </tr>
                                 </tbody>
 

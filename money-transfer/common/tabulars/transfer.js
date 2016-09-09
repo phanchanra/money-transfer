@@ -41,6 +41,8 @@ tabularOpts.columns = [
     {data: "customerFee", title: "Cus Fee"},
     {data: "discountFee", title: "Dis Fee"},
     {data: "totalFee", title: "Total Fee"},
+    {data: "agentFee", title: "Agent Fee"},
     {data: "totalAmount", title: "Total Amount"},
 ];
+tabularOpts.extraFields=['feeDoc'];
 export const TransferTabular = new Tabular.Table(tabularOpts);
