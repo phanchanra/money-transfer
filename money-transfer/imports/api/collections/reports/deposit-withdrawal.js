@@ -6,7 +6,7 @@ import {moment} from 'meteor/momentjs:moment';
 import {dateRangePickerOpts} from '../../../../../core/client/libs/date-range-picker-opts';
 import {SelectOpts} from '../../../ui/libs/select-opts.js';
 
-export const TransferDetailSchema = new SimpleSchema({
+export const DepositWithdrawalSchema = new SimpleSchema({
 
     repDate: {
         type: [Date],
@@ -24,7 +24,11 @@ export const TransferDetailSchema = new SimpleSchema({
         autoform: {
             type: "select2",
             options: function () {
-                return SelectOpts.transfer(false);
+                return SelectOpts.depositWithdrawal(false);
+                // return [
+                //     {label: 'BTB', value: '001'},
+                //     {label: 'BMC', value: '002'},
+                // ];
             },
             afFieldInput: {
                 select2Options: {
@@ -52,6 +56,10 @@ export const TransferDetailSchema = new SimpleSchema({
             type: "select2",
             options: function () {
                 return SelectOpts.branch(false);
+                // return [
+                //     {label: 'BTB', value: '001'},
+                //     {label: 'BMC', value: '002'},
+                // ];
             },
             afFieldInput: {
                 select2Options: {
@@ -71,5 +79,6 @@ export const TransferDetailSchema = new SimpleSchema({
             }
         }
     }
+
 
 });

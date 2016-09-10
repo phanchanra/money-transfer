@@ -10,8 +10,8 @@ import {Company} from '../../../../core/imports/api/collections/company.js';
 import {Transfer} from '../../../imports/api/collections/transfer';
 import {Exchange} from '../../../../core/imports/api/collections/exchange'
 
-export const transferDetailReport = new ValidatedMethod({
-    name: 'moneyTransfer.transferDetailReport',
+export const depositWithdrawalReport = new ValidatedMethod({
+    name: 'moneyTransfer.depositWithdrawalReport',
     mixins: [CallPromiseMixin],
     validate: null,
     run(params) {
@@ -36,6 +36,7 @@ export const transferDetailReport = new ValidatedMethod({
             let exchange = Exchange.findOne(params.exchange);
             params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';
 
+
             /****** Title *****/
             data.title = Company.findOne();
 
@@ -58,24 +59,26 @@ export const transferDetailReport = new ValidatedMethod({
             if (!_.isEmpty(type)) {
                 selector.type = {$in: type};
             }
-            //let index = 1;
-            // Transfer.find(selector)
-            //     .forEach(function (obj) {
-            //         // Do something
-            //         obj.index = index;
-            //
-            //         content.push(obj);
-            //
-            //         index++;
-            //     });
-            //
-            // if (content.length > 0) {
-            //     data.content = content;
-            // }
-            ////
+
             let transfers = Transfer.aggregate([
                 {
                     $match: selector
+                },
+                {
+                    $project: {
+                        coefficient: {
+                            $multiply: [{
+                                $cond: [{$eq: ["$type", "CW"]}, -1, 1]
+                            }, 1]
+                        },
+                        productId: 1,
+                        amount: 1,
+                        currencyId: 1,
+                        transferDate: 1,
+                        type: 1,
+                        accountId:1
+                    },
+
                 },
                 {
                     $lookup: {
@@ -85,48 +88,54 @@ export const transferDetailReport = new ValidatedMethod({
                         as: "productDoc"
                     }
                 },
-                { $unwind: { path: '$productDoc' } },
                 {
-                    $project: {
-                        currencyId: 1,
-                        productId: 1,
-                        productDoc: 1,
-                        transferDate: 1,
-                        sumProduct: {
+
+                    $group: {
+                        _id: '$currencyId',
+                        subAmount: {
+                            $sum: {$multiply: ["$amount", "$coefficient"]}
+
+                        },
+                        totalAmountUSD: {
                             $sum: {
-                                $cond: {//condition sum by currency and product
-                                    if: { $eq: ["$currencyId", "THB"] },
-                                    then: { $divide: ["$amount", exchange.rates.THB] },
+
+                                $cond: {
+                                    if: {
+                                        $eq: ["$currencyId", "KHR"]
+                                    },
+                                    then: {$divide: [{$multiply: ["$amount", "$coefficient"]}, exchange.rates.KHR]},
                                     else: {
                                         $cond: {
                                             if: {
-                                                $eq: ['$currencyId', 'KHR']
+                                                $eq: ['$currencyId', "THB"],
                                             },
-                                            then: { $divide: ["$amount", exchange.rates.KHR] },
-                                            else: "$amount"
-
+                                            then: {$divide: [{$multiply: ["$amount", "$coefficient"]}, exchange.rates.THB]},
+                                            else: {$multiply: ["$amount", "$coefficient"]}
                                         }
                                     }
                                 }
                             }
+                        },
+                        productsCDCW: {
+                            $addToSet: '$$ROOT'
                         }
+
                     }
                 },
                 {
                     $group: {
                         _id: null,
                         data: {
-                            $addToSet: "$$ROOT"
+                            $addToSet: '$$ROOT'
                         },
-                        total: {
-                            $sum: "$sumProduct"
-                        }
+                        totalAmount: {$sum: '$totalAmountUSD'},
                     }
                 }
+
             ]);
-            if(transfers.length > 0) {
+            if (transfers.length > 0) {
                 data.content = transfers[0].data;
-                data.footer.total = transfers[0].total;
+                data.footer.totalAmount = transfers[0].totalAmount;
             }
             console.log(data);
             return data

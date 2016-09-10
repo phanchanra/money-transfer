@@ -71,3 +71,35 @@ MoneyTransferRoutes.route('/transfer-transaction-report', {
         parent: 'moneyTransfer.home'
     }
 });
+// Deposit withdrawal
+import '../imports/ui/pages/reports/deposit-withdrawal';
+MoneyTransferRoutes.route('/deposit-withdrawal-report', {
+    name: 'moneyTransfer.depositWithdrawalReport',
+    title: "Deposit Withdrawal",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_depositWithdrawalReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Deposit Withdrawal Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Balance Outstanding
+import '../imports/ui/pages/reports/balance-outstanding';
+MoneyTransferRoutes.route('/balance-outstanding-report', {
+    name: 'moneyTransfer.transferBalanceOutstandingReport',
+    title: "Balance Outstanding",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_transferBalanceOutstandingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Balance Outstanding Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});

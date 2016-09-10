@@ -10,8 +10,8 @@ import {Company} from '../../../../core/imports/api/collections/company.js';
 import {Transfer} from '../../../imports/api/collections/transfer';
 import {Exchange} from '../../../../core/imports/api/collections/exchange'
 
-export const transferDetailReport = new ValidatedMethod({
-    name: 'moneyTransfer.transferDetailReport',
+export const transferBalanceOutstandingReport = new ValidatedMethod({
+    name: 'moneyTransfer.transferBalanceOutstandingReport',
     mixins: [CallPromiseMixin],
     validate: null,
     run(params) {
@@ -58,71 +58,9 @@ export const transferDetailReport = new ValidatedMethod({
             if (!_.isEmpty(type)) {
                 selector.type = {$in: type};
             }
-            //let index = 1;
-            // Transfer.find(selector)
-            //     .forEach(function (obj) {
-            //         // Do something
-            //         obj.index = index;
-            //
-            //         content.push(obj);
-            //
-            //         index++;
-            //     });
-            //
-            // if (content.length > 0) {
-            //     data.content = content;
-            // }
-            ////
-            let transfers = Transfer.aggregate([
-                {
-                    $match: selector
-                },
-                {
-                    $lookup: {
-                        from: "moneyTransfer_product",
-                        localField: "productId",
-                        foreignField: "_id",
-                        as: "productDoc"
-                    }
-                },
-                { $unwind: { path: '$productDoc' } },
-                {
-                    $project: {
-                        currencyId: 1,
-                        productId: 1,
-                        productDoc: 1,
-                        transferDate: 1,
-                        sumProduct: {
-                            $sum: {
-                                $cond: {//condition sum by currency and product
-                                    if: { $eq: ["$currencyId", "THB"] },
-                                    then: { $divide: ["$amount", exchange.rates.THB] },
-                                    else: {
-                                        $cond: {
-                                            if: {
-                                                $eq: ['$currencyId', 'KHR']
-                                            },
-                                            then: { $divide: ["$amount", exchange.rates.KHR] },
-                                            else: "$amount"
 
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    $group: {
-                        _id: null,
-                        data: {
-                            $addToSet: "$$ROOT"
-                        },
-                        total: {
-                            $sum: "$sumProduct"
-                        }
-                    }
-                }
+            let transfers = Transfer.aggregate([
+
             ]);
             if(transfers.length > 0) {
                 data.content = transfers[0].data;

@@ -59,5 +59,15 @@ export const SelectOpts = {
 
         return list;
     },
+    depositWithdrawal: function (selectOne = true) {
+        let list = [];
+        if (selectOne) {
+            list.push({label: '(Select One)', value: ''});
+        }
+        list.push({label: "CD", value: "CD"});
+        list.push({label: "CW", value: "CW"});
+
+        return list;
+    },
 
 };
