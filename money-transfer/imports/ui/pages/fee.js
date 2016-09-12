@@ -30,6 +30,7 @@ import {Transfer} from '../../api/collections/transfer';
 import {FeeTabular} from '../../../common/tabulars/fee';
 //function
 import {calculateAgentFee} from '../../../common/globalState/calculateAgentFee'
+import {tmpCollection} from '../../api/collections/tmpCollection';
 // Page
 import './fee.html';
 // Declare template
@@ -73,15 +74,17 @@ indexTmpl.events({
     'click .js-display' (event, instance) {
         alertify.feeShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
     },
-    'click .add-balance': function (e, t) {
-        //var productId = FlowRouter.getParam('productId');
-        let productId = this.productId;
-        let currencyId = this.currencyId;
-        FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
-    }
+    // 'click .add-balance': function (e, t) {
+    //     //var productId = FlowRouter.getParam('productId');
+    //     let productId = this.productId;
+    //     let currencyId = this.currencyId;
+    //     FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
+    // }
 });
-Template.MoneyTransfer_addOpeningBalance.helpers({
+indexTmpl.onDestroyed(function () {
+    tmpCollection.remove({});
 });
+
 // Product
 productTmpl.events({
     'click .js-display-product' (event, instance) {

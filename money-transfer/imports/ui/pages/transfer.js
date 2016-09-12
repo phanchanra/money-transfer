@@ -40,6 +40,8 @@ let indexTmpl = Template.MoneyTransfer_transfer,
     actionTmpl = Template.MoneyTransfer_transferAction,
     formTmpl = Template.MoneyTransfer_transferForm,
     showTmpl = Template.MoneyTransfer_transferShow,
+    productTabTmpl = Template.MoneyTransfer_productShowAction,
+    productTmpl = Template.MoneyTransfer_transferProductShow,
     invoice = Template.generateInvoice;
 
 
@@ -102,9 +104,21 @@ indexTmpl.events({
             // $("div.print").printArea(options);
             // printPageArea('print-invoice');
         });
+    },
+    // 'click .js-display-product' (event, instance) {
+    //     Meteor.call("getProduct", this.productId, function (error, result) {
+    //         alertify.transferShow(fa('eye', 'Product'), renderTemplate(productShowTmpl, result));
+    //     });
+    // }
+});
+// Product
+productTabTmpl.events({
+    'click .js-display-product' (event, instance) {
+        Meteor.call("getProduct", this.productId, function (error, result) {
+            alertify.transferShow(fa('eye', 'Product'), renderTemplate(productTmpl, result));
+        });
     }
 });
-
 // Form
 formTmpl.onRendered(function () {
     $('[name="amount"]').prop("readonly", true);

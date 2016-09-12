@@ -178,10 +178,10 @@ Transfer.after.update(function (userId, doc) {
                 if (transferUpdate.lastBalance == null || transferUpdate.lastBalance == "undefined") {
                     let balanceAmount = transferUpdate.balanceAmount - doc.amount;
                     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-                    let balanceAmountFee = balanceAmount + doc.feeDoc.agentFee;
+                    let balanceAmountFee = (balanceAmount + doc.feeDoc.agentFee);
                     //update transfer
                     setObjTransfer.agentFee = agentFeeAfterDis;
-                    setObjTransfer.balanceAmount = balanceAmount;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
                     setObjTransfer['lastBalance.date'] = new Date();
                     setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
                     setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
@@ -217,7 +217,7 @@ Transfer.after.update(function (userId, doc) {
                     let balanceAmountFee = (transferUpdate.lastBalance.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
 
                     setObjTransfer.agentFee = agentFeeAfterDis;
-                    setObjTransfer.balanceAmount = balanceAmount;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
                     setObjTransfer['lastBalance.date'] = new Date();
                     setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
                     setObjTransfer['lastBalance.customerFee'] = customerFee;

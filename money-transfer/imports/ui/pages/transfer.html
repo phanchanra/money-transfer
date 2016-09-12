@@ -24,7 +24,10 @@
 
     {{/columnAction}}
 </template>
-
+<!-- Product-->
+<template name="MoneyTransfer_productShowAction">
+    <a href="#" class="js-display-product">{{productId}}</a>
+</template>
 <!--Form-->
 <template name="MoneyTransfer_transferForm">
     {{#if Template.subscriptionsReady}}
@@ -206,5 +209,30 @@
         {{else}}
             {{> loading}}
         {{/if}}
+    </div>
+</template>
+<!--Show-->
+<template name="MoneyTransfer_transferProductShow">
+    <div class="box-body">
+    <!--{{#if Template.subscriptionsReady}}-->
+        <dl class="dl-horizontal">
+            <fieldset>
+                <legend>Product</legend>
+                <dt>ID</dt>
+                <dd>{{_id}}</dd>
+                <dt>Product </dt>
+                <dd>{{name}}</dd>
+                <dt>Date</dt>
+                <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                <dt>Status</dt>
+                <dd>{{status}}</dd>
+                <dt>Address</dt>
+                <dd>{{address}}</dd>
+            </fieldset>
+        </dl>
+
+            <!--{{else}}-->
+        <!--{{> loading}}-->
+            <!--{{/if}}-->
     </div>
 </template>

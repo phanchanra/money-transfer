@@ -23,10 +23,15 @@ tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_transferAction},
     {data: "_id", title: "ID"},
     {data: "type", title: "type"},
-    {data: "productId", title: "Product"},
+    //{data: "productId", title: "Product"},
+    {
+        data: 'productId',
+        title: "Product",
+        tmpl: Meteor.isClient && Template.MoneyTransfer_productShowAction
+    },
     {
         data: "transferDate",
-        title: "Transfer date",
+        title: "Date",
         render: function (val, type, doc) {
             return moment(val).format('DD/MM/YYYY');
         }
@@ -37,12 +42,13 @@ tabularOpts.columns = [
     {data: "receiverTelephone", title: "Tel"},
     {data: "currencyId", title: "Cur"},
     {data: "amount", title: "Amount"},
-    {data: "balanceAmount", title: "Bal Amount"},
     {data: "customerFee", title: "Cus Fee"},
     {data: "discountFee", title: "Dis Fee"},
     {data: "totalFee", title: "Total Fee"},
     {data: "agentFee", title: "Agent Fee"},
     {data: "totalAmount", title: "Total Amount"},
+    {data: "balanceAmount", title: "Bal Amount"}
+
 ];
 tabularOpts.extraFields=['feeDoc'];
 export const TransferTabular = new Tabular.Table(tabularOpts);
