@@ -37,7 +37,7 @@ Transfer.after.insert(function (userId, doc) {
                     {
                         $set: {
                             os: {
-                                date: doc.transferDate,
+                                date: new Date(),
                                 balanceAmount: doc.balanceAmount,
                                 balanceAmountFee: doc.balanceAmount
                             }
@@ -50,7 +50,7 @@ Transfer.after.insert(function (userId, doc) {
                     {
                         $set: {
                             os: {
-                                date: doc.transferDate,
+                                date: new Date(),
                                 balanceAmount: doc.balanceAmount,
                                 balanceAmountFee: doc.balanceAmount
                             }
@@ -84,7 +84,6 @@ Transfer.after.update(function (userId, doc) {
             Transfer.direct.update(
                 doc._id, {
                     $set: {
-                        type: doc.type,
                         amount: doc.amount,
                         balanceAmount: newBalanceAmountCDCD
                     }
@@ -95,6 +94,7 @@ Transfer.after.update(function (userId, doc) {
                 {
                     $set: {
                         os: {
+                            date: Date.now(),
                             balanceAmount: newBalanceAmountCDCD,
                             balanceAmountFee: newBalanceAmountCDCD
                         }
@@ -105,7 +105,6 @@ Transfer.after.update(function (userId, doc) {
             Transfer.direct.update(
                 doc._id, {
                     $set: {
-                        type: doc.type,
                         amount: doc.amount,
                         balanceAmount: newBalanceAmountCDCW
                     }
@@ -116,6 +115,7 @@ Transfer.after.update(function (userId, doc) {
                 {
                     $set: {
                         os: {
+                            date: new Date(),
                             balanceAmount: newBalanceAmountCDCW,
                             balanceAmountFee: newBalanceAmountCDCW,
                         }
@@ -126,7 +126,6 @@ Transfer.after.update(function (userId, doc) {
             Transfer.direct.update(
                 doc._id, {
                     $set: {
-                        type: doc.type,
                         amount: doc.amount,
                         balanceAmount: newBalanceAmountCWCW
                     }
@@ -137,6 +136,7 @@ Transfer.after.update(function (userId, doc) {
                 {
                     $set: {
                         os: {
+                            date: new Date(),
                             balanceAmount: newBalanceAmountCWCW,
                             balanceAmountFee: newBalanceAmountCWCW,
                         }
@@ -147,7 +147,6 @@ Transfer.after.update(function (userId, doc) {
             Transfer.direct.update(
                 doc._id, {
                     $set: {
-                        type: doc.type,
                         amount: doc.amount,
                         balanceAmount: newBalanceAmountCWCD
                     }
@@ -158,6 +157,7 @@ Transfer.after.update(function (userId, doc) {
                 {
                     $set: {
                         os: {
+                            date: new Date(),
                             balanceAmount: newBalanceAmountCWCD,
                             balanceAmountFee: newBalanceAmountCWCD,
                         }
@@ -167,23 +167,7 @@ Transfer.after.update(function (userId, doc) {
         }
     });
 });
-Transfer.after.remove(function (userId, doc) {
-    let transfer = Transfer.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
-    let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
-    Meteor.defer(function () {
-        Fee.direct.update(
-            fee._id,
-            {
-                $set: {
-                    os: {
-                        balanceAmount: transfer.balanceAmount,
-                        balanceAmountFee: transfer.balanceAmount
-                    }
-                }
-            }
-        );
-    });
-});
+
 
 
 

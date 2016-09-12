@@ -6,46 +6,8 @@ import {moment} from 'meteor/momentjs:moment';
 import {dateRangePickerOpts} from '../../../../../core/client/libs/date-range-picker-opts';
 import {SelectOpts} from '../../../ui/libs/select-opts.js';
 
-export const TransferSchema = new SimpleSchema({
-    // dateFrom: {
-    //     type: Date,
-    //     label: 'Date From',
-    //     defaultValue: moment().toDate(),
-    //     autoform: {
-    //         afFieldInput: {
-    //             type: "bootstrap-datetimepicker",
-    //             dateTimePickerOptions: {
-    //                 format: 'DD/MM/YYYY',
-    //                 showTodayButton: true
-    //             }
-    //         }
-    //     }
-    //     ,
-    //     custom: function () {//Another usage of the custom function.
-    //         if (this.value > this.field('dateTo').value) {
-    //             return "checkDateFrom";
-    //         }
-    //     }
-    // },
-    // dateTo: {
-    //     type: Date,
-    //     label: 'Date To',
-    //     defaultValue: moment().toDate(),
-    //     autoform: {
-    //         afFieldInput: {
-    //             type: "bootstrap-datetimepicker",
-    //             dateTimePickerOptions: {
-    //                 format: 'DD/MM/YYYY',
-    //                 showTodayButton: true
-    //             }
-    //         }
-    //     },
-    //     custom: function () {//Another usage of the custom function.
-    //         if (this.value > this.field('dateFrom').value) {
-    //             return "checkDateTo";
-    //         }
-    //     }
-    // },
+export const DepositWithdrawalSchema = new SimpleSchema({
+
     repDate: {
         type: [Date],
         label: 'Date',
@@ -56,13 +18,13 @@ export const TransferSchema = new SimpleSchema({
             }
         }
     },
-    transferType: {
+    type: {
         type: [String],
-        label: 'Transfer Type',
+        label: 'Type',
         autoform: {
             type: "select2",
             options: function () {
-                return SelectOpts.transfer(false);
+                return SelectOpts.depositWithdrawal(false);
                 // return [
                 //     {label: 'BTB', value: '001'},
                 //     {label: 'BMC', value: '002'},
@@ -105,11 +67,18 @@ export const TransferSchema = new SimpleSchema({
                 }
             }
         }
+    },
+    exchange:{
+        type:String,
+        label:'Exchange',
+        autoform: {
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Please search... (limit 10)',
+                optionsMethod: 'moneyTransfer.selectOptMethods.exchange'
+            }
+        }
     }
 
 
 });
-// SimpleSchema.messages({
-//     checkDateFrom: 'Date from must be less than date to!',
-//     //checkDateTo: 'Date to must be greater than date from!'
-// });

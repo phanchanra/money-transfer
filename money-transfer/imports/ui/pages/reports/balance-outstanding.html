@@ -1,16 +1,14 @@
 <!--Report-->
-<template name="MoneyTransfer_detailTransferReport">
+<template name="MoneyTransfer_transferBalanceOutstandingReport">
     <div class="box-body">
         <!--Form-->
-        {{#autoForm schema=schema id="MoneyTransfer_detailTransferReport" type="normal"}}
+        {{#autoForm schema=schema id="MoneyTransfer_transferBalanceOutstandingReport" type="normal"}}
             <div class="row">
                 <div class="col-md-6">
                     {{> afQuickField name="product"}}
-                    {{> afQuickField name="branch"}}
                 </div>
                 <div class="col-md-6">
                     {{> afQuickField name="repDate"}}
-                    {{> afQuickField name="transferType"}}
                 </div>
             </div>
             {{> formFooterWithButton}}
@@ -23,23 +21,21 @@
                 {{#if rptInit}}
                     {{#if rptData}}
                         {{#with rptData}}
-
                             <!--Title-->
                             {{#with title}}
                                 <div class="rpt-title">
                                     <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
                                     <div class="rpt-title-2x">{{enName}}</div>
-                                    <div><u>Detail Transfer Report</u></div>
+                                    <div><u>Transfer Detail Report</u></div>
                                     <div>{{enAddress}}</div>
                                 </div>
                             {{/with}}
-
                             <!--Header-->
                             {{#with header}}
                                 <div style="width: 100%">
                                     <div style="width: 50%; float: left">
                                         <div><strong>Branch:</strong> {{branch}}</div>
-                                        <div><strong>Product Type:</strong> {{transferType}}</div>
+                                        <div><strong>Type:</strong> {{type}}</div>
                                     </div>
 
                                     <div style="width: 50%; float: right">
@@ -47,6 +43,9 @@
                                             {{moFormat repDate.[0] "DD/MM/YYYY"}}
                                             -
                                             {{moFormat repDate.[1] "DD/MM/YYYY"}}
+                                        </div>
+                                        <div><strong>Exchange:</strong>
+                                            {{exchangeObj}}
                                         </div>
                                     </div>
                                 </div>

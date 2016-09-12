@@ -18,7 +18,7 @@ import {Product} from '../../imports/api/collections/product';
 // Page
 Meteor.isClient && require('../../imports/ui/pages/fee');
 //Meteor.isClient && require('../../imports/ui/pages/bank-account');
-
+import {tmpCollection as accountWithdrawalAndDepositCount} from '../../imports/api/collections/tmpCollection';
 tabularOpts.name = 'moneyTransfer.fee';
 tabularOpts.collection = Fee;
 tabularOpts.columns = [
@@ -38,7 +38,48 @@ tabularOpts.columns = [
     //         return numeral(val).format('0,000.00')
     //     }
     // },
-    {title: 'Add Opening Balance', tmpl: Meteor.isClient && Template.MoneyTransfer_addOpeningBalance}
+    {
+        data: 'productId',
+        title: 'CD/CW',
+        render: function (val, type, doc) {
+//             let button = `<a href="/money-transfer/bank-account/${val}/${doc.currencyId}" type="button" name="add-balance" class="btn btn-default add-balance" title="Add opening balance">+</a>
+// `;
+            let url = `/money-transfer/bank-account/${val}/${doc.currencyId}`;
+            try {
+                let cdCw = accountWithdrawalAndDepositCount.findOne({
+                    productId: val,
+                    currencyId: doc.currencyId,
+                });
+                if (!cdCw) {
+                    Meteor.call('getAccountDepositAndWithdrawal', {
+                        productId: val,
+                        currencyId: doc.currencyId,
+                    }, function (err, result) {
+                        accountWithdrawalAndDepositCount.insert({
+                            productId: val,
+                            currencyId: doc.currencyId,
+                            cd: result.cd,
+                            cw: result.cw
+                        })
+
+                    });
+                    let cdCw = accountWithdrawalAndDepositCount.findOne({
+                        productId: val,
+                        currencyId: doc.currencyId
+                    });
+                    //return cdCw.cd + ' / ' + cdCw.cw + ' ' + button;
+                    return `<a href="${url}" type="button" class="btn btn-default" title="Add opening balance">` + cdCw.cd + ' / ' + cdCw.cw + `</a>`;
+                }
+                //return cdCw.cd + ' / ' + cdCw.cw + ' ' + button;
+                return `<a href="${url}" type="button" class="btn btn-default" title="Add opening balance">` + cdCw.cd + ' / ' + cdCw.cw + `</a>`;
+
+            } catch (e) {
+
+            }
+
+
+        }
+    }
 ];
 tabularOpts.extraFields = ['service'];
 export const FeeTabular = new Tabular.Table(tabularOpts);

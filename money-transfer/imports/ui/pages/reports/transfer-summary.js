@@ -17,21 +17,19 @@ import '../../../../../core/client/components/loading.js';
 import '../../../../../core/client/components/form-footer.js';
 
 // Method
-import {customerReport} from '../../../../common/methods/reports/customer.js';
+import {transferSummaryReport} from '../../../../common/methods/reports/transfer-summary';
 
 // Schema
-import {CustomerSchema} from '../../../api/collections/reports/customer.js';
+import {TransferSummarySchema} from '../../../api/collections/reports/transfer-summary';
 
 
 // Page
-import './../reports/customer.html';
+import './../reports/transfer-summary.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_customerReport;
-
+let indexTmpl = Template.MoneyTransfer_transferSummaryReport;
 // State
 let formDataState = new ReactiveVar(null);
-
 // Index
 indexTmpl.onCreated(function () {
     this.rptInitState = new ReactiveVar(false);
@@ -50,7 +48,7 @@ indexTmpl.onCreated(function () {
             this.rptInitState.set(true);
             this.rptDataState.set(false);
 
-            customerReport.callPromise(formDataState.get())
+            transferSummaryReport.callPromise(formDataState.get())
                 .then((result)=> {
                     this.rptDataState.set(result);
                 }).catch((err)=> {
@@ -64,7 +62,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return CustomerSchema;
+        return TransferSummarySchema;
     },
     rptInit(){
         let instance = Template.instance();
@@ -73,6 +71,9 @@ indexTmpl.helpers({
     rptData: function () {
         let instance = Template.instance();
         return instance.rptDataState.get();
+    },
+    no(index){
+        return index + 1;
     }
 });
 
@@ -116,4 +117,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_customerReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_transferSummaryReport', hooksObject);

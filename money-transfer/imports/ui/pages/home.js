@@ -25,10 +25,20 @@ Template.MoneyTransfer_home.events({
     'click .equalWithBigNumber'(event, instance){
         // let val1 = new  BigNumber(0.6);
         // let val2 = new  BigNumber(0.3);
-        let val1 = new  BigNumber(0.3);
-        let val2 = new  BigNumber(0.1);
+        let val1 = new BigNumber(0.3);
+        let val2 = new BigNumber(0.1);
         //instance.state.set(new BigNumber((val1).times(val2)).toNumber());
         instance.state.set(new BigNumber((val1).minus(val2)).toNumber());
+    },
+    'click .alertDate'(e, instance){
+        var lastDate = moment('1/9/2016', 'DD/MM/YYYY');
+//var b = moment('1/1/2013', 'DD/MM/YYYY');
+        var curerentDate = moment();
+        var days = curerentDate.diff(lastDate, 'days');
+        var numberDay = 10;
+        if (days > numberDay) {
+            alert('your turn exired');
+        }
     }
 
 });

@@ -3,15 +3,10 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
 import {Fee} from '../../imports/api/collections/fee';
-
 Meteor.publish('moneyTransfer.feeById', function moneyTransferFee(feeId) {
     this.unblock();
     Meteor._sleepForMs(200);
-
-    new SimpleSchema({
-        feeId: {type: String}
-    }).validate({feeId});
-
+    new SimpleSchema({feeId: {type: String}}).validate({feeId});
     if (!this.userId) {
         return this.ready();
     }

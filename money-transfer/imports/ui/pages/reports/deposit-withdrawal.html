@@ -1,26 +1,24 @@
 <!--Report-->
-<template name="MoneyTransfer_customerReport">
+<template name="MoneyTransfer_depositWithdrawalReport">
     <div class="box-body">
         <!--Form-->
-        {{#autoForm schema=schema id="SimplePos_customerReport" type="normal"}}
+        {{#autoForm schema=schema id="MoneyTransfer_depositWithdrawalReport" type="normal"}}
             <div class="row">
                 <div class="col-md-6">
+                    {{> afQuickField name="product"}}
+                    {{> afQuickField name="type"}}
                     {{> afQuickField name="branch"}}
-                    {{> afQuickField name="name"}}
                 </div>
                 <div class="col-md-6">
                     {{> afQuickField name="repDate"}}
+                    {{> afQuickField name="exchange"}}
 
-                    {{> formFooterWithButton}}
                 </div>
             </div>
+            {{> formFooterWithButton}}
         {{/autoForm}}
-
-        <hr>
         <!--Print Button-->
         <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
-
-
         <!--Report Paper-->
         <div id="print-data">
             <div class="rpt rpt-portrait-a4">
@@ -33,7 +31,7 @@
                                 <div class="rpt-title">
                                     <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
                                     <div class="rpt-title-2x">{{enName}}</div>
-                                    <div><u>Customer Report</u></div>
+                                    <div><u>Deposit Withdrawal Report</u></div>
                                     <div>{{enAddress}}</div>
                                 </div>
                             {{/with}}
@@ -43,7 +41,7 @@
                                 <div style="width: 100%">
                                     <div style="width: 50%; float: left">
                                         <div><strong>Branch:</strong> {{branch}}</div>
-                                        <div><strong>Name:</strong> {{name}}</div>
+                                        <div><strong>Type:</strong> {{type}}</div>
                                     </div>
 
                                     <div style="width: 50%; float: right">
@@ -51,6 +49,9 @@
                                             {{moFormat repDate.[0] "DD/MM/YYYY"}}
                                             -
                                             {{moFormat repDate.[1] "DD/MM/YYYY"}}
+                                        </div>
+                                        <div><strong>Exchange:</strong>
+                                            {{exchangeObj}}
                                         </div>
                                     </div>
                                 </div>
@@ -61,34 +62,48 @@
                                 <thead class="rpt-content-header">
                                 <tr>
                                     <th>No</th>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>gender</th>
-                                    <th>Birth Date</th>
-                                    <th>Address</th>
-                                    <th>Branch</th>
+                                    <th>Ref</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Product</th>
+                                    <th>Currency</th>
+                                    <th>Amount</th>
                                 </tr>
                                 </thead>
 
                                 <tbody class="rpt-content-body">
                                 {{#each content}}
-                                    <tr>
-                                        <td>{{index}}</td>
-                                        <td>{{_id}}</td>
-                                        <td>{{name}}</td>
-                                        <td>{{gender}}</td>
-                                        <td>{{moFormat dob "DD/MM/YYYY"}}</td>
-                                        <td>{{address}}</td>
-                                        <td>{{branchId}}</td>
+                                    <tr style="background-color: lightyellow;">
+                                        <td colspan="6" style="text-align: right;">Sub Total ({{_id}}):</td>
+                                        <td align="right">
+                                            {{numFormat subAmount "0,0.00"}}
+                                        </td>
                                     </tr>
-                                {{/each}}
-                                </tbody>
+                                    {{#each productsCDCW}}
+                                        <tr>
+                                            <td align="center">{{no @index}}</td>
+                                            <td>{{accountId}}</td>
+                                            <td align="center">{{moFormat transferDate "DD/MM/YYYY"}}</td>
+                                            <td align="center">{{type}}</td>
+                                            {{#each productDoc}}
+                                                <td>{{_id}}-{{name}}</td>
+                                            {{/each}}
+                                            <td align="right">{{currencyId}}</td>
+                                            <td align="right">{{numFormat amount "0,0.00"}}</td>
 
-                                <!--<tfoot class="rpt-content-footer">-->
-                                <!--<tr>-->
-                                <!--<td></td>-->
-                                <!--</tr>-->
-                                <!--</tfoot>-->
+                                        </tr>
+                                    {{/each}}
+
+                                {{/each}}
+                                <tr>
+                                    <td colspan="6" style="text-align: right;">Grand Total:</td>
+
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalAmount "0,0.00"}}
+                                    </td>
+
+                                </tr>
+                                </tbody>
                             </table>
 
                         {{/with}}
@@ -109,8 +124,6 @@
                 {{/if}}
             </div>
         </div>
-        <!--/#print-data-->
 
     </div>
-    <!-- /.box-body -->
 </template>

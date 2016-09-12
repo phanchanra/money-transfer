@@ -24,7 +24,10 @@
 
     {{/columnAction}}
 </template>
-
+<!-- Product-->
+<template name="MoneyTransfer_productShowAction">
+    <a href="#" class="js-display-product">{{productId}}</a>
+</template>
 <!--Form-->
 <template name="MoneyTransfer_transferForm">
     {{#if Template.subscriptionsReady}}
@@ -143,9 +146,9 @@
                     </div>
                 </fieldset>
                 <div class="form-footer">
-                    <button type="submit" class="btn btn-primary"><i
+                    <button type="submit" class="btn btn-primary save"><i
                             class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
-                    <button type="submit" class="btn btn-primary js-print"><i class="fa fa-print"></i>&nbsp;Submit &
+                    <button type="submit" class="btn btn-primary js-print save-print"><i class="fa fa-print"></i>&nbsp;Submit &
                         Print
                     </button>
                     <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}
@@ -206,5 +209,30 @@
         {{else}}
             {{> loading}}
         {{/if}}
+    </div>
+</template>
+<!--Show-->
+<template name="MoneyTransfer_transferProductShow">
+    <div class="box-body">
+    <!--{{#if Template.subscriptionsReady}}-->
+        <dl class="dl-horizontal">
+            <fieldset>
+                <legend>Product</legend>
+                <dt>ID</dt>
+                <dd>{{_id}}</dd>
+                <dt>Product </dt>
+                <dd>{{name}}</dd>
+                <dt>Date</dt>
+                <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                <dt>Status</dt>
+                <dd>{{status}}</dd>
+                <dt>Address</dt>
+                <dd>{{address}}</dd>
+            </fieldset>
+        </dl>
+
+            <!--{{else}}-->
+        <!--{{> loading}}-->
+            <!--{{/if}}-->
     </div>
 </template>

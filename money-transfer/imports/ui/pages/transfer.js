@@ -40,6 +40,8 @@ let indexTmpl = Template.MoneyTransfer_transfer,
     actionTmpl = Template.MoneyTransfer_transferAction,
     formTmpl = Template.MoneyTransfer_transferForm,
     showTmpl = Template.MoneyTransfer_transferShow,
+    productTabTmpl = Template.MoneyTransfer_productShowAction,
+    productTmpl = Template.MoneyTransfer_transferProductShow,
     invoice = Template.generateInvoice;
 
 
@@ -69,10 +71,13 @@ indexTmpl.events({
         Session.set("transferId", this._id);
         //tmpCollection.findOne();
         tmpCollection.insert({
-                customerFee: this.customerFee,
                 totalFee: this.totalFee,
                 totalAmount: this.totalAmount,
-                feeDoc:{fromAmount: this.fromAmount, toAmount:this.toAmount, customerFee:this.customerFee, ownerFee:this.ownerFee, agentFee:this.agentFee}
+                fromAmount: this.feeDoc.fromAmount,
+                toAmount: this.feeDoc.toAmount,
+                customerFee: this.feeDoc.customerFee,
+                ownerFee: this.feeDoc.ownerFee,
+                agentFee: this.feeDoc.agentFee
             }
         );
 
@@ -99,14 +104,27 @@ indexTmpl.events({
             // $("div.print").printArea(options);
             // printPageArea('print-invoice');
         });
+    },
+    // 'click .js-display-product' (event, instance) {
+    //     Meteor.call("getProduct", this.productId, function (error, result) {
+    //         alertify.transferShow(fa('eye', 'Product'), renderTemplate(productShowTmpl, result));
+    //     });
+    // }
+});
+// Product
+productTabTmpl.events({
+    'click .js-display-product' (event, instance) {
+        Meteor.call("getProduct", this.productId, function (error, result) {
+            alertify.transferShow(fa('eye', 'Product'), renderTemplate(productTmpl, result));
+        });
     }
 });
-
 // Form
 formTmpl.onRendered(function () {
     $('[name="amount"]').prop("readonly", true);
 });
 formTmpl.onCreated(function () {
+
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
@@ -207,10 +225,6 @@ invoice.events({
     }
 });
 formTmpl.events({
-    // 'change [name="type"]'(e, instance){
-    //     Session.set("transferType", $(e.currentTarget).val());
-    //     alert(Session.get("transferType"));
-    // },
     'change [name="senderId"]'(e, instance){
         let senderId = $(e.currentTarget).val();
         Meteor.call("getCustomerInfo", senderId, function (error, result) {
@@ -268,6 +282,16 @@ formTmpl.events({
             clearOnKeyupAmount();
         }
         Session.set("amount", amount);
+        Meteor.call("checkValidateDepositWithdrawal", productId, currencyId, function (error, result) {
+            if (result) {
+                instance.$('.save').prop('disabled', false);
+                instance.$('.save-print').prop('disabled', false);
+            } else {
+                instance.$('.save').prop('disabled', true);
+                instance.$('.save-print').prop('disabled', true);
+                swal("Please check", "You are not yet deposit amount!");
+            }
+        });
         Meteor.call("getFee", productId, currencyId, amount, function (error, result) {
             if (result) {
                 tmpCollection.remove({});
@@ -314,19 +338,16 @@ let hooksObject = {
             //console.log(doc);
             return doc;
         },
+        // ,
         update(doc){
-            //console.log(tmpCollection.findOne());
+            //console.log(doc);
             doc.$set.feeDoc = tmpCollection.findOne();
-
             return doc;
         }
     },
-
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.transfer().close();
-            //console.log(Session.get("transferId"));
-            //console.log(Session.get("savePrint"));
             if (Session.get("savePrint")) {
                 Meteor.call('invoice', Session.get("transferId"), function (err, doc) {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
@@ -334,6 +355,7 @@ let hooksObject = {
                 });
             }
         } else {
+
             if (Session.get("savePrint")) {
                 Meteor.call('invoice', result, function (err, doc) {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));

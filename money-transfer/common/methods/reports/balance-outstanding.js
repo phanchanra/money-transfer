@@ -8,15 +8,15 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/imports/api/collections/company.js';
 import {Transfer} from '../../../imports/api/collections/transfer';
+import {Exchange} from '../../../../core/imports/api/collections/exchange'
 
-
-export const customerReport = new ValidatedMethod({
-    name: 'moneyTransfer.customerReport',
+export const transferBalanceOutstandingReport = new ValidatedMethod({
+    name: 'moneyTransfer.transferBalanceOutstandingReport',
     mixins: [CallPromiseMixin],
     validate: null,
     run(params) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(2000);
+            Meteor._sleepForMs(200);
 
             let data = {
                 title: {},
@@ -27,10 +27,14 @@ export const customerReport = new ValidatedMethod({
 
             // let date = _.trim(_.words(params.date, /[^To]+/g));
             let branch = params.branch;
-            let name = params.name;
+            let product = params.product;
+            let type = params.type;
             let date = params.repDate;
             let fDate = moment(date[0]).toDate();
             let tDate = moment(date[1]).add(1, 'days').toDate();
+            //let exchangeId = params.exchange;
+            let exchange = Exchange.findOne(params.exchange);
+            params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';
 
             /****** Title *****/
             data.title = Company.findOne();
@@ -41,29 +45,28 @@ export const customerReport = new ValidatedMethod({
             /****** Content *****/
             let content = [];
             let selector = {};
-
+            selector.transferDate = {
+                $gte: fDate,
+                $lte: tDate
+            };
             if (!_.isEmpty(branch)) {
                 selector.branchId = {$in: branch};
             }
-            if (!_.isEmpty(name)) {
-                selector.name = {$regex: name, $options: 'i'};
+            if (!_.isEmpty(product)) {
+                selector.productId = {$in: product};
+            }
+            if (!_.isEmpty(type)) {
+                selector.type = {$in: type};
             }
 
-            let index = 1;
-            Transfer.find(selector)
-                .forEach(function (obj) {
-                    // Do something
-                    obj.index = index;
+            let transfers = Transfer.aggregate([
 
-                    content.push(obj);
-
-                    index++;
-                });
-
-            if (content.length > 0) {
-                data.content = content;
+            ]);
+            if(transfers.length > 0) {
+                data.content = transfers[0].data;
+                data.footer.total = transfers[0].total;
             }
-            
+            console.log(data);
             return data
         }
     }

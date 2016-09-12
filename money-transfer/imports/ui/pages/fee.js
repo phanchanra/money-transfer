@@ -25,10 +25,12 @@ import BigNumber from 'bignumber.js';
 // Collection
 import {Fee} from '../../api/collections/fee';
 import {Product} from '../../api/collections/product';
+import {Transfer} from '../../api/collections/transfer';
 // Tabular
 import {FeeTabular} from '../../../common/tabulars/fee';
 //function
 import {calculateAgentFee} from '../../../common/globalState/calculateAgentFee'
+import {tmpCollection} from '../../api/collections/tmpCollection';
 // Page
 import './fee.html';
 // Declare template
@@ -52,6 +54,7 @@ indexTmpl.helpers({
     tabularTable(){
         return FeeTabular;
     }
+
 });
 
 indexTmpl.events({
@@ -71,12 +74,15 @@ indexTmpl.events({
     'click .js-display' (event, instance) {
         alertify.feeShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
     },
-    'click .add-balance': function (e, t) {
-        //var productId = FlowRouter.getParam('productId');
-        let productId = this.productId;
-        let currencyId = this.currencyId;
-        FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
-    }
+    // 'click .add-balance': function (e, t) {
+    //     //var productId = FlowRouter.getParam('productId');
+    //     let productId = this.productId;
+    //     let currencyId = this.currencyId;
+    //     FlowRouter.go('moneyTransfer.bankAccount', {productId: productId, currencyId: currencyId,});
+    // }
+});
+indexTmpl.onDestroyed(function () {
+    tmpCollection.remove({});
 });
 
 // Product
@@ -150,7 +156,7 @@ formTmpl.events({
         let productId = $(e.currentTarget).val();
         Session.set("productId", productId);
         let currencySymbol = Session.get("currencyId");
-        Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
+        Meteor.call("productAvailable", productId, currencySymbol, this._id, function (error, result) {
             if (result) {
                 instance.$('[name="save"]').prop('disabled', true);
                 swal("Please check", "Product and currency are already exist!");
@@ -175,7 +181,7 @@ formTmpl.events({
 
         Session.set("currencyId", currencySymbol);
         let productId = Session.get("productId");
-        Meteor.call("productAvailable", productId, currencySymbol, function (error, result) {
+        Meteor.call("productAvailable", productId, currencySymbol, this._id, function (error, result) {
             if (result) {
                 instance.$('[name="save"]').prop('disabled', true);
                 swal("Please check", "Product and currency are already exist!");
