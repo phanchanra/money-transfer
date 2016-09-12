@@ -1,4 +1,4 @@
-import {Transfer} from '../../imports/api/collections/transfer.js';
+import {Transfer} from '../../common/collections/transfer.js';
 
 // Lib
 import './_init.js';

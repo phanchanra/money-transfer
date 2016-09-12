@@ -1,6 +1,6 @@
-import {Fee} from '../../imports/api/collections/fee';
-import {Transfer} from '../../imports/api/collections/transfer';
-//import {Currency} from '../../../core/imports/api/collections/';
+import {Fee} from '../../common/collections/fee';
+import {Transfer} from '../../common/collections/transfer';
+//import {Currency} from '../../../core/common/collections/';
 Meteor.methods({
     countDepositWith: function (productId, currencyId) {
         let depositWith = Transfer.find({productId: productId, currencyId: currencyId});

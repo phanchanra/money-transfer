@@ -1,5 +1,5 @@
-import {Transfer} from '../../imports/api/collections/transfer';
-import {Customer} from '../../imports/api/collections/customer';
+import {Transfer} from '../../common/collections/transfer';
+import {Customer} from '../../common/collections/customer';
 Meteor.methods({
     countCustomerExpired(){
 

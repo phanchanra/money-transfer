@@ -3,7 +3,7 @@
 //
 // import {Item} from '../../imports/api/collections/item.js';
 //
-import {Transfer} from '../../imports/api/collections/transfer';
+import {Transfer} from '../../common/collections/transfer';
 Meteor.startup(function () {
     Transfer._ensureIndex({productId: 1, currencyId: 1});
     // if (Item.find().count() == 0) {

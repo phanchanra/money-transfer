@@ -1,4 +1,4 @@
-import {Transfer} from '../../../imports/api/collections/transfer';
+import {Transfer} from '../../../common/collections/transfer';
 Meteor.methods({
     summeryTransferIn: function (dateFrom, dateTo, product, branch) {
         dateFrom = moment(dateFrom).toDate();

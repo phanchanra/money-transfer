@@ -11,8 +11,8 @@ import {__} from '../../core/common/libs/tapi18n-callback-helper.js';
 
 // Layout
 import {Layout} from '../../core/client/libs/render-layout.js';
-import '../../core/imports/ui/layouts/login';
-import '../../core/imports/ui/layouts/main';
+import '../../core/imports/layouts/login';
+import '../../core/imports/layouts/main';
 
 // Group
 let MoneyTransferRoutes = FlowRouter.group({
@@ -25,7 +25,7 @@ let MoneyTransferRoutes = FlowRouter.group({
 });
 
 // Home
-import '../imports/ui/pages/home.js';
+import '../imports/pages/home.js';
 MoneyTransferRoutes.route('/home', {
     name: 'moneyTransfer.home',
     title: 'Home',
@@ -41,7 +41,7 @@ MoneyTransferRoutes.route('/home', {
     }
 });
 // Transfer
-import '../imports/ui/pages/transfer';
+import '../imports/pages/transfer';
 MoneyTransferRoutes.route('/transfer', {
     name: 'moneyTransfer.transfer',
     title: 'Transfer',
@@ -57,7 +57,7 @@ MoneyTransferRoutes.route('/transfer', {
     }
 });
 // Customer
-import '../imports/ui/pages/customer.js';
+import '../imports/pages/customer.js';
 MoneyTransferRoutes.route('/customer', {
     name: 'moneyTransfer.customer',
     title: 'Customer',
@@ -73,7 +73,7 @@ MoneyTransferRoutes.route('/customer', {
     }
 });
 // Product
-import '../imports/ui/pages/product.js';
+import '../imports/pages/product.js';
 MoneyTransferRoutes.route('/product', {
     name: 'moneyTransfer.product',
     title: 'Product',
@@ -89,7 +89,7 @@ MoneyTransferRoutes.route('/product', {
     }
 });
 // Fee
-import '../imports/ui/pages/fee';
+import '../imports/pages/fee';
 MoneyTransferRoutes.route('/fee', {
     name: 'moneyTransfer.fee',
     title: 'Fee',
@@ -105,7 +105,7 @@ MoneyTransferRoutes.route('/fee', {
     }
 });
 // Bank Account
-import '../imports/ui/pages/bank-account';
+import '../imports/pages/bank-account';
 MoneyTransferRoutes.route('/bank-account/:productId/:currencyId', {
     name: 'moneyTransfer.bankAccount',
     title: 'Bank Account',
