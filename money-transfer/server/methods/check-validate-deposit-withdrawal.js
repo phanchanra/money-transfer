@@ -1,4 +1,4 @@
-import {Fee} from '../../imports/api/collections/fee';
+import {Fee} from '../../common/collections/fee';
 Meteor.methods({
     checkValidateDepositWithdrawal: function (productId, currencyId) {
         let fee = Fee.findOne({productId: productId, currencyId: currencyId});

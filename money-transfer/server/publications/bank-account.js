@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
 //import {Transfer} from '../../imports/api/collections/transfer';
-import {Transfer} from '../../imports/api/collections/transfer';
+import {Transfer} from '../../common/collections/transfer';
 
 Meteor.publish('moneyTransfer.bankAccountById', function moneyTransferBankAccount(bankAccountId) {
     this.unblock();

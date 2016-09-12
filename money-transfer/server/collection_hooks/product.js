@@ -1,7 +1,7 @@
 import 'meteor/matb33:collection-hooks';
 import {idGenerator} from 'meteor/theara:id-generator';
 // Collection
-import {Product} from '../../imports/api/collections/product';
+import {Product} from '../../common/collections/product';
 
 Product.before.insert(function (userId, doc) {
     //let prefix = doc.branchId + '-';

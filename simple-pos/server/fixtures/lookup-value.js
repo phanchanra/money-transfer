@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {LookupValue} from '../../imports/api/collections/lookup-value.js';
+import {LookupValue} from '../../common/collections/lookup-value.js';
 
 Meteor.startup(function () {
     if (LookupValue.find().count() == 0) {
@@ -24,6 +24,16 @@ Meteor.startup(function () {
                 options: [
                     {label: 'Mal', value: 'M', index: 1},
                     {label: 'Female', value: 'F', index: 2},
+                ]
+            },
+            // Contact Type
+            {
+                name: 'Contact Type',
+                private: false,
+                options: [
+                    {label: 'Mobile', value: 'M', index: 1},
+                    {label: 'Home', value: 'H', index: 2},
+                    {label: 'Work', value: 'W', index: 3},
                 ]
             },
         ];

@@ -1,4 +1,4 @@
-import {Customer} from '../../imports/api/collections/customer';
+import {Customer} from '../../common/collections/customer';
 
 Meteor.methods({
     getCustomerInfo:function (customerId) {

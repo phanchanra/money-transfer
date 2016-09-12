@@ -1,4 +1,4 @@
-import {Transfer} from '../../imports/api/collections/transfer';
+import {Transfer} from '../../common/collections/transfer';
 Meteor.methods({
     getAccountDepositAndWithdrawal(selector){
         let obj = {

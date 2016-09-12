@@ -12,10 +12,10 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Product} from '../../imports/api/collections/product';
+import {Product} from '../collections/product';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/product.html');
+Meteor.isClient && require('../../imports/pages/product.html');
 
 tabularOpts.name = 'moneyTransfer.product';
 tabularOpts.collection = Product;

@@ -1,10 +1,10 @@
 import {Meteor} from 'meteor/meteor';
 import {moneyTransferState} from '../../../common/globalState/moneyTransferState';
 import {aggregate} from "meteor/meteorhacks:aggregate";
-import {Customer} from '../../../imports/api/collections/customer';
-import {Product} from '../../../imports/api/collections/product';
-import {Company} from '../../../../core/imports/api/collections/company';
-import {Transfer} from '../../../imports/api/collections/transfer'
+import {Customer} from '../../../common/collections/customer';
+import {Product} from '../../../common/collections/product';
+import {Company} from '../../../../core/common/collections/company';
+import {Transfer} from '../../../common/collections/transfer'
 Meteor.methods({
     invoice(tmpId){
 

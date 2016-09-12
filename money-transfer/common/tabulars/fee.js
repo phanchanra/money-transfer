@@ -12,13 +12,13 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Fee} from '../../imports/api/collections/fee';
-import {Product} from '../../imports/api/collections/product';
+import {Fee} from '../collections/fee';
+import {Product} from '../collections/product';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/fee');
-//Meteor.isClient && require('../../imports/ui/pages/bank-account');
-import {tmpCollection as accountWithdrawalAndDepositCount} from '../../imports/api/collections/tmpCollection';
+Meteor.isClient && require('../../imports/pages/fee');
+//Meteor.isClient && require('../../imports/pages/bank-account');
+import {tmpCollection as accountWithdrawalAndDepositCount} from '../collections/tmpCollection';
 tabularOpts.name = 'moneyTransfer.fee';
 tabularOpts.collection = Fee;
 tabularOpts.columns = [

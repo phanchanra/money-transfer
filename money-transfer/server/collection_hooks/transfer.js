@@ -2,8 +2,8 @@ import 'meteor/matb33:collection-hooks';
 import {idGenerator} from 'meteor/theara:id-generator';
 
 // Collection
-import {Transfer} from '../../imports/api/collections/transfer';
-import {Fee} from '../../imports/api/collections/fee';
+import {Transfer} from '../../common/collections/transfer';
+import {Fee} from '../../common/collections/fee';
 import {moneyTransferState} from '../../common/globalState/moneyTransferState';
 Transfer.before.insert(function (userId, doc) {
     let lastBalance = {};

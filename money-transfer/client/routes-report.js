@@ -11,7 +11,7 @@ import {__} from '../../core/common/libs/tapi18n-callback-helper.js';
 
 // Layout
 import {Layout} from '../../core/client/libs/render-layout.js';
-import '../../core/imports/ui/layouts/report/index.html';
+import '../../core/imports/layouts/report/index.html';
 
 // Group
 let MoneyTransferRoutes = FlowRouter.group({
@@ -24,7 +24,7 @@ let MoneyTransferRoutes = FlowRouter.group({
 });
 
 // Transfer Summary
-import '../imports/ui/pages/reports/transfer-summary';
+import '../imports/pages/reports/transfer-summary';
 MoneyTransferRoutes.route('/transfer-summary-report', {
     name: 'moneyTransfer.transferSummaryReport',
     title: "Summary Transfer",
@@ -40,7 +40,7 @@ MoneyTransferRoutes.route('/transfer-summary-report', {
     }
 });
 // Detail Transfer
-import '../imports/ui/pages/reports/transfer-detail';
+import '../imports/pages/reports/transfer-detail';
 MoneyTransferRoutes.route('/transfer-detail-report', {
     name: 'moneyTransfer.transferDetailReport',
     title: "Detail Transfer",
@@ -56,7 +56,7 @@ MoneyTransferRoutes.route('/transfer-detail-report', {
     }
 });
 // Transfer Transaction
-import '../imports/ui/pages/reports/transfer-transaction';
+import '../imports/pages/reports/transfer-transaction';
 MoneyTransferRoutes.route('/transfer-transaction-report', {
     name: 'moneyTransfer.transferTransactionReport',
     title: "Transfer Transaction",
@@ -72,7 +72,7 @@ MoneyTransferRoutes.route('/transfer-transaction-report', {
     }
 });
 // Deposit withdrawal
-import '../imports/ui/pages/reports/deposit-withdrawal';
+import '../imports/pages/reports/deposit-withdrawal';
 MoneyTransferRoutes.route('/deposit-withdrawal-report', {
     name: 'moneyTransfer.depositWithdrawalReport',
     title: "Deposit Withdrawal",
@@ -88,7 +88,7 @@ MoneyTransferRoutes.route('/deposit-withdrawal-report', {
     }
 });
 // Balance Outstanding
-import '../imports/ui/pages/reports/balance-outstanding';
+import '../imports/pages/reports/balance-outstanding';
 MoneyTransferRoutes.route('/balance-outstanding-report', {
     name: 'moneyTransfer.transferBalanceOutstandingReport',
     title: "Balance Outstanding",

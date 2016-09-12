@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {Customer} from '../../imports/api/collections/customer';
+import {Customer} from '../../common/collections/customer';
 
 Meteor.publish('moneyTransfer.customerById', function moneyTransferCustomer(customerId) {
     this.unblock();

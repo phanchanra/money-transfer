@@ -6,9 +6,9 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {moment} from  'meteor/momentjs:moment';
 
 // Collection
-import {Company} from '../../../../core/imports/api/collections/company.js';
-import {Transfer} from '../../../imports/api/collections/transfer';
-import {Exchange} from '../../../../core/imports/api/collections/exchange'
+import {Company} from '../../../../core/common/collections/company.js';
+import {Transfer} from '../../collections/transfer';
+import {Exchange} from '../../../../core/common/collections/exchange'
 
 export const transferBalanceOutstandingReport = new ValidatedMethod({
     name: 'moneyTransfer.transferBalanceOutstandingReport',

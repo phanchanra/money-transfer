@@ -1,4 +1,4 @@
-import {Fee} from '../../imports/api/collections/fee';
+import {Fee} from '../../common/collections/fee';
 Meteor.methods({
     getFee: function (productId, currencyId, amount) {
         if (productId && currencyId && amount) {

@@ -6,9 +6,9 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {moment} from  'meteor/momentjs:moment';
 
 // Collection
-import {Customer} from '../../imports/api/collections/customer.js';
-import {Product} from '../../imports/api/collections/product';
-import {Exchange} from '../../../core/imports/api/collections/exchange';
+import {Customer} from '../collections/customer.js';
+import {Product} from '../collections/product';
+import {Exchange} from '../../../core/common/collections/exchange';
 
 export let SelectOptMethods = {};
 

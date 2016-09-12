@@ -4,7 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 
 // Collection
-import {Order} from '../../imports/api/collections/order';
+import {Order} from '../collections/order';
 
 export const lookupOrder = new ValidatedMethod({
     name: 'simplePos.lookupOrder',
@@ -18,11 +18,66 @@ export const lookupOrder = new ValidatedMethod({
 
             let data = Order.aggregate([
                 {
+                    $match: {_id: orderId}
+                },
+                {
                     $lookup: {
                         from: "simplePos_customer",
                         localField: "customerId",
                         foreignField: "_id",
                         as: "customerDoc"
+                    }
+                },
+                {
+                    $unwind: "$customerDoc"
+                },
+                {
+                    $unwind: "$items"
+                },
+                {
+                    $lookup: {
+                        from: "simplePos_item",
+                        localField: "items.itemId",
+                        foreignField: "_id",
+                        as: "itemDoc"
+                    }
+                },
+                {
+                    $unwind: "$itemDoc"
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        orderDate: 1,
+                        customerId: 1,
+                        customerDoc: 1,
+                        des: 1,
+                        branchId: 1,
+                        total: 1,
+                        items: 1,
+                        itemDoc: 1,
+                        itemName: "$itemDoc.name"
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        orderDate: {$last: "$orderDate"},
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
+                        des: {$last: "$des"},
+                        branchId: {$last: "$branchId"},
+                        total: {$last: "$total"},
+                        items: {
+                            $addToSet: {
+                                _id: "$items.itemId",
+                                itemId: "$items.itemId",
+                                itemName: "$itemName",
+                                qty: "$items.qty",
+                                price: "$items.price",
+                                amount: "$items.amount"
+                            }
+                        }
                     }
                 }
             ]);

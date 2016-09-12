@@ -1,5 +1,5 @@
-import {Fee} from '../../imports/api/collections/fee';
-//import {Currency} from '../../../core/imports/api/collections/currency';
+import {Fee} from '../../common/collections/fee';
+//import {Currency} from '../../../core/common/collections/currency';
 Meteor.methods({
     getCurrency: function (productId) {
         let fees = Fee.find({productId: productId});
