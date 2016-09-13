@@ -90,16 +90,16 @@ MoneyTransferRoutes.route('/product', {
 });
 // Fee
 import '../imports/pages/fee';
-MoneyTransferRoutes.route('/fee', {
+MoneyTransferRoutes.route('/product-fee', {
     name: 'moneyTransfer.fee',
-    title: 'Fee',
+    title: 'Product Fee',
     action: function (params, queryParams) {
         Layout.main('MoneyTransfer_fee');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: 'Fee',
+        title: 'Product Fee',
         // icon: 'user',
         parent: 'moneyTransfer.home'
     }

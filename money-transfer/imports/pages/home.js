@@ -32,13 +32,16 @@ Template.MoneyTransfer_home.events({
     },
     'click .alertDate'(e, instance){
         var lastDate = moment('1/9/2016', 'DD/MM/YYYY');
-//var b = moment('1/1/2013', 'DD/MM/YYYY');
-        var curerentDate = moment();
-        var days = curerentDate.diff(lastDate, 'days');
+        //var b = moment('1/1/2013', 'DD/MM/YYYY');
+        var currentDate = moment();
+        var days = currentDate.diff(lastDate, 'days');
         var numberDay = 10;
-        if (days > numberDay) {
-            alert('your turn exired');
-        }
+        Meteor.call('countCustomerExpired', function (error, result) {
+            console.log(result);
+        });
+        // if (days > numberDay) {
+        //     alert(days);
+        // }
     }
 
 });

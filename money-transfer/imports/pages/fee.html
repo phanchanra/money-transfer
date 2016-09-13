@@ -24,7 +24,7 @@
 </template>
 <!--Action-->
 <!--<template name="MoneyTransfer_addOpeningBalance">-->
-    <!--<button type="button" name="add-balance" class="btn btn-default add-balance" title="Add opening balance">+</button>-->
+<!--<button type="button" name="add-balance" class="btn btn-default add-balance" title="Add opening balance">+</button>-->
 <!--</template>-->
 <!--Product-->
 <template name="MoneyTransfer_feeProduct">
@@ -58,7 +58,7 @@
                                 Customer Fee
                             </div>
                             <div class="col-sm-2">
-                                Owner Fee
+                                Agent Fee
                             </div>
                             <div class="col-sm-1">
                                 Action
@@ -96,10 +96,6 @@
                         <dd>{{productId}}</dd>
                         <dt>Currency</dt>
                         <dd>{{currencyId}}</dd>
-                        <dt>Account Id</dt>
-                        <dd>{{accountId}}</dd>
-                        <dt>Opening Amount</dt>
-                        <dd>{{balanceAmount}}</dd>
                     </fieldset>
 
                     <fieldset>
@@ -127,27 +123,27 @@
 <!--Show-->
 <template name="MoneyTransfer_showProduct">
     <div class="box-body">
-        <!--{{#if Template.subscriptionsReady}}-->
+    {{#if Template.subscriptionsReady}}
 
-            <dl class="dl-horizontal">
-                <fieldset>
-                    <legend>Product</legend>
-                    <dt>ID</dt>
-                    <dd>{{_id}}</dd>
-                    <dt>Product </dt>
-                    <dd>{{name}}</dd>
-                    <dt>Date</dt>
-                    <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
-                    <dt>Status</dt>
-                    <dd>{{status}}</dd>
-                    <dt>Address</dt>
-                    <dd>{{address}}</dd>
-                </fieldset>
-            </dl>
+        <dl class="dl-horizontal">
+            <fieldset>
+                <legend>Product</legend>
+                <dt>ID</dt>
+                <dd>{{_id}}</dd>
+                <dt>Product</dt>
+                <dd>{{name}}</dd>
+                <dt>Date</dt>
+                <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                <dt>Status</dt>
+                <dd>{{status}}</dd>
+                <dt>Address</dt>
+                <dd>{{address}}</dd>
+            </fieldset>
+        </dl>
 
-        <!--{{else}}-->
-            <!--{{> loading}}-->
-        <!--{{/if}}-->
+    {{else}}
+        {{> loading}}
+    {{/if}}
     </div>
 </template>
 <!------------Custom contact array field-------------------->
@@ -206,9 +202,9 @@
         {{> afQuickField name=current.customerFee template="bootstrap3" label=false class="input-sm customer-fee" Placeholder="Customer fee"}}
     </div>
     <div class="col-sm-2">
-        {{> afQuickField name=current.ownerFee template="bootstrap3" label=false class="input-sm owner-fee" Placeholder="Agent fee"}}
+        {{> afQuickField name=current.agentFee template="bootstrap3" label=false class="input-sm agent-fee"}}
         <span style="display: none;">
-            {{> afQuickField name=current.agentFee value=agentFee template="bootstrap3" label=false class="input-sm agent-fee"}}
+        {{> afQuickField name=current.ownerFee value=ownerFee template="bootstrap3" label=false class="input-sm owner-fee" Placeholder="Owner fee"}}
         </span>
     </div>
 </template>

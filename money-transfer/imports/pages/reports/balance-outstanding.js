@@ -119,4 +119,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_transferDetailReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_transferBalanceOutstandingReport', hooksObject);

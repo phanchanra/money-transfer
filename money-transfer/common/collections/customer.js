@@ -20,7 +20,7 @@ Customer.generalSchema = new SimpleSchema({
         label: 'Gender',
         defaultValue: "M",
         autoform: {
-             type: "select-radio-inline",
+            type: "select-radio-inline",
             // options: function () {
             //     return SelectOpts.gender(false);
             // }
@@ -32,9 +32,9 @@ Customer.generalSchema = new SimpleSchema({
             }
         }
     },
-    notificationDay:{
-        type:Number,
-        label:"Notification Day",
+    notificationDay: {
+        type: Number,
+        label: "Notification Day",
     },
     dob: {
         type: Date,
@@ -70,6 +70,14 @@ Customer.generalSchema = new SimpleSchema({
                 return inputmaskOptions.phone();
             }
         }
+    },
+    expiredDate: {
+        type: Date,
+        optional: true
+    },
+    lastInvoice: {
+        type: String,
+        optional: true
     },
     email: {
         type: String,

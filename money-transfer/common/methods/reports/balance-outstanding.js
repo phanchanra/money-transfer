@@ -8,7 +8,6 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Transfer} from '../../collections/transfer';
-import {Exchange} from '../../../../core/common/collections/exchange'
 
 export const transferBalanceOutstandingReport = new ValidatedMethod({
     name: 'moneyTransfer.transferBalanceOutstandingReport',
@@ -22,20 +21,14 @@ export const transferBalanceOutstandingReport = new ValidatedMethod({
                 title: {},
                 header: {},
                 content: [{index: 'No Result'}],
-                footer: {}
+                //footer: {}
             };
 
             // let date = _.trim(_.words(params.date, /[^To]+/g));
             let branch = params.branch;
             let product = params.product;
-            let type = params.type;
-            let date = params.repDate;
-            let fDate = moment(date[0]).toDate();
-            let tDate = moment(date[1]).add(1, 'days').toDate();
-            //let exchangeId = params.exchange;
-            let exchange = Exchange.findOne(params.exchange);
-            params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';
-
+            let dateOs = params.repDate;
+            let dateAs = moment(dateOs).add(1, 'days').toDate();
             /****** Title *****/
             data.title = Company.findOne();
 
@@ -46,27 +39,149 @@ export const transferBalanceOutstandingReport = new ValidatedMethod({
             let content = [];
             let selector = {};
             selector.transferDate = {
-                $gte: fDate,
-                $lte: tDate
+                $lt: dateAs
             };
+
             if (!_.isEmpty(branch)) {
                 selector.branchId = {$in: branch};
             }
             if (!_.isEmpty(product)) {
                 selector.productId = {$in: product};
             }
-            if (!_.isEmpty(type)) {
-                selector.type = {$in: type};
-            }
-
             let transfers = Transfer.aggregate([
+                {
+                    $match: selector
+                },
+                // {
+                //     $group: {
+                //         _id: {productId: "$productId", currencyId: "$currencyId"},
+                //         data: {
+                //             $last: "$$ROOT"
+                //         }
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: '$_id.productId',
+                //         currencyData: {
+                //             $addToSet: '$data'
+                //         }
+                //     }
+                // },
+                // // {
+                // //     $group: {
+                // //         _id: '$productId',
+                // //         currencyData:{
+                // //             $addToSet: {
+                // //                 _id: {
+                // //                     $concat: ["$_id.productId", "-", "$_id.currencyId"]
+                // //                 },
+                // //                 data: {
+                // //                     balanceAmount: '$data.balanceA'
+                // //                 }
+                // //             }
+                // //         }
+                // //     }
+                // // },
+                // // {
+                // //     $project: {
+                // //         _id: {
+                // //             $concat: ["$_id.productId", "-", "$_id.currencyId"]
+                // //         },
+                // //         data: 1
+                // //     }
+                // // },
+                // {
+                //     $lookup: {
+                //         from: "moneyTransfer_product",
+                //         localField: "productId",
+                //         foreignField: "_id",
+                //         as: "productDoc"
+                //     }
+                // },
+                // {$unwind: {path: '$productDoc'}},
+                // {
+                //     $project: {
+                //         productId: 1,
+                //         amount: 1,
+                //         balanceAmount: 1,
+                //         currencyId: 1,
+                //         transferDate: 1,
+                //         type: 1,
+                //         accountId: 1,
+                //         productDoc: 1
+                //     },
+                // },
+                // {$sort: {_id: -1}},
+                // {
+                //     $group: {
+                //         _id: null,
+                //         data: {
+                //             $addToSet: '$$ROOT'
+                //         }
+                //     }
+                // }
+                {
+                    $project: {
+                        productId: 1,
+                        amount: 1,
+                        balanceAmount: 1,
+                        currencyId: 1,
+                        transferDate: 1,
+                        type: 1,
+                        accountId: 1,
+                        productDoc: 1
+                    },
+                },
+                {
+                    $group: {
+                        _id: { productId: "$productId", currencyId: "$currencyId" },
+                        data: {
+                            $last: "$$ROOT"
+                        }
+                    }
+                },
+
+                {
+                    $group: {
+                        _id: '$_id.productId',
+                        currencyData: {
+                            $addToSet: '$data'
+                        }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "moneyTransfer_product",
+                        localField: "_id",
+                        foreignField: "_id",
+                        as: "productDoc"
+                    }
+                },
+                { $unwind: { path: '$productDoc' } },
+                // {
+                //     $project: {
+                //         _id: {
+                //             $concat: ["$_id.productId", "-", "$_id.currencyId"]
+                //         },
+                //         data: 1
+                //     }
+                // },
+                // {$sort: {_id: -1}},
+                {
+                    $group: {
+                        _id: null,
+                        data: {
+                            $addToSet: '$$ROOT'
+                        }
+                    }
+                }
 
             ]);
-            if(transfers.length > 0) {
+            if (transfers.length > 0) {
                 data.content = transfers[0].data;
-                data.footer.total = transfers[0].total;
             }
-            console.log(data);
+            //console.log(data);
             return data
         }
     }
