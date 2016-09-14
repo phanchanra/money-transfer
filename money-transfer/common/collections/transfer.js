@@ -140,14 +140,6 @@ Transfer.accountSchema = new SimpleSchema({
             type: 'universe-select',
             options: function () {
                 return SelectOpts.currency();
-                // if (Meteor.isClient && this.isSet) {
-                //
-                //     Meteor.call("getCurrency", this.field('productId').value, function (error, result) {
-                //         if (result) {
-                //             return result;
-                //         }
-                //     });
-                // }
             }
         }
     },

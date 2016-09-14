@@ -75,14 +75,14 @@
                                         <td>{{productDoc._id}}-{{productDoc.name}}</td>
                                         <td>{{moFormat transferDate "DD/MM/YYYY"}}</td>
                                         <td>{{currencyId}}</td>
-                                        <td>{{sumProduct}}</td>
+                                        <td>{{numFormat sumProduct "0,0.00"}}</td>
                                     </tr>
 
                                 {{/each}}
                                 <tr>
                                     <td colspan="5" style="text-align: right;">Grand Total:</td>
 
-                                    <td style="background-color: lightgrey;">{{footer.total}}</td>
+                                    <td style="background-color: lightgrey;">{{numFormat footer.total "0,0.00"}}</td>
                                 </tr>
                                 </tbody>
                             </table>

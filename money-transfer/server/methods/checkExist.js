@@ -1,10 +1,11 @@
 import {Fee} from '../../common/collections/fee';
 Meteor.methods({
-    productAvailable: function (productId, currencyId, feeId) {
+    productAvailableInsert: function (productId, currencyId) {
         if(productId && currencyId){
-            let fee = Fee.findOne({productId: productId, currencyId:currencyId, _id: {$ne: feeId}});
+            let fee = Fee.findOne({productId: productId, currencyId:currencyId});
             if (fee) {
-                return true;
+                console.log(fee);
+                return fee._id;
             } else {
                 return false;
             }
