@@ -1,16 +1,15 @@
-import {Transfer} from '../../common/collections/transfer';
 import {Customer} from '../../common/collections/customer';
 Meteor.methods({
     countCustomerExpired(){
-        let customerCount = Customer.find();
-        tmp = [];
-        customerCount.forEach(function (key, value) {
-            tmp.push({
-                label:key,
-                value:value
-            });
-        });
-        return tmp;
+        let countCustomer = Customer.findOne();
+        let currentDate = moment();
 
+        let expiredDate = moment(countCustomer.expiredDate).toDate();
+        let currentDateCount=moment(currentDate).diff(expiredDate, 'days');
+
+        console.log(currentDateCount);
+        // db.moneyTransfer_customer.find({
+        //     expiredDate: {$lt: currentDate}
+        // })
     }
 });

@@ -28,6 +28,15 @@
 <template name="MoneyTransfer_productShowAction">
     <a href="#" class="js-display-product">{{productId}}</a>
 </template>
+<!-- Sender-->
+<template name="MoneyTransfer_senderShowAction">
+    <a href="#" class="js-display-sender">{{senderId}}</a>
+</template>
+<!-- Receiver-->
+<template name="MoneyTransfer_receiverShowAction">
+    <a href="#" class="js-display-receiver">{{receiverId}}</a>
+</template>
+
 <!--Form-->
 <template name="MoneyTransfer_transferForm">
     {{#if Template.subscriptionsReady}}
@@ -214,7 +223,7 @@
 <!--Show-->
 <template name="MoneyTransfer_transferProductShow">
     <div class="box-body">
-    <!--{{#if Template.subscriptionsReady}}-->
+    {{#if Template.subscriptionsReady}}
         <dl class="dl-horizontal">
             <fieldset>
                 <legend>Product</legend>
@@ -231,8 +240,63 @@
             </fieldset>
         </dl>
 
-            <!--{{else}}-->
-        <!--{{> loading}}-->
-            <!--{{/if}}-->
+    {{else}}
+        {{> loading}}
+    {{/if}}
+    </div>
+</template>
+<template name="MoneyTransfer_transferSenderShow">
+    <div class="box-body">
+    {{#if Template.subscriptionsReady}}
+        <dl class="dl-horizontal">
+            <fieldset>
+                <legend>Sender</legend>
+                <dt>ID</dt>
+                <dd>{{_id}}</dd>
+                <dt>Name </dt>
+                <dd>{{name}}</dd>
+                <dt>Gender </dt>
+                <dd>{{gender}}</dd>
+                <dt>Date</dt>
+                <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
+                <dt>Notification</dt>
+                <dd>{{notificationDay}}</dd>
+                <dt>Telephone</dt>
+                <dd>{{telephone}}</dd>
+                <dt>Address</dt>
+                <dd>{{address}}</dd>
+            </fieldset>
+        </dl>
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+    </div>
+</template><template name="MoneyTransfer_transferReceiverShow">
+    <div class="box-body">
+    {{#if Template.subscriptionsReady}}
+        <dl class="dl-horizontal">
+            <fieldset>
+                <legend>Receiver</legend>
+                <dt>ID</dt>
+                <dd>{{_id}}</dd>
+                <dt>Name </dt>
+                <dd>{{name}}</dd>
+                <dt>Gender </dt>
+                <dd>{{gender}}</dd>
+                <dt>Date</dt>
+                <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
+                <dt>Notification</dt>
+                <dd>{{notificationDay}}</dd>
+                <dt>Telephone</dt>
+                <dd>{{telephone}}</dd>
+                <dt>Address</dt>
+                <dd>{{address}}</dd>
+            </fieldset>
+        </dl>
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
     </div>
 </template>

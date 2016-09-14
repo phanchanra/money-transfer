@@ -36,9 +36,17 @@ tabularOpts.columns = [
             return moment(val).format('DD/MM/YYYY');
         }
     },
-    {data: "senderId", title: "Sender"},
+    {
+        data: "senderId",
+        title: "Sender",
+        tmpl: Meteor.isClient && Template.MoneyTransfer_senderShowAction
+    },
     {data: "senderTelephone", title: "Tel"},
-    {data: "receiverId", title: "Receiver"},
+    {
+        data: "receiverId",
+        title: "Receiver",
+        tmpl: Meteor.isClient && Template.MoneyTransfer_receiverShowAction
+    },
     {data: "receiverTelephone", title: "Tel"},
     {data: "currencyId", title: "Cur"},
     {data: "amount", title: "Amount"},
