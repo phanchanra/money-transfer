@@ -32,7 +32,7 @@ Meteor.methods({
                    {
                        $set: {
                            os: {
-                               date: Date.now(),
+                               date: new Date(),
                                balanceAmount: newBalanceAmountCDCD,
                                balanceAmountFee: newBalanceAmountCDCD
                            }

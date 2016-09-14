@@ -37,7 +37,9 @@ Transfer.after.update(function (userId, doc) {
     let preDoc = this.previous;
     Meteor.call('updateBankAccountFeeAfterUpdate', {doc, preDoc})
 });
+Transfer.after.remove(function (userId, doc) {
 
+});
 
 
 
