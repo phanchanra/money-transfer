@@ -1,0 +1,63 @@
+import {Meteor} from 'meteor/meteor';
+import {Session} from 'meteor/session';
+import {Templete} from 'meteor/templating';
+import {Tabular} from 'meteor/aldeed:tabular';
+import {EJSON} from 'meteor/ejson';
+import {moment} from 'meteor/momentjs:moment';
+import {_} from 'meteor/erasaur:meteor-lodash';
+import {numeral} from 'meteor/numeral:numeral';
+import {lightbox} from 'meteor/theara:lightbox-helpers';
+
+// Lib
+import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
+
+// Collection
+import {Borrowing} from '../collections/borrowing';
+
+// Page
+Meteor.isClient && require('../../imports/pages/borrowing.html');
+
+tabularOpts.name = 'moneyBorrowing.borrowing';
+tabularOpts.collection = Borrowing;
+tabularOpts.columns = [
+    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingAction},
+    {data: "_id", title: "ID"},
+    {
+        data: "borrowingDate",
+        title: "Date",
+        render: function (val, type, doc) {
+            return moment(val).format('DD/MM/YYYY');
+        }
+    },
+    {data: "term", title: "Term (Month)"},
+    {
+        data: "maturityDate",
+        title: "Maturity Date",
+        render: function (val, type, doc) {
+            return moment(val).format('DD/MM/YYYY');
+        }
+    },
+    {
+        data: "interestRate",
+        title: "Rate",
+        render: function (val, type, doc) {
+            return numeral(val).format('0,0.00 %');
+        }
+    },
+    {data: "currencyId", title: "CRC"},
+    {
+        data: "borrowAmount",
+        title: "Borrowing Amount",
+        render: function (val, type, doc) {
+            return numeral(val).format('0,0.00');
+        }
+    },
+    {
+        data: "projectInterest",
+        title: "Project Interest",
+        render: function (val, type, doc) {
+            return numeral(val).format('0,0.00');
+        }
+    },
+];
+export const BorrowingTabular = new Tabular.Table(tabularOpts);

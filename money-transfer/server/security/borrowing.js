@@ -1,14 +1,14 @@
-import {Customer} from '../../common/collections/customer.js';
+import {Borrowing} from '../../common/collections/borrowing';
 
 // Lib
 import '../configs/security.js';
 
-Customer.permit(['insert'])
+Borrowing.permit(['insert'])
     .MoneyTransfer_ifDataInsert()
     .allowInClientCode();
-Customer.permit(['update'])
+Borrowing.permit(['update'])
     .MoneyTransfer_ifDataUpdate()
     .allowInClientCode();
-Customer.permit(['remove'])
+Borrowing.permit(['remove'])
     .MoneyTransfer_ifDataRemove()
     .allowInClientCode();

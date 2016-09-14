@@ -1,7 +1,7 @@
 import {Transfer} from '../../common/collections/transfer.js';
 
 // Lib
-import './_init.js';
+import '../configs/security.js';
 
 Transfer.permit(['insert'])
     .MoneyTransfer_ifDataInsert()

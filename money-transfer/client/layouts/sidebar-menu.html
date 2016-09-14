@@ -101,4 +101,23 @@
         </li>
 
     {{/if}}
+
+    <!--Borrowing-->
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-file"></i>
+            <span>Borrowing</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="{{isActiveRoute name='moneyTransfer.borrowing'}}">
+                <a href="{{pathFor 'moneyTransfer.borrowing'}}">
+                    <i class="fa fa-sun-o"></i> <span>Borrowing</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
 </template>

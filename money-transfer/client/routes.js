@@ -121,4 +121,22 @@ MoneyTransferRoutes.route('/bank-account/:productId/:currencyId', {
     }
 });
 
+//--- Borrowing ---
+// Borrowing
+import '../imports/pages/borrowing';
+MoneyTransferRoutes.route('/borrowing', {
+    name: 'moneyTransfer.borrowing',
+    title: 'Borrowing',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowing');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Borrowing',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
 

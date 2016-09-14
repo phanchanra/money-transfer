@@ -10,10 +10,10 @@ import {Customer} from '../collections/customer.js';
 import {Product} from '../collections/product';
 import {Exchange} from '../../../core/common/collections/exchange';
 
-export let SelectOptMethods = {};
+export let SelectOptsMethod = {};
 
-SelectOptMethods.customer = new ValidatedMethod({
-    name: 'moneyTransfer.selectOptMethods.customer',
+SelectOptsMethod.customer = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.customer',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
@@ -47,8 +47,8 @@ SelectOptMethods.customer = new ValidatedMethod({
     }
 });
 
-SelectOptMethods.product = new ValidatedMethod({
-    name: 'moneyTransfer.selectOptMethods.product',
+SelectOptsMethod.product = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.product',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
@@ -83,8 +83,8 @@ SelectOptMethods.product = new ValidatedMethod({
         }
     }
 });
-// SelectOptMethods.item = new ValidatedMethod({
-//     name: 'moneyTransfer.selectOptMethods.item',
+// SelectOptsMethod.item = new ValidatedMethod({
+//     name: 'moneyTransfer.selectOptsMethod.item',
 //     validate: null,
 //     run(options) {
 //         if (!this.isSimulation) {
@@ -116,8 +116,8 @@ SelectOptMethods.product = new ValidatedMethod({
 //     }
 // });
 
-SelectOptMethods.exchange = new ValidatedMethod({
-    name: 'moneyTransfer.selectOptMethods.exchange',
+SelectOptsMethod.exchange = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.exchange',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
