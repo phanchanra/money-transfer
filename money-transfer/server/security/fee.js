@@ -1,7 +1,7 @@
 import {Fee} from '../../common/collections/fee';
 
 // Lib
-import './_init.js';
+import '../configs/security.js';
 
 Fee.permit(['insert'])
     .MoneyTransfer_ifSetting()

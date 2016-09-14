@@ -1,7 +1,7 @@
 import {Product} from '../../common/collections/product';
 
 // Lib
-import './_init.js';
+import '../configs/security.js';
 
 Product.permit(['insert'])
     .MoneyTransfer_ifSetting()

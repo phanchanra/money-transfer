@@ -60,7 +60,7 @@ Transfer.generalSchema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
-                optionsMethod: 'moneyTransfer.selectOptMethods.customer',
+                optionsMethod: 'moneyTransfer.selectOptsMethod.customer',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
                         let currentBranch = Session.get('currentBranch');
@@ -89,7 +89,7 @@ Transfer.generalSchema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
-                optionsMethod: 'moneyTransfer.selectOptMethods.customer',
+                optionsMethod: 'moneyTransfer.selectOptsMethod.customer',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
                         let currentBranch = Session.get('currentBranch');
@@ -129,7 +129,7 @@ Transfer.accountSchema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'moneyTransfer.selectOptMethods.product'
+                optionsMethod: 'moneyTransfer.selectOptsMethod.product'
             }
         }
     },

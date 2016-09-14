@@ -44,7 +44,7 @@ export const DepositWithdrawalSchema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'moneyTransfer.selectOptMethods.product',
+                optionsMethod: 'moneyTransfer.selectOptsMethod.product',
                 multiple: true
             }
         }
@@ -75,7 +75,7 @@ export const DepositWithdrawalSchema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'moneyTransfer.selectOptMethods.exchange'
+                optionsMethod: 'moneyTransfer.selectOptsMethod.exchange'
             }
         }
     }
