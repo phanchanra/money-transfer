@@ -42,6 +42,8 @@ let indexTmpl = Template.MoneyTransfer_transfer,
     showTmpl = Template.MoneyTransfer_transferShow,
     productTabTmpl = Template.MoneyTransfer_productShowAction,
     productTmpl = Template.MoneyTransfer_transferProductShow,
+    senderTmpl = Template.MoneyTransfer_transferSenderShow,
+    receiverTmpl = Template.MoneyTransfer_transferReceiverShow,
     invoice = Template.generateInvoice;
 
 
@@ -105,20 +107,23 @@ indexTmpl.events({
             // printPageArea('print-invoice');
         });
     },
-    // 'click .js-display-product' (event, instance) {
-    //     Meteor.call("getProduct", this.productId, function (error, result) {
-    //         alertify.transferShow(fa('eye', 'Product'), renderTemplate(productShowTmpl, result));
-    //     });
-    // }
-});
-// Product
-productTabTmpl.events({
     'click .js-display-product' (event, instance) {
         Meteor.call("getProduct", this.productId, function (error, result) {
             alertify.transferShow(fa('eye', 'Product'), renderTemplate(productTmpl, result));
         });
+    },
+    'click .js-display-sender' (event, instance) {
+        Meteor.call("getCustomer", this.senderId, function (error, result) {
+            alertify.transferShow(fa('eye', 'Sender'), renderTemplate(senderTmpl, result));
+        });
+    },
+    'click .js-display-receiver' (event, instance) {
+        Meteor.call("getCustomer", this.receiverId, function (error, result) {
+            alertify.transferShow(fa('eye', 'Receiver'), renderTemplate(receiverTmpl, result));
+        });
     }
 });
+
 // Form
 formTmpl.onRendered(function () {
     $('[name="amount"]').prop("readonly", true);

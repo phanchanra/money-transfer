@@ -138,5 +138,20 @@ MoneyTransferRoutes.route('/borrowing', {
         parent: 'moneyTransfer.home'
     }
 });
-
+// Customer Expired Lis
+import '../imports/pages/customerExpiredDate';
+MoneyTransferRoutes.route('/customer-expired-date', {
+    name: 'moneyTransfer.customerExpiredDate',
+    title: 'Customer Expired Date',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_customerExpiredDate');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Customer Expired Date',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
 

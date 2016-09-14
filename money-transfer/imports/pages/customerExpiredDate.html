@@ -1,0 +1,75 @@
+<!--Index-->
+<template name="MoneyTransfer_customerExpiredDate">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-list"></span> All Customers Expired Date List({{customerCount}})
+                        <div class="pull-right action-buttons">
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
+                                </button>
+                                <ul class="dropdown-menu slidedown">
+                                    <li><a href="#"><span class="glyphicon glyphicon-pencil"></span>Edit</a></li>
+                                    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>Delete</a></li>
+                                    <li><a href="#"><span class="glyphicon glyphicon-flag"></span>Flag</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Date</th>
+                                <th>Telephone</th>
+                                <th>Address</th>
+                                <th>Notification Day</th>
+                                <th>Expired Day</th>
+                                <th>Invoice</th>
+                                <th>Late Day</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each customerExpiredDate}}
+                                <tr>
+                                    <td>{{_id}}</td>
+                                    <td>{{name}}</td>
+                                    <td>{{gender}}</td>
+                                    <td>{{moFormat dob "DD/MM/YYYY"}}</td>
+                                    <td>{{telephone}}</td>
+                                    <td>{{address}}</td>
+                                    <td>{{notificationDay}}</td>
+                                    <td>{{moFormat expiredDate "DD/MM/YYYY"}}</td>
+                                    <td>{{lastInvoice}}</td>
+                                    <td>{{calExpiredDate expiredDate}}</td>
+                                </tr>
+                            {{/each}}
+                            <tr>
+                                <td colspan="10">
+                                    {{#if Template.subscriptionsReady}}
+                                        {{#if hasMorePosts}}
+                                            <button class="btn btn-primary load-more col-xs-12" id="get-checked-data">
+                                                Load More
+                                            </button>
+                                        {{/if}}
+                                    {{else}}
+                                        <div class="loading">{{>spinner}}</div>
+                                    {{/if}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
