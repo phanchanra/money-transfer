@@ -51,43 +51,7 @@ Transfer.after.update(function (userId, doc) {
     //prevDoc = this.previous;
     Meteor.call('updateTransferFeeAfterUpdateTransfer', {doc})
 });
-Transfer.after.remove(function (userId, doc) {
-    let feeUpdateOnTransfer = {};
-    let transferOnTransfer = Transfer.findOne({
-        productId: doc.productId,
-        currencyId: doc.currencyId,
-        _id: {$ne: doc._id}
-    }, {sort: {_id: -1}});
-    let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
 
-    Meteor.defer(function () {
-        if (transferOnTransfer == null || transferOnTransfer == "undefined") {
-            Fee.direct.update(
-                fee._id,
-                {
-                    $set: {
-                        os: {
-                            balanceAmount: 0,
-                            balanceAmountFee: 0
-                        }
-                    }
-                }
-            );
-            Meteor.call('updateCustomerExpireDayAfterRemove', {doc});
-        } else {
-            feeUpdateOnTransfer['os.date'] = new Date();
-            feeUpdateOnTransfer['os.balanceAmount'] = transferOnTransfer.lastBalance.balanceAmount;
-            feeUpdateOnTransfer['os.balanceAmountFee'] = transferOnTransfer.lastBalance.balanceAmountFee;
-            feeUpdateOnTransfer['os.customerFee'] = transferOnTransfer.lastBalance.customerFee;
-            feeUpdateOnTransfer['os.ownerFee'] = transferOnTransfer.lastBalance.ownerFee;
-            feeUpdateOnTransfer['os.agentFee'] = transferOnTransfer.lastBalance.agentFee;
-            Fee.direct.update(
-                fee._id,
-                {
-                    $set: feeUpdateOnTransfer
-                }
-            );
-            Meteor.call('updateCustomerExpireDayAfterRemove', {doc});
-        }
-    });
+Transfer.after.remove(function (userId, doc) {
+    Meteor.call('updateFeeAfterRemoveTransferAndBankAccount', {doc});
 });
