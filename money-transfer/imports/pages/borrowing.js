@@ -67,6 +67,13 @@ indexTmpl.events({
     },
     'click .js-display' (event, instance) {
         alertify.borrowingShow(fa('eye', 'Borrowing'), renderTemplate(showTmpl, {borrowingId: this._id}));
+    },
+    'click .js-invoice' (event, instance) {
+        let params = {};
+        let queryParams = {borrowingId: this._id};
+        let path = FlowRouter.path("moneyTransfer.borrowingInvoiceReport", params, queryParams);
+
+        window.open(path, '_blank');
     }
 });
 
@@ -76,12 +83,24 @@ formTmpl.onCreated(function () {
     this.term = new ReactiveVar(0);
 
     this.autorun(()=> {
+        // Check for update form
         let currentData = Template.currentData();
         if (currentData) {
-            this.subscribe('moneyTransfer.borrowingById', currentData.borrowingId);
-        }
+            $.blockUI();
 
+            const handle = this.subscribe('moneyTransfer.borrowingById', currentData.borrowingId);
+            if (handle.ready()) {
+                let borrowingDoc = Borrowing.findOne({_id: currentData.borrowingId});
+                this.borrowingDate.set(borrowingDoc.borrowingDate);
+                this.term.set(borrowingDoc.term);
+
+                Meteor.setTimeout(function () {
+                    $.unblockUI();
+                }, 200);
+            }
+        }
     });
+
 });
 
 formTmpl.onRendered(function () {
@@ -93,6 +112,7 @@ formTmpl.onRendered(function () {
 
     // Tracker
     this.autorun(()=> {
+        // Cal maturity date
         let maturityDate = null, minMaturityDate = false, maxMaturityDate = false;
 
         if (this.borrowingDate.get() && this.term.get()) {
@@ -155,14 +175,6 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
-    before: {
-        insert: function (doc) {
-            return doc;
-        },
-        update: function (doc) {
-            return doc;
-        }
-    },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.borrowing().close();

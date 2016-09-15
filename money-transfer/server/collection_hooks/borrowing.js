@@ -23,3 +23,17 @@ Borrowing.before.insert(function (userId, doc) {
     });
 
 });
+
+Borrowing.before.update(function (userId, doc, fieldNames, modifier, options) {
+    modifier.$set = modifier.$set || {};
+
+    modifier.$set.tenor = moment(modifier.$set.maturityDate).diff(modifier.$set.borrowingDate, 'days');
+    modifier.$set.projectInterest = CalInterest({
+        amount: modifier.$set.borrowingAmount,
+        numOfDay: modifier.$set.tenor,
+        interestRate: modifier.$set.interestRate,
+        method: 'M',
+        dayInMethod: 30,
+        currencyId: modifier.$set.currencyId
+    });
+});

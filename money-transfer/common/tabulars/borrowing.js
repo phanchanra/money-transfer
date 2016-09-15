@@ -46,7 +46,7 @@ tabularOpts.columns = [
     },
     {data: "currencyId", title: "CRC"},
     {
-        data: "borrowAmount",
+        data: "borrowingAmount",
         title: "Borrowing Amount",
         render: function (val, type, doc) {
             return numeral(val).format('0,0.00');
