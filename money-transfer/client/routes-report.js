@@ -39,6 +39,7 @@ MoneyTransferRoutes.route('/transfer-summary-report', {
         parent: 'moneyTransfer.home'
     }
 });
+
 // Detail Transfer
 import '../imports/pages/reports/transfer-detail';
 MoneyTransferRoutes.route('/transfer-detail-report', {
@@ -55,6 +56,7 @@ MoneyTransferRoutes.route('/transfer-detail-report', {
         parent: 'moneyTransfer.home'
     }
 });
+
 // Transfer Transaction
 import '../imports/pages/reports/transfer-transaction';
 MoneyTransferRoutes.route('/transfer-transaction-report', {
@@ -71,6 +73,7 @@ MoneyTransferRoutes.route('/transfer-transaction-report', {
         parent: 'moneyTransfer.home'
     }
 });
+
 // Deposit withdrawal
 import '../imports/pages/reports/deposit-withdrawal';
 MoneyTransferRoutes.route('/deposit-withdrawal-report', {
@@ -87,6 +90,7 @@ MoneyTransferRoutes.route('/deposit-withdrawal-report', {
         parent: 'moneyTransfer.home'
     }
 });
+
 // Balance Outstanding
 import '../imports/pages/reports/balance-outstanding';
 MoneyTransferRoutes.route('/balance-outstanding-report', {
@@ -102,4 +106,15 @@ MoneyTransferRoutes.route('/balance-outstanding-report', {
         //icon: 'users',
         parent: 'moneyTransfer.home'
     }
+});
+
+//--- Borrowing ---//
+// Invoice
+import '../imports/pages/reports/borrowingInvoice';
+MoneyTransferRoutes.route('/borrowing-invoice-report', {
+    name: 'moneyTransfer.borrowingInvoiceReport',
+    title: "Borrowing Invoice",
+    action: function (params, queryParams) {
+        Layout.report('MoneyTransfer_borrowingInvoiceReport');
+    },
 });

@@ -1,0 +1,86 @@
+<template name="MoneyTransfer_borrowingInvoiceReport">
+    <div class="rpt rpt-3x rpt-portrait-a5">
+        {{#if rptData}}
+
+            {{#with rptData}}
+
+                <!--Title-->
+                {{#with rptTitle}}
+                    <div class="rpt-title">
+                        <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                        <div class="rpt-title-3x">{{enName}}</div>
+                        <div class="rpt-title-3x"><u>វិក្កយបត្រខ្ខីប្រាក់</u></div>
+                        <div>អាសយដ្ឋាន: {{khAddress}}, ទូរស័ព្ទ: {{telephone}}</div>
+                    </div>
+                {{/with}}
+
+                <!--Header-->
+                {{#with rptContent}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <div style="padding-bottom: 1em"><strong>លេខកូដ:</strong> {{_id}}</div>
+                            <div class="borrow-invoice">
+                                <strong>អតិថិជន:</strong>
+                                {{customerDoc.name}},
+                                ទូរស័ព្ទ: {{customerDoc.telephone}}
+                            </div>
+                            <div class="borrow-invoice"><strong>កាលបរិច្ឆេទខ្ចី:</strong> {{moFormat borrowingDate
+                                                                                                     "DD/MM/YYYY"}}
+                            </div>
+                            <div class="borrow-invoice"><strong>ចំនួនខែខ្ចី:</strong> {{term}} ខែ</div>
+                            <div class="borrow-invoice"><strong>កាលបរិច្ចេទបញ្ចប់:</strong> {{moFormat maturityDate
+                                                                                                       "DD/MM/YYYY"}}
+                            </div>
+                            <div class="borrow-invoice"><strong>ចំនួនថ្ងៃសរុប:</strong> {{tenor}} ថ្ងៃ</div>
+                        </div>
+
+                        <div style="width: 50%; float: right">
+                            <div class="borrow-invoice"><strong>រូបិយប័ណ្ណ:</strong> {{currencyId}}</div>
+                            <div class="borrow-invoice"><strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate
+                                                                                                     "0,0.00"}} %
+                                ក្នុងមួយខែ
+                            </div>
+                            <div class="borrow-invoice"><strong>ចំនួនប្រាក់ខ្ចី:</strong> {{numFormat borrowingAmount
+                                                                                                      "0,0.00"}} {{currencyId}}
+                            </div>
+                            <div class="borrow-invoice"><strong>ចំនួនការប្រាក់សរុប:</strong> {{numFormat projectInterest
+                                                                                                         "0,0.00"}} {{currencyId}}
+                            </div>
+                            <div class="borrow-invoice"><strong>បរិយាយ:</strong> {{memo}}</div>
+                        </div>
+                    </div>
+                {{/with}}
+                <!--/Report data-->
+
+            {{/with}}
+            <!--/Report init-->
+
+            <!--Sign-->
+            <br>
+            <br>
+            <table class="text-center" width="100%" border="0">
+                <tr>
+                    <td width="50%">
+                        <div style="margin-bottom: 7em; font-weight: bolder">
+                            អ្នកខ្ចីប្រាក់
+                        </div>
+                        __________________
+                    </td>
+                    <td width="50%">
+                        <div style="margin-bottom: 7em; font-weight: bolder">
+                            បេឡាធិការ
+                        </div>
+                        __________________
+                    </td>
+                </tr>
+
+            </table>
+
+            <!--Auto print-->
+            <!--{{autoprint close="true"}}-->
+
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
