@@ -21,7 +21,7 @@ Meteor.methods({
 
             if (doc.type == "IN") {
                 //check undefined
-                if (transferUpdate.lastBalance == null || transferUpdate.lastBalance == "undefined") {
+                if (transferUpdate.lastBalance == '' || transferUpdate.lastBalance == null || transferUpdate.lastBalance == "undefined") {
                     let balanceAmount = transferUpdate.balanceAmount + doc.amount;
                     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
                     let balanceAmountFee = balanceAmount + doc.feeDoc.agentFee;
@@ -91,7 +91,7 @@ Meteor.methods({
                 Meteor.call('updateCustomerExpireDay', {doc});
             } else if (doc.type == "OUT") {
                 //check undefined
-                if (transferUpdate.lastBalance == null || transferUpdate.lastBalance == "undefined") {
+                if (transferUpdate.lastBalance == '' || transferUpdate.lastBalance == null || transferUpdate.lastBalance == "undefined") {
                     let balanceAmount = transferUpdate.balanceAmount - doc.amount;
                     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
                     let balanceAmountFee = (balanceAmount + doc.feeDoc.agentFee);

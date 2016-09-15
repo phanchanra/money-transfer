@@ -92,6 +92,8 @@ export const transferDetailReport = new ValidatedMethod({
                         productId: 1,
                         productDoc: 1,
                         transferDate: 1,
+                        type:1,
+                        amount:1,
                         sumProduct: {
                             $sum: {
                                 $cond: {//condition sum by currency and product

@@ -59,7 +59,6 @@ export const transferSummaryReport = new ValidatedMethod({
             if (!_.isEmpty(type)) {
                 selector.type = {$in: type};
             }
-
             //let index = 1;
             // Transfer.find(selector)
             //     .forEach(function (obj) {
@@ -166,7 +165,7 @@ export const transferSummaryReport = new ValidatedMethod({
                             $sum: {
                                 $cond: {
                                     if: {
-                                        $eq: ["currencyId", "THB"]
+                                        $eq: ["$currencyId", "THB"]
                                     },
                                     then: {$divide: ["$totalAmount", exchange.rates.THB]},
 
@@ -175,7 +174,7 @@ export const transferSummaryReport = new ValidatedMethod({
                                             if: {
                                                 $eq: ["$currencyId", "KHR"]
                                             },
-                                            then: {divide: ["$totalAmount", exchange.rates.KHR]},
+                                            then: {$divide: ["$totalAmount", exchange.rates.KHR]},
                                             else: "$totalAmount"
                                         }
                                     }

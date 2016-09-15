@@ -43,7 +43,7 @@
                 <ul class="menu">
                     {{#each customerExpiredDate}}
                         <li>
-                            <a href="#">
+                            <a href="#" data-customerId={{_id}} class="customer-alert">
                                 {{name}} (អត់បានមក {{calExpiredDate expiredDate}} ថ្ងៃហើយ!)
                                 <!--<i class="fa fa-users text-aqua"></i> 5 new members joined today-->
                             </a>
@@ -91,6 +91,34 @@
     <!--</li>-->
     <!--</ul>-->
     <!--</li>-->
+</template>
+<template name="MoneyTransfer_customerAlertShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>Customer Alert List</legend>
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Name </dt>
+                    <dd>{{name}}</dd>
+                    <dt>Gender </dt>
+                    <dd>{{gender}}</dd>
+                    <dt>Date</dt>
+                    <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
+                    <dt>Notification</dt>
+                    <dd>{{notificationDay}}</dd>
+                    <dt>Telephone</dt>
+                    <dd>{{telephone}}</dd>
+                    <dt>Address</dt>
+                    <dd>{{address}}</dd>
+                </fieldset>
+            </dl>
+
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
 </template>
 
 
