@@ -58,21 +58,7 @@ export const transferTransactionReport = new ValidatedMethod({
             if (!_.isEmpty(type)) {
                 selector.type = {$in: type};
             }
-            //let index = 1;
-            // Transfer.find(selector)
-            //     .forEach(function (obj) {
-            //         // Do something
-            //         obj.index = index;
-            //
-            //         content.push(obj);
-            //
-            //         index++;
-            //     });
-            //
-            // if (content.length > 0) {
-            //     data.content = content;
-            // }
-            ////
+
             let transfers = Transfer.aggregate([
                 {
                     $match: selector
@@ -210,9 +196,9 @@ export const transferTransactionReport = new ValidatedMethod({
                                 }
                             }
                         },
-                        discountFeeSum: {
-                            $sum: '$discountFee'
-                        },
+                        // discountFeeSum: {
+                        //     $sum: '$discountFee'
+                        // },
                         products: {
                             $addToSet: '$$ROOT'
                         }
@@ -228,7 +214,7 @@ export const transferTransactionReport = new ValidatedMethod({
                         },
                         total: {$sum: '$totalUSD'},
                         customerFee: {$sum: '$customerFeeUSD'},
-                        discountFee: {$sum: '$discountFeeSum'},
+                        // discountFee: {$sum: '$discountFeeSum'},
                         agentFee: {$sum: '$agentFeeUSD'},
                         totalFee: {$sum: '$totalFeeUSD'},
                         totalAmount: {$sum: '$totalAmountUSD'}
@@ -239,7 +225,7 @@ export const transferTransactionReport = new ValidatedMethod({
                 data.content = transfers[0].data;
                 data.footer.total = transfers[0].total;
                 data.footer.customerFee = transfers[0].customerFee;
-                data.footer.discountFee = transfers[0].discountFee;
+                // data.footer.discountFee = transfers[0].discountFee;
                 data.footer.agentFee = transfers[0].agentFee;
                 data.footer.totalFee = transfers[0].totalFee;
                 data.footer.totalAmount = transfers[0].totalAmount;

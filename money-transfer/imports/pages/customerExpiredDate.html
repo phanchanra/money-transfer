@@ -12,11 +12,11 @@
                                         data-toggle="dropdown">
                                     <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
                                 </button>
-                                <ul class="dropdown-menu slidedown">
-                                    <li><a href="#"><span class="glyphicon glyphicon-pencil"></span>Edit</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>Delete</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-flag"></span>Flag</a></li>
-                                </ul>
+                                <!--<ul class="dropdown-menu slidedown">-->
+                                    <!--<li><a href="#"><span class="glyphicon glyphicon-pencil"></span>Edit</a></li>-->
+                                    <!--<li><a href="#"><span class="glyphicon glyphicon-trash"></span>Delete</a></li>-->
+                                    <!--<li><a href="#"><span class="glyphicon glyphicon-flag"></span>Flag</a></li>-->
+                                <!--</ul>-->
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,8 @@
                                             </button>
                                         {{/if}}
                                     {{else}}
-                                        <div class="loading">{{>spinner}}</div>
+                                        {{> loading}}
+                                        <!--<div class="loading">{{>spinner}}</div>-->
                                     {{/if}}
                                 </td>
                             </tr>
