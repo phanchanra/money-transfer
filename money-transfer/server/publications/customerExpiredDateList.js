@@ -18,9 +18,9 @@ import {Customer} from '../../common/collections/customer';
 // return Customer.find({});
 //});
 Meteor.publish('moneyTransfer.customerExpiredDateList', function (limit) {
+    this.unblock();
     Meteor._sleepForMs(200);
     if (this.userId) {
-        this.unblock();
         let currentDate = moment().toDate();
         return Customer.find({expiredDate: {$lt: currentDate}}, {limit:limit});
     }

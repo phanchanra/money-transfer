@@ -26,7 +26,6 @@ import '../../../core/client/components/form-footer.js';
 import {Customer} from '../../common/collections/customer';
 
 import './customerExpiredDate.html';
-
 // Declare template
 let indexTmpl = Template.MoneyTransfer_customerExpiredDate;
 // Index
