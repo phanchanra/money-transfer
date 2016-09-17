@@ -4,25 +4,15 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {Customer} from '../../common/collections/customer';
 
-//Meteor.publish('moneyTransferCustomerExpiredDate', function moneyTransferCustomerExpiredDate() {
-// this.unblock();
-// Meteor._sleepForMs(200);
-//
-// new SimpleSchema({
-//     customerId: {type: String}
-// }).validate({});
-//
-// if (!this.userId) {
-//     return this.ready();
-// }
-// return Customer.find({});
-//});
-Meteor.publish('moneyTransfer.customerExpiredDateList', function (limit) {
+Meteor.publish('moneyTransfer.customerExpiredDateList', function (limit, searchValue) {
     this.unblock();
     Meteor._sleepForMs(200);
     if (this.userId) {
         let currentDate = moment().toDate();
-        return Customer.find({expiredDate: {$lt: currentDate}}, {limit:limit});
+        if (!searchValue) {
+            return Customer.find({expiredDate: {$lt: currentDate}}, {limit: limit});
+        }
+        return Customer.find({expiredDate: {$lt: currentDate}, $text: {$search: searchValue}}, {limit: limit});
     }
     return this.ready();
 });
