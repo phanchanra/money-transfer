@@ -107,6 +107,22 @@ MoneyTransferRoutes.route('/balance-outstanding-report', {
         parent: 'moneyTransfer.home'
     }
 });
+// Balance
+import '../imports/pages/reports/balance';
+MoneyTransferRoutes.route('/balance-report', {
+    name: 'moneyTransfer.transferBalanceReport',
+    title: "Balance",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_transferBalanceReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Balance Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
 
 //--- Borrowing ---//
 // Invoice

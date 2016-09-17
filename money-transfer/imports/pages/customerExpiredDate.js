@@ -34,12 +34,13 @@ indexTmpl.onCreated(function () {
     let instance = this;
     // 2. initialize the reactive variables
     instance.loaded = new ReactiveVar(0);
-    instance.limit = new ReactiveVar(5);
+    instance.limit = new ReactiveVar(10);
+    // instance.query = new ReactiveVar();
 
     instance.autorun(function () {
         // get the limit
         let limit = instance.limit.get();
-        console.log(limit);
+        // let query = instance.query.get();
         let subscription = Meteor.subscribe('moneyTransfer.customerExpiredDateList', limit);
         // if subscription is ready, set limit to newLimit
         if (subscription.ready()) {
@@ -51,7 +52,13 @@ indexTmpl.onCreated(function () {
 
     // 3. Cursor
     instance.customers = function () {
-        return Customer.find({}, {limit: instance.loaded.get()});
+        let searchName = Session.get("searchValue");
+        //check for search
+        if (searchName) {
+            return Customer.find({name: searchName}, {limit: instance.loaded.get()});
+        } else {
+            return Customer.find({}, {limit: instance.loaded.get()});
+        }
     }
 });
 indexTmpl.helpers({
@@ -76,8 +83,14 @@ indexTmpl.events({
         // get current value for limit, i.e. how many customer are currently displayed
         let limit = instance.limit.get();
         // increase limit by 5 and update it
-        limit += 5;
+        limit += 10;
         instance.limit.set(limit);
     },
+    "keyup #searchValue": function (e) {
+        e.preventDefault();
+        Session.set("searchValue", $(e.currentTarget).val());
+        instance.limit.set(10);
+    }
+
 });
 
