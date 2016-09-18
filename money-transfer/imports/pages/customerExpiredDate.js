@@ -87,9 +87,9 @@ indexTmpl.events({
         instance.limit.set(limit);
     },
     "keyup #searchValue": function (e) {
-        e.preventDefault();
+        //e.preventDefault();
         Session.set("searchValue", $(e.currentTarget).val());
-        instance.limit.set(10);
+
     }
 
 });

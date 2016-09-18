@@ -31,6 +31,8 @@ tabularOpts.columns = [
             return moment(val).format('DD/MM/YYYY');
         }
     },
+    {data:"productId", title:"Product"},
+    {data:"currencyId", title:"Currency"},
     {data: "amount", title: "Amount"},
     {data: "balanceAmount", title: "Balance Amount"},
 ];

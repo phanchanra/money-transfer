@@ -63,18 +63,20 @@
                         <legend>General</legend>
                         <dt>ID</dt>
                         <dd>{{_id}}</dd>
-                        <dt>Name</dt>
-                        <dd>{{name}}</dd>
+                        <dt>Account Id</dt>
+                        <dd>{{accountId}}</dd>
+                        <dt>Type</dt>
+                        <dd>{{type}}</dd>
                         <dt>Register Date</dt>
-                        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
-                        <dt>Status</dt>
-                        <dd>{{status}}</dd>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Contact</legend>
-                        <dt>Address</dt>
-                        <dd>{{address}}</dd>
+                        <dd>{{moFormat transferDate "DD/MM/YYYY"}}</dd>
+                        <dt>Product</dt>
+                        <dd>{{productId}}</dd>
+                        <dt>currencyId</dt>
+                        <dd>{{currencyId}}</dd>
+                        <dt>Amount</dt>
+                        <dd>{{amount}}</dd>
+                        <dt>Balance Amount</dt>
+                        <dd>{{balanceAmount}}</dd>
                     </fieldset>
                 </dl>
             {{/with}}
