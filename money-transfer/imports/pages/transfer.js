@@ -61,7 +61,6 @@ indexTmpl.helpers({
     },
     selector() {
         return {branchId: Session.get('currentBranch'), type: {$in: ['IN', 'OUT']}};
-        // return {branchId: Session.get('currentBranch'), status: 'Thai'};
     }
 });
 
@@ -71,26 +70,53 @@ indexTmpl.events({
     },
     'click .js-update' (event, instance) {
         Session.set("transferId", this._id);
-        //tmpCollection.findOne();
-        tmpCollection.insert({
-                totalFee: this.totalFee,
-                totalAmount: this.totalAmount,
-                fromAmount: this.feeDoc.fromAmount,
-                toAmount: this.feeDoc.toAmount,
-                customerFee: this.feeDoc.customerFee,
-                ownerFee: this.feeDoc.ownerFee,
-                agentFee: this.feeDoc.agentFee
+        let totalFee = this.totalFee;
+        let totalAmount = this.totalAmount;
+        let feeDocAmount = this.feeDoc.fromAmount;
+        let feeDocToAmount = this.feeDoc.toAmount;
+        let feeDocCustomerFee = this.feeDoc.customerFee;
+        let feeDocOwnerFee = this.feeDoc.ownerFee;
+        let feeDocAgentFee = this.feeDoc.agentFee;
+        Meteor.call('lastTransferIdRemoveEdit', {
+            _id: this._id,
+            productId: this.productId,
+            currencyId: this.currencyId
+        }, (error, result) => {
+            if (result) {
+                //tmpCollection.findOne();
+                tmpCollection.insert({
+                        totalFee: totalFee,
+                        totalAmount: totalAmount,
+                        fromAmount: feeDocAmount,
+                        toAmount: feeDocToAmount,
+                        customerFee: feeDocCustomerFee,
+                        ownerFee: feeDocOwnerFee,
+                        agentFee: feeDocAgentFee
+                    }
+                );
+                alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this));
+            } else {
+                swal("Sorry can not remove", "This transfer is not last!");
             }
-        );
+        });
 
-        alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Transfer,
-            {_id: this._id},
-            {title: 'Transfer', transferTitle: this._id}
-        );
+        Meteor.call('lastTransferIdRemoveEdit', {
+            _id: this._id,
+            productId: this.productId,
+            currencyId: this.currencyId
+        }, function (error, result) {
+            if (result) {
+                destroyAction(
+                    Transfer,
+                    {_id: this._id},
+                    {title: 'Transfer', transferTitle: this._id}
+                );
+            } else {
+                swal("Sorry can not remove", "This transfer is not last!");
+            }
+        });
     },
     'click .js-display' (event, instance) {
         alertify.transferShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
@@ -269,7 +295,7 @@ formTmpl.events({
         } else {
             symbol = 'B'
         }
-        Session.set("currencyId", currencyId);
+        //Session.set("currencyId", currencyId);
         Session.set("currencySymbol", symbol);
         clearOnchange();
         tmpCollection.remove({});
@@ -304,7 +330,13 @@ formTmpl.events({
 
                 let totalAmount = calculateTotalAmount(amount, result.customerFee);
                 tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+                instance.$('.save').prop('disabled', false);
+                instance.$('.save-print').prop('disabled', false);
                 //, feeDoc: result
+            }else{
+                instance.$('.save').prop('disabled', true);
+                instance.$('.save-print').prop('disabled', true);
+                swal("Please check", "Your balance are out of fee, not yet setting!");
             }
         });
     },

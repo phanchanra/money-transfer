@@ -67,11 +67,17 @@ indexTmpl.events({
         alertify.fee(fa('pencil', 'Fee'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Fee,
-            {_id: this._id},
-            {title: 'Fee', feeTitle: this._id}
-        );
+        Meteor.call('productFeeExist', this.productId, this.currencyId, function (error, result) {
+            if (result) {
+                swal("Sorry can not remove", "This product fee is already used!");
+            } else {
+                destroyAction(
+                    Fee,
+                    {_id: this._id},
+                    {title: 'Fee', feeTitle: this._id}
+                );
+            }
+        });
     },
     'click .js-display' (event, instance) {
         alertify.feeShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
@@ -159,7 +165,6 @@ formTmpl.onRendered(function () {
 });
 formTmpl.events({
     'change [name="productId"]'(e, instance){
-        debugger;
         let productId = $(e.currentTarget).val();
         //Session.set("productId", productId);
         let currencySymbol = $('[name="currencyId"]').val();

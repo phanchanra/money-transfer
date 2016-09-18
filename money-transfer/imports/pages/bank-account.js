@@ -78,14 +78,38 @@ indexTmpl.events({
         alertify.bankAccount(fa('plus', 'Bank Account'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.bankAccount(fa('pencil', 'Bank Account'), renderTemplate(formTmpl, this));
+        let productId = FlowRouter.getParam('productId');
+        let currencyId = FlowRouter.getParam('currencyId');
+        Meteor.call('lastTransferIdRemoveEdit', {
+            _id: this._id,
+            productId: productId,
+            currencyId: currencyId
+        }, (error, result) => {
+            if (result) {
+                alertify.bankAccount(fa('pencil', 'Bank Account'), renderTemplate(formTmpl, this));
+            } else {
+                swal("Sorry can not remove", "This bank account is not last!");
+            }
+        });
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Transfer,
-            {_id: this._id},
-            {title: 'Bank Account', bankAccountTitle: this._id}
-        );
+        let productId = FlowRouter.getParam('productId');
+        let currencyId = FlowRouter.getParam('currencyId');
+        Meteor.call('lastTransferIdRemoveEdit', {
+            _id: this._id,
+            productId: productId,
+            currencyId: currencyId
+        }, function (error, result) {
+            if (result) {
+                destroyAction(
+                    Transfer,
+                    {_id: this._id},
+                    {title: 'Transfer', transferTitle: this._id}
+                );
+            } else {
+                swal("Sorry can not remove", "This bank account is not last!");
+            }
+        });
     },
     'click .js-display' (event, instance) {
         alertify.bankAccountShow(fa('eye', 'Bank Account'), renderTemplate(showTmpl, this));
