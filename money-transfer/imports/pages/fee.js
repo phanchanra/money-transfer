@@ -67,14 +67,15 @@ indexTmpl.events({
         alertify.fee(fa('pencil', 'Fee'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
+        let id = this._id;
         Meteor.call('productFeeExist', this.productId, this.currencyId, function (error, result) {
             if (result) {
                 swal("Sorry can not remove", "This product fee is already used!");
             } else {
                 destroyAction(
                     Fee,
-                    {_id: this._id},
-                    {title: 'Fee', feeTitle: this._id}
+                    {_id: id},
+                    {title: 'Fee', feeTitle: id}
                 );
             }
         });
