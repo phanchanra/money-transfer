@@ -36,7 +36,7 @@ Template.MoneyTransfer_home.events({
         // var currentDate = moment();
         // var days = currentDate.diff(lastDate, 'days');
         // var numberDay = 10;
-        Meteor.call('countCustomerExpired') ;
+        //Meteor.call('countCustomerExpired') ;
         // if (days > numberDay) {
         //     alert(days);
         // }

@@ -52,10 +52,10 @@ indexTmpl.onCreated(function () {
 
     // 3. Cursor
     instance.customers = function () {
-        let searchName = Session.get("searchValue");
+        let searchName = Session.get("prefix");
         //check for search
         if (searchName) {
-            return Customer.find({name: searchName}, {limit: instance.loaded.get()});
+            return Customer.find({name: {$regex: searchName + ".*", $options: 'i'}}, {limit: instance.loaded.get()});
         } else {
             return Customer.find({}, {limit: instance.loaded.get()});
         }
@@ -88,7 +88,7 @@ indexTmpl.events({
     },
     "keyup #searchValue": function (e) {
         //e.preventDefault();
-        Session.set("searchValue", $(e.currentTarget).val());
+        Session.set("prefix", $(e.currentTarget).val());
 
     }
 

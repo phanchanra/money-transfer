@@ -102,6 +102,7 @@ indexTmpl.events({
 
     },
     'click .js-destroy' (event, instance) {
+        let id = this._id;
         Meteor.call('lastTransferIdRemoveEdit', {
             _id: this._id,
             productId: this.productId,
@@ -110,8 +111,8 @@ indexTmpl.events({
             if (result) {
                 destroyAction(
                     Transfer,
-                    {_id: this._id},
-                    {title: 'Transfer', transferTitle: this._id}
+                    {_id: id},
+                    {title: 'Transfer', transferTitle: id}
                 );
             } else {
                 swal("Sorry can not remove", "This transfer is not last!");
