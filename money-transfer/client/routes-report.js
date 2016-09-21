@@ -19,7 +19,11 @@ let MoneyTransferRoutes = FlowRouter.group({
     title: "Money Transfer",
     titlePrefix: 'Money Transfer > ',
     subscriptions: function (params, queryParams) {
-//     this.register('files', Meteor.subscribe('files'));
+        // Branch by user
+        if (Meteor.user()) {
+            let rolesBranch = Meteor.user().rolesBranch;
+            this.register('core.branch', Meteor.subscribe('core.branch', {_id: {$in: rolesBranch}}));
+        }
     }
 });
 
@@ -108,7 +112,9 @@ MoneyTransferRoutes.route('/balance-outstanding-report', {
     }
 });
 
-//--- Borrowing ---//
+/********************
+ * Borrowing
+ *******************/
 // Invoice
 import '../imports/pages/reports/borrowingInvoice';
 MoneyTransferRoutes.route('/borrowing-invoice-report', {
@@ -117,4 +123,71 @@ MoneyTransferRoutes.route('/borrowing-invoice-report', {
     action: function (params, queryParams) {
         Layout.report('MoneyTransfer_borrowingInvoiceReport');
     },
+});
+
+// Borrowing
+import '../imports/pages/reports/borrowing';
+MoneyTransferRoutes.route('/borrowing-report', {
+    name: 'moneyTransfer.borrowingReport',
+    title: "Borrowing Report",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Borrowing Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// Borrowing status
+import '../imports/pages/reports/borrowingStatus';
+MoneyTransferRoutes.route('/borrowing-status-report', {
+    name: 'moneyTransfer.borrowingStatusReport',
+    title: "Borrowing Status Report",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowingStatusReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Borrowing Status Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Borrowing balance
+import '../imports/pages/reports/borrowingBalance';
+MoneyTransferRoutes.route('/borrowing-balance-report', {
+    name: 'moneyTransfer.borrowingBalanceReport',
+    title: "Borrowing Balance Report",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowingBalanceReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Borrowing Balance Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// Borrowing payment
+import '../imports/pages/reports/borrowingPayment';
+MoneyTransferRoutes.route('/borrowing-payment-report', {
+    name: 'moneyTransfer.borrowingPaymentReport',
+    title: "Borrowing Payment Report",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowingPaymentReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Borrowing Payment Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
 });

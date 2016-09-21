@@ -137,7 +137,7 @@ SelectOptsMethod.exchange = new ValidatedMethod({
 
             let data = Exchange.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = 'Date: ' + moment(value.exDate).format('DD/MM/YYYY')+ ' ' + value.base +'  '+ value.rates.USD + '=' + value.rates.KHR +'KHR'+ ' | ' + value.rates.THB+'THB';
+                let label = 'Date: ' + moment(value.exDate).format('DD/MM/YYYY') + ' ' + value.base + '  ' + value.rates.USD + '=' + value.rates.KHR + 'KHR' + ' | ' + value.rates.THB + 'THB';
                 list.push({label: label, value: value._id});
             });
 
@@ -146,3 +146,37 @@ SelectOptsMethod.exchange = new ValidatedMethod({
     }
 });
 
+/*******************
+ * Borrowing
+ ******************/
+import {Borrowing} from '../collections/borrowing';
+SelectOptsMethod.borrowing = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.borrowing',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
+
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+            let params = options.params || {};
+
+            if (searchText) {
+                selector.$text = {$search: searchText};
+            } else if (values.length) {
+                selector = {_id: {$in: values}};
+            }
+            selector.status = 'Active';
+            selector.customerId = params.customerId;
+
+            let data = Borrowing.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                let label = value._id + ' | Date: ' + moment(value.borrowingDate).format('DD/MM/YYYY') + ' | Amount: ' + numeral(value.borrowingAmount).format('0,0.00') + ' ' + value.currencyId;
+                list.push({label: label, value: value._id});
+            });
+
+            return list;
+        }
+    }
+});

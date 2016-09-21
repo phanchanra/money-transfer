@@ -1,6 +1,8 @@
 import {Template} from  'meteor/templating';
 import {TAPi18n} from 'meteor/tap:i18n';
 import BigNumber from 'bignumber.js';
+// import 'p-loading';
+// import 'p-loading/dist/css/p-loading.css';
 
 // Page
 import './home.html';
@@ -36,7 +38,7 @@ Template.MoneyTransfer_home.events({
         // var currentDate = moment();
         // var days = currentDate.diff(lastDate, 'days');
         // var numberDay = 10;
-        Meteor.call('countCustomerExpired') ;
+        Meteor.call('countCustomerExpired');
         // if (days > numberDay) {
         //     alert(days);
         // }

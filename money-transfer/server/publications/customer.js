@@ -4,7 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {Customer} from '../../common/collections/customer';
 
-Meteor.publish('moneyTransfer.customerById', function moneyTransferCustomer(customerId) {
+Meteor.publish('moneyTransfer.customerById', function moneyTransferCustomerById(customerId) {
     this.unblock();
     Meteor._sleepForMs(200);
 

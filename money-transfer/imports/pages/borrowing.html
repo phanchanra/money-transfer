@@ -20,8 +20,14 @@
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
         <li><a href="#" class="js-display"><i class="fa fa-eye"></i> Show</a></li>
+        <li role="separator" class="divider"></li>
         <li><a href="#" class="js-invoice"><i class="fa fa-print"></i> Invoice</a></li>
     {{/columnAction}}
+</template>
+
+<!--Status-->
+<template name="MoneyTransfer_borrowingStatusAction">
+    <button class="btn {{statusAttr}} btn-sm js-status">{{status}}</button>
 </template>
 
 <!--Form-->
@@ -48,6 +54,80 @@
     </div>
 </template>
 
+<template name="MoneyTransfer_borrowingRescheduleForm">
+    <div class="box-body">
+        {{#autoForm collection=collection id="MoneyTransfer_borrowingRescheduleForm" type="insert"}}
+            <div class="row">
+            <!--{{#with data}}-->
+                <div class="col-md-6">
+                    {{> afQuickField name="customerId" value=data.customerId}}
+                    {{> afQuickField name="borrowingDate"}}
+                    {{> afQuickField name="term" value=data.term}}
+                    {{> afQuickField name="maturityDate"}}
+                </div>
+                <div class="col-md-6">
+                    {{> afQuickField name="currencyId" value=data.currencyId}}
+                    {{> afQuickField name="interestRate" value=data.interestRate}}
+                    {{> afQuickField name="borrowingAmount" value=data.totalDue}}
+                    {{> afQuickField name="memo"}}
+                    {{> afQuickField type="hidden" name="refId" value=data._id}}
+                    {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                </div>
+                    <!--{{/with}}-->
+            </div>
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Status Form-->
+<template name="MoneyTransfer_borrowingActiveStatusForm">
+    <div class="box-body">
+        {{#autoForm collection=collection id="MoneyTransfer_borrowingActiveStatusForm" doc=data type="update"}}
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        {{#with data}}
+                            <dt>Customer</dt>
+                            <dd>{{customerId}} : {{customerDoc.name}}</dd>
+                            <dt>Borrowing Date</dt>
+                            <dd>{{moFormat borrowingDate "DD/MM/YYYY"}}</dd>
+                            <dt>Term</dt>
+                            <dd>{{term}} Month(s)</dd>
+                            <dt>Maturity Date</dt>
+                            <dd>{{moFormat maturityDate "DD/MM/YYYY"}}</dd>
+                            <dt>Tenor</dt>
+                            <dd>{{tenor}} day(s)</dd>
+                            <dt>Interest Rate</dt>
+                            <dd>{{numFormat interestRate "0,0.00"}} %</dd>
+                            <dt>Currency ID</dt>
+                            <dd>{{currencyId}}</dd>
+                            <dt>Borrowing Amount</dt>
+                            <dd>{{numFormat borrowingAmount "0,0.00"}} {{currencyId}}</dd>
+                            <dt>Project Interest</dt>
+                            <dd>{{numFormat projectInterest "0,0.00"}} {{currencyId}}</dd>
+                            <dt>Type</dt>
+                            <dd>{{borrowingType}}</dd>
+                            <dt>Ref ID</dt>
+                            <dd>{{refId}}</dd>
+                            <dt>Status</dt>
+                            <dd class="text-red">{{status}}</dd>
+                        {{/with}}
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    {{> afQuickField name="status" value="Active" readonly=true}}
+                    {{> afQuickField name="activeDate"}}
+                    {{> afQuickField name="memo"}}
+
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
 <!--Show-->
 <template name="MoneyTransfer_borrowingShow">
     <div class="box-body">
@@ -57,7 +137,7 @@
                     <dt>ID</dt>
                     <dd>{{_id}}</dd>
                     <dt>Customer</dt>
-                    <dd>{{customerId}}</dd>
+                    <dd>{{customerId}} : {{customerDoc.name}}</dd>
                     <dt>Borrowing Date</dt>
                     <dd>{{moFormat borrowingDate "DD/MM/YYYY"}}</dd>
                     <dt>Term</dt>
@@ -74,6 +154,18 @@
                     <dd>{{numFormat borrowingAmount "0,0.00"}}</dd>
                     <dt>Project Interest</dt>
                     <dd>{{numFormat projectInterest "0,0.00"}}</dd>
+                    <dt>Type</dt>
+                    <dd>{{borrowingType}}</dd>
+                    <dt>Ref ID</dt>
+                    <dd>{{refId}}</dd>
+                    <dt>Status</dt>
+                    <dd>{{status}}</dd>
+                    <dt>Active Date</dt>
+                    <dd>{{moFormat activeDate "DD/MM/YYYY"}}</dd>
+                    <dt>Reschedule Date</dt>
+                    <dd>{{moFormat rescheduleDate "DD/MM/YYYY"}}</dd>
+                    <dt>Close Date</dt>
+                    <dd>{{moFormat closeDate "DD/MM/YYYY"}}</dd>
                 </dl>
             {{/with}}
         {{else}}

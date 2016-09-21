@@ -17,11 +17,12 @@ import {Borrowing} from '../collections/borrowing';
 // Page
 Meteor.isClient && require('../../imports/pages/borrowing.html');
 
-tabularOpts.name = 'moneyBorrowing.borrowing';
+tabularOpts.name = 'moneyTransfer.borrowing';
 tabularOpts.collection = Borrowing;
 tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingAction},
     {data: "_id", title: "ID"},
+    {data: "borrowingType", title: "Type"},
     {
         data: "borrowingDate",
         title: "Date",
@@ -29,7 +30,7 @@ tabularOpts.columns = [
             return moment(val).format('DD/MM/YYYY');
         }
     },
-    {data: "term", title: "Term (Month)"},
+    {data: "term", title: "Term"},
     {
         data: "maturityDate",
         title: "Maturity Date",
@@ -59,5 +60,15 @@ tabularOpts.columns = [
             return numeral(val).format('0,0.00');
         }
     },
+    {
+        data: "status",
+        title: "Status",
+        tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingStatusAction
+    },
+    {
+        data: "_customerDoc.name",
+        title: "Customer",
+    },
 ];
+
 export const BorrowingTabular = new Tabular.Table(tabularOpts);

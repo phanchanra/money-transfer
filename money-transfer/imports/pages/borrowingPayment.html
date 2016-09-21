@@ -1,0 +1,97 @@
+<!--Index-->
+<template name="MoneyTransfer_borrowingPayment">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Tabular-->
+        {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="MoneyTransfer_borrowingPaymentAction">
+    {{#columnAction}}
+        <!--<li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>-->
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> Show</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#" class="js-invoice"><i class="fa fa-print"></i> Invoice</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="MoneyTransfer_borrowingPaymentForm">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    {{#with confirmData}}
+                        <dt>Last Active Date</dt>
+                        <dd>{{moFormat lastPaymentDoc.paidDate "DD/MM/YYYY"}}</dd>
+                        <dt>Principal Due</dt>
+                        <dd>{{numFormat lastPaymentDoc.balanceDoc.principal "0,0.00"}}</dd>
+                        <dt>Old Interest Due</dt>
+                        <dd>{{numFormat lastPaymentDoc.balanceDoc.interest "0,0.00"}}</dd>
+                        <dt>No. of Days</dt>
+                        <dd>{{currentDue.numOfDay}} days</dd>
+                        <dt>Current Interest Due</dt>
+                        <dd>{{numFormat currentDue.currentInterest "0,0.00"}} {{currencyId}}</dd>
+
+                        <hr>
+                        <dt class="text-red">Total Due</dt>
+                        <dd>{{numFormat currentDue.totalAmount "0,0.00"}} {{currencyId}}</dd>
+                    {{/with}}
+                </dl>
+            </div>
+
+            <div class="col-md-8">
+                {{#autoForm collection=collection id="MoneyTransfer_borrowingPaymentForm" type="insert"}}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="customerId"}}
+                            {{> afQuickField name="borrowingId"}}
+                            {{> afQuickField name="paidDate"}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="paidAmount" value=confirmData.currentDue.totalAmount}}
+                            {{> afQuickField name="memo"}}
+                            {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                        </div>
+                    </div>
+                    {{> formFooterWithButton}}
+                {{/autoForm}}
+
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--Show-->
+<template name="MoneyTransfer_borrowingPaymentShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Customer</dt>
+                    <dd>{{customerId}}</dd>
+                    <dt>Borrowing ID</dt>
+                    <dd>{{borrowingId}}</dd>
+                    <dt>Paid Date</dt>
+                    <dd>{{moFormat paidDate "DD/MM/YYYY"}}</dd>
+                    <dt>Paid Amount</dt>
+                    <dd>{{numFormat paidAmount "0,0.00"}} %</dd>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
