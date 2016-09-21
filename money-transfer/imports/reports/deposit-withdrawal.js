@@ -8,43 +8,49 @@ import 'meteor/theara:autoprint';
 import 'printthis';
 
 // Lib
-import {displaySuccess, displayError} from '../../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 
 // Component
-import '../../../../core/imports/layouts/report/content.html';
-import '../../../../core/imports/layouts/report/sign-footer.html';
-import '../../../../core/client/components/loading.js';
-import '../../../../core/client/components/form-footer.js';
+import '../../../core/imports/layouts/report/content.html';
+import '../../../core/imports/layouts/report/sign-footer.html';
+import '../../../core/client/components/loading.js';
+import '../../../core/client/components/form-footer.js';
 
 // Method
-import {borrowingPaymentReport} from '../../../common/methods/reports/borrowingPayment';
+import {depositWithdrawalReport} from '../../common/methods/reports/deposit-withdrawal';
 
 // Schema
-import {BorrowingPaymentSchema} from '../../../common/collections/reports/borrowingPayment';
+import {DepositWithdrawalSchema} from '../../common/collections/reports/deposit-withdrawal';
+
 
 // Page
-import './borrowingPayment.html';
+import './../reports/deposit-withdrawal.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_borrowingPaymentReport;
-
+let indexTmpl = Template.MoneyTransfer_depositWithdrawalReport;
 // State
 let formDataState = new ReactiveVar(null);
-
 // Index
 indexTmpl.onCreated(function () {
-    this.rptInit = new ReactiveVar(false);
-    this.rptData = new ReactiveVar(null);
+    this.rptInitState = new ReactiveVar(false);
+    this.rptDataState = new ReactiveVar(null);
 
     this.autorun(() => {
+        // Form Filter
+        let user = Meteor.user();
+        if (user) {
+            let rolesBranch = user.rolesBranch;
+            this.subscribe('core.branch', {_id: {$in: rolesBranch}});
+        }
+
         // Report Data
         if (formDataState.get()) {
-            this.rptInit.set(true);
-            this.rptData.set(false);
+            this.rptInitState.set(true);
+            this.rptDataState.set(false);
 
-            borrowingPaymentReport.callPromise(formDataState.get())
+            depositWithdrawalReport.callPromise(formDataState.get())
                 .then((result)=> {
-                    this.rptData.set(result);
+                    this.rptDataState.set(result);
                 }).catch((err)=> {
                     console.log(err.message);
                 }
@@ -56,33 +62,23 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return BorrowingPaymentSchema;
+        return DepositWithdrawalSchema;
     },
     rptInit(){
         let instance = Template.instance();
-        return instance.rptInit.get();
+        return instance.rptInitState.get();
     },
     rptData: function () {
         let instance = Template.instance();
-        return instance.rptData.get();
+        return instance.rptDataState.get();
     },
-    No(index){
-        return index += 1;
-    },
-    calCurrentDue(dueDoc, lastPaymentDoc){
-        let principal = 0, interest = 0;
-        if (dueDoc && lastPaymentDoc && lastPaymentDoc.balanceDoc) {
-            principal = lastPaymentDoc.balanceDoc.principal;
-            interest = dueDoc.currentInterest + lastPaymentDoc.balanceDoc.interest;
-        }
-
-        return {principal, interest};
+    no(index){
+        return index + 1;
     }
 });
 
 indexTmpl.events({
-    'click .btn-print-this'(event, instance){
-        // Print This Package
+    'click .btn-print'(event, instance){
         let opts = {
             // debug: true,               // show the iframe for debugging
             // importCSS: true,            // import page CSS
@@ -96,15 +92,8 @@ indexTmpl.events({
             // formValues: true            // preserve input/form values
         };
 
-        $('#print-data').printThis(opts);
-    },
-    'click .btn-print-area'(event, instance){
-        // Print Area Package
-        let opts = {
-            //
-        };
 
-        $('#print-data').printArea(opts);
+        $('#print-data').printThis();
     }
 });
 
@@ -128,4 +117,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_borrowingPaymentReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_depositWithdrawalReport', hooksObject);

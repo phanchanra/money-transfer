@@ -70,7 +70,7 @@ export const borrowingBalanceReport = new ValidatedMethod({
                 },
                 {
                     $lookup: {
-                        from: "moneyTransfer_borrowingPay",
+                        from: "moneyTransfer_borrowingPayment",
                         localField: "_id",
                         foreignField: "borrowingId",
                         as: "lastPaymentDoc"

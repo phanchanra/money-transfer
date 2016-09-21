@@ -4,7 +4,7 @@ import {idGenerator} from 'meteor/theara:id-generator';
 // Collection
 import {Transfer} from '../../common/collections/transfer';
 import {Fee} from '../../common/collections/fee';
-import {moneyTransferState} from '../../common/globalState/moneyTransferState';
+import {moneyTransferState} from '../../common/libs/moneyTransferState';
 Transfer.before.insert(function (userId, doc) {
     let lastBalance = {};
     //let tmpBalance = {};

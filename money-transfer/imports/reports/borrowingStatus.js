@@ -8,25 +8,25 @@ import 'meteor/theara:autoprint';
 import 'printthis';
 
 // Lib
-import {displaySuccess, displayError} from '../../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 
 // Component
-import '../../../../core/imports/layouts/report/content.html';
-import '../../../../core/imports/layouts/report/sign-footer.html';
-import '../../../../core/client/components/loading.js';
-import '../../../../core/client/components/form-footer.js';
+import '../../../core/imports/layouts/report/content.html';
+import '../../../core/imports/layouts/report/sign-footer.html';
+import '../../../core/client/components/loading.js';
+import '../../../core/client/components/form-footer.js';
 
 // Method
-import {borrowingBalanceReport} from '../../../common/methods/reports/borrowingBalance';
+import {borrowingStatusReport} from '../../common/methods/reports/borrowingStatus';
 
 // Schema
-import {BorrowingBalanceSchema} from '../../../common/collections/reports/borrowingBalance';
+import {BorrowingStatusSchema} from '../../common/collections/reports/borrowingStatus';
 
 // Page
-import './borrowingBalance.html';
+import './borrowingStatus.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_borrowingBalanceReport;
+let indexTmpl = Template.MoneyTransfer_borrowingStatusReport;
 
 // State
 let formDataState = new ReactiveVar(null);
@@ -42,10 +42,8 @@ indexTmpl.onCreated(function () {
             this.rptInit.set(true);
             this.rptData.set(false);
 
-            borrowingBalanceReport.callPromise(formDataState.get())
+            borrowingStatusReport.callPromise(formDataState.get())
                 .then((result)=> {
-                    console.log(result);
-
                     this.rptData.set(result);
                 }).catch((err)=> {
                     console.log(err.message);
@@ -58,7 +56,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return BorrowingBalanceSchema;
+        return BorrowingStatusSchema;
     },
     rptInit(){
         let instance = Template.instance();
@@ -70,6 +68,16 @@ indexTmpl.helpers({
     },
     No(index){
         return index += 1;
+    },
+    getStatusDate(status, data){
+        switch (status) {
+            case 'Active':
+                return data.activeDate;
+            case 'Reschedule':
+                return data.rescheduleDate;
+            case 'Close':
+                return data.closeDate;
+        }
     }
 });
 
@@ -121,4 +129,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_borrowingBalanceReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_borrowingStatusReport', hooksObject);

@@ -29,7 +29,7 @@ import {Transfer} from '../../common/collections/transfer';
 // Tabular
 import {FeeTabular} from '../../common/tabulars/fee';
 //function
-import {calculateAgentFee} from '../../common/globalState/calculateAgentFee'
+import {calculateAgentFee} from '../../common/libs/calculateAgentFee'
 import {tmpCollection} from '../../common/collections/tmpCollection';
 // Page
 import './fee.html';

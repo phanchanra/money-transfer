@@ -9,7 +9,7 @@
 
     <div class="box-body">
         <!--Tabular-->
-        {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
+        {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed table-hover-pointer"}}
     </div>
     <!-- /.box-body -->
 </template>
@@ -137,7 +137,7 @@
                     <dt>ID</dt>
                     <dd>{{_id}}</dd>
                     <dt>Customer</dt>
-                    <dd>{{customerId}} : {{customerDoc.name}}</dd>
+                    <dd>{{customerId}} : {{_customerDoc.name}}</dd>
                     <dt>Borrowing Date</dt>
                     <dd>{{moFormat borrowingDate "DD/MM/YYYY"}}</dd>
                     <dt>Term</dt>

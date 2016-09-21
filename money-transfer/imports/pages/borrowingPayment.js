@@ -14,7 +14,7 @@ import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.j
 import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
 import {renderTemplate} from '../../../core/client/libs/render-template.js';
 import {destroyAction} from '../../../core/client/libs/destroy-action.js';
-import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError, displayWarning} from '../../../core/client/libs/display-alert.js';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 
 // Component
@@ -23,6 +23,7 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // Collection
+import {Borrowing} from '../../common/collections/borrowing';
 import {BorrowingPayment} from '../../common/collections/borrowingPayment';
 
 // Tabular
@@ -31,6 +32,7 @@ import {BorrowingPaymentTabular} from '../../common/tabulars/borrowingPayment';
 // Method
 import {lookupBorrowingWithLastPayment} from '../../common/methods/lookupBorrowingWithLastPayment';
 import {CalInterest} from '../../common/libs/calInterest';
+import {getLastPaymentByBorrowing} from '../../common/methods/getLastBorrowingPayment';
 
 // Page
 import './borrowingPayment.html';
@@ -41,53 +43,72 @@ let indexTmpl = Template.MoneyTransfer_borrowingPayment,
     formTmpl = Template.MoneyTransfer_borrowingPaymentForm,
     showTmpl = Template.MoneyTransfer_borrowingPaymentShow;
 
-
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('borrowingPay', {size: 'lg'});
-    createNewAlertify('borrowingPayShow');
+    createNewAlertify('borrowingPayment');
+    createNewAlertify('borrowingPaymentShow');
+
+    this.autorun(()=> {
+        let borrowingId = FlowRouter.getParam('borrowingId');
+        this.subscribe('moneyTransfer.borrowingById', borrowingId);
+    });
 });
 
 indexTmpl.helpers({
     tabularTable(){
         return BorrowingPaymentTabular;
+    },
+    data () {
+        let borrowingId = FlowRouter.getParam('borrowingId');
+        return Borrowing.findOne(borrowingId);
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.borrowingPay(fa('plus', 'Payment'), renderTemplate(formTmpl));
-    },
-    'click .js-update' (event, instance) {
-        alertify.borrowingPay(fa('pencil', 'Payment'), renderTemplate(formTmpl, {borrowingPayId: this._id}));
+        alertify.borrowingPayment(fa('plus', 'Payment'), renderTemplate(formTmpl));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            BorrowingPayment,
-            {_id: this._id},
-            {title: 'Payment', itemTitle: this._id}
+        // Check last
+        $.blockUI();
+
+        getLastPaymentByBorrowing.callPromise({
+            borrowingId: this.borrowingId
+        }).then((result)=> {
+            $.unblockUI();
+
+            if (this._id != result._id) {
+                displayWarning('This doc can not delete');
+            } else {
+                destroyAction(
+                    BorrowingPayment,
+                    {_id: this._id},
+                    {title: 'Payment', itemTitle: this._id}
+                );
+            }
+        }).catch((err)=> {
+                console.log(err.message);
+            }
         );
     },
     'click .js-display' (event, instance) {
-        alertify.borrowingPayShow(fa('eye', 'Payment'), renderTemplate(showTmpl, {borrowingPayId: this._id}));
+        alertify.borrowingPaymentShow(fa('eye', 'Payment'), renderTemplate(showTmpl, {borrowingPaymentId: this._id}));
     },
     'click .js-invoice' (event, instance) {
         let params = {};
-        let queryParams = {borrowingPayId: this._id};
-        let path = FlowRouter.path("moneyTransfer.borrowingPayInvoiceReport", params, queryParams);
+        let queryParams = {borrowingPaymentId: this._id};
+        let path = FlowRouter.path("moneyTransfer.borrowingPaymentInvoiceReport", params, queryParams);
 
         window.open(path, '_blank');
     }
 });
 
 // Form
-var borrowingDocTem = new ReactiveVar();
-var borrowingId = new ReactiveVar();
-var paidDate = new ReactiveVar(null);
+var borrowingDocState = new ReactiveVar();
+var paidDateState = new ReactiveVar(null);
 
 formTmpl.onCreated(function () {
-
 });
 
 formTmpl.onRendered(function () {
@@ -98,33 +119,31 @@ formTmpl.onRendered(function () {
 
     // Tracker
     this.autorun(()=> {
-        let _$paidDate = this.$('[name="paidDate"]');
+        $.blockUI();
 
         // Get borrowing and last payment doc
-        if (borrowingId.get()) {
-            $.blockUI();
+        let borrowingId = FlowRouter.getParam('borrowingId');
+        let _$paidDate = this.$('[name="paidDate"]');
+        let params = {borrowingId: borrowingId};
 
-            let params = {borrowingId: borrowingId.get()};
-            lookupBorrowingWithLastPayment.callPromise(params)
-                .then((result)=> {
-                    // Set min of paid date
-                    minPaidDate = moment(result.lastPaymentDoc.paidDate).startOf('day').toDate();
-                    _$paidDate.data('DateTimePicker').options({
-                        minDate: minPaidDate,
-                    });
+        lookupBorrowingWithLastPayment.callPromise(params)
+            .then((result)=> {
+                // Set min of paid date
+                let minPaidDate = moment(result.lastPaymentDoc.paidDate).startOf('day').toDate();
+                _$paidDate.data('DateTimePicker').options({
+                    minDate: minPaidDate,
+                });
 
-                    console.log(result);
+                console.log(result);
 
-                    borrowingDocTem.set(result);
+                borrowingDocState.set(result);
 
-                    $.unblockUI();
-                }).catch((err)=> {
-                    console.log(err.message);
-                }
-            );
-        } else {
-            borrowingDocTem.set(null);
-        }
+                $.unblockUI();
+            }).catch((err)=> {
+                console.log(err.message);
+            }
+        );
+
     });
 
 });
@@ -134,13 +153,13 @@ formTmpl.helpers({
         return BorrowingPayment;
     },
     confirmData(){
-        let borrowingDoc = borrowingDocTem.get();
+        let borrowingDoc = borrowingDocState.get();
 
-        if (borrowingDoc && paidDate.get()) {
+        if (borrowingDoc && paidDateState.get()) {
             let numOfDay = 0, currentInterest = 0, totalAmount = 0;
 
             // Cal num of day
-            numOfDay = moment(paidDate.get()).endOf('day').diff(moment(borrowingDoc.lastPaymentDoc.paidDate).startOf('day'), 'days');
+            numOfDay = moment(paidDateState.get()).endOf('day').diff(moment(borrowingDoc.lastPaymentDoc.paidDate).startOf('day'), 'days');
 
             currentInterest = CalInterest({
                 amount: borrowingDoc.lastPaymentDoc.balanceDoc.principal,
@@ -165,12 +184,9 @@ formTmpl.helpers({
 });
 
 formTmpl.events({
-    'change [name="borrowingId"]'(event, instance){
-        borrowingId.set(event.currentTarget.value);
-    },
     'blur [name="paidAmount"]'(event, instance){
         let totalDue = 0;
-        let borrowingDoc = borrowingDocTem.get();
+        let borrowingDoc = borrowingDocState.get();
         if (borrowingDoc && borrowingDoc.currentDue) {
             totalDue = borrowingDoc.currentDue.totalAmount;
         }
@@ -183,23 +199,22 @@ formTmpl.events({
 });
 
 formTmpl.onDestroyed(function () {
-    borrowingDocTem.set(null);
-    borrowingId.set(null);
-    paidDate.set(null);
+    borrowingDocState.set(null);
+    paidDateState.set(null);
 });
 
 // Show
 showTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
-        this.subscribe('moneyTransfer.borrowingPayById', currentData.borrowingPayId);
+        this.subscribe('moneyTransfer.borrowingPaymentById', currentData.borrowingPaymentId);
     });
 });
 
 showTmpl.helpers({
     data () {
         let currentData = Template.currentData();
-        return BorrowingPayment.findOne(currentData.borrowingPayId);
+        return BorrowingPayment.findOne(currentData.borrowingPaymentId);
     }
 });
 
@@ -207,7 +222,7 @@ showTmpl.helpers({
 let hooksObject = {
     before: {
         insert: function (doc) {
-            let borrowingDoc = borrowingDocTem.get();
+            let borrowingDoc = borrowingDocState.get();
             if (borrowingDoc && borrowingDoc.currentDue) {
                 doc.dueDoc = borrowingDoc.currentDue;
                 doc.lastPaymentDoc = borrowingDoc.lastPaymentDoc;
@@ -217,16 +232,8 @@ let hooksObject = {
         }
     },
     onSuccess (formType, result) {
+        alertify.borrowingPayment().close();
         displaySuccess();
-
-        // Clear state
-        borrowingDocTem.set(null);
-        borrowingId.set(null);
-
-        Meteor.setTimeout(()=> {
-            $paidDate = $('[name="paidDate"]');
-            paidDateAttachDTP($paidDate)
-        }, 200);
     },
     onError (formType, error) {
         displayError(error.message);
@@ -237,8 +244,8 @@ AutoForm.addHooks(['MoneyTransfer_borrowingPaymentForm'], hooksObject);
 
 // Attach paid date to dateTimePicker
 function paidDateAttachDTP(element) {
-    paidDate.set(element.data('DateTimePicker').date());
+    paidDateState.set(element.data('DateTimePicker').date());
     element.on("dp.change", (e)=> {
-        paidDate.set(e.date);
+        paidDateState.set(e.date);
     });
 }

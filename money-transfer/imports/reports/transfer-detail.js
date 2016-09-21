@@ -8,28 +8,30 @@ import 'meteor/theara:autoprint';
 import 'printthis';
 
 // Lib
-import {displaySuccess, displayError} from '../../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 
 // Component
-import '../../../../core/imports/layouts/report/content.html';
-import '../../../../core/imports/layouts/report/sign-footer.html';
-import '../../../../core/client/components/loading.js';
-import '../../../../core/client/components/form-footer.js';
+import '../../../core/imports/layouts/report/content.html';
+import '../../../core/imports/layouts/report/sign-footer.html';
+import '../../../core/client/components/loading.js';
+import '../../../core/client/components/form-footer.js';
 
 // Method
-import {depositWithdrawalReport} from '../../../common/methods/reports/deposit-withdrawal';
+import {transferDetailReport} from '../../common/methods/reports/transfer-detail';
 
 // Schema
-import {DepositWithdrawalSchema} from '../../../common/collections/reports/deposit-withdrawal';
+import {TransferDetailSchema} from '../../common/collections/reports/transfer-detail';
 
 
 // Page
-import './../reports/deposit-withdrawal.html';
+import './../reports/transfer-detail.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_depositWithdrawalReport;
+let indexTmpl = Template.MoneyTransfer_transferDetailReport;
+
 // State
 let formDataState = new ReactiveVar(null);
+
 // Index
 indexTmpl.onCreated(function () {
     this.rptInitState = new ReactiveVar(false);
@@ -48,7 +50,7 @@ indexTmpl.onCreated(function () {
             this.rptInitState.set(true);
             this.rptDataState.set(false);
 
-            depositWithdrawalReport.callPromise(formDataState.get())
+            transferDetailReport.callPromise(formDataState.get())
                 .then((result)=> {
                     this.rptDataState.set(result);
                 }).catch((err)=> {
@@ -62,7 +64,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return DepositWithdrawalSchema;
+        return TransferDetailSchema;
     },
     rptInit(){
         let instance = Template.instance();
@@ -117,4 +119,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_depositWithdrawalReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_transferDetailReport', hooksObject);

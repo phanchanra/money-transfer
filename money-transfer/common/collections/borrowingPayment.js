@@ -11,39 +11,22 @@ import {SelectOpts} from '../../imports/libs/select-opts.js';
 export const BorrowingPayment = new Mongo.Collection('moneyTransfer_borrowingPayment');
 
 BorrowingPayment.generalSchema = new SimpleSchema({
-    customerId: {
-        type: String,
-        label: 'Customer',
-        autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'moneyTransfer.selectOptsMethod.customer',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        let currentBranch = Session.get('currentBranch');
-                        return {branchId: currentBranch};
-                    }
-                }
-            }
-        }
-    },
     borrowingId: {
         type: String,
         label: 'Borrowing ID',
-        autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'moneyTransfer.selectOptsMethod.borrowing',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        let customerId = AutoForm.getFieldValue('customerId');
-                        return {customerId: customerId};
-                    }
-                }
-            }
-        }
+        // autoform: {
+        //     type: 'universe-select',
+        //     afFieldInput: {
+        //         uniPlaceholder: 'Select One',
+        //         optionsMethod: 'moneyTransfer.selectOptsMethod.borrowing',
+        //         optionsMethodParams: function () {
+        //             if (Meteor.isClient) {
+        //                 let customerId = FlowRouter.getParam('customerId');
+        //                 return {customerId: customerId};
+        //             }
+        //         }
+        //     }
+        // }
     },
     paidDate: {
         type: Date,

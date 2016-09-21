@@ -22,6 +22,10 @@ tabularOpts.collection = Borrowing;
 tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingAction},
     {data: "_id", title: "ID"},
+    {
+        data: "_customerDoc.name",
+        title: "Customer",
+    },
     {data: "borrowingType", title: "Type"},
     {
         data: "borrowingDate",
@@ -40,9 +44,9 @@ tabularOpts.columns = [
     },
     {
         data: "interestRate",
-        title: "Rate",
+        title: "Rate (%)",
         render: function (val, type, doc) {
-            return numeral(val).format('0,0.00 %');
+            return numeral(val).format('0,0.00');
         }
     },
     {data: "currencyId", title: "CRC"},
@@ -64,10 +68,6 @@ tabularOpts.columns = [
         data: "status",
         title: "Status",
         tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingStatusAction
-    },
-    {
-        data: "_customerDoc.name",
-        title: "Customer",
     },
 ];
 

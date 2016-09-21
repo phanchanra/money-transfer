@@ -17,17 +17,26 @@
             <ul class="treeview-menu">
                 <li class="{{isActiveRoute name='moneyTransfer.transfer'}}">
                     <a href="{{pathFor 'moneyTransfer.transfer'}}">
-                        <i class="fa fa-sun-o"></i> <span>Transfer</span>
+                        <i class="fa fa-circle-o"></i> <span>Transfer</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.exchangeTransaction'}}">
                     <a href="{{pathFor 'moneyTransfer.exchangeTransaction'}}">
-                        <i class="fa fa-sun-o"></i> <span>Exchange Transaction</span>
+                        <i class="fa fa-circle-o"></i> <span>Exchange Transaction</span>
                     </a>
                 </li>
+
+                <!--Borrowing-->
+                <li class="{{isActiveRoute name='moneyTransfer.borrowing'}}">
+                    <a href="{{pathFor 'moneyTransfer.borrowing'}}">
+                        <i class="fa fa-circle-o"></i> <span>Borrowing</span>
+                    </a>
+                </li>
+
+                <!--Customer-->
                 <li class="{{isActiveRoute name='moneyTransfer.customer'}}">
                     <a href="{{pathFor 'moneyTransfer.customer'}}">
-                        <i class="fa fa-sun-o"></i> <span>Customer</span>
+                        <i class="fa fa-circle-o"></i> <span>Customer</span>
                     </a>
                 </li>
             </ul>
@@ -38,7 +47,7 @@
     {{#if isInRole 'reporter' 'MoneyTransfer'}}
         <li class="treeview">
             <a href="#">
-                <i class="fa fa-file"></i>
+                <i class="fa fa-file-o"></i>
                 <span>Report</span>
                 <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -47,34 +56,58 @@
             <ul class="treeview-menu">
                 <li class="{{isActiveRoute name='moneyTransfer.transferTransactionReport'}}">
                     <a href="{{pathFor 'moneyTransfer.transferTransactionReport'}}">
-                        <i class="fa fa-sun-o"></i> <span>Transfer Transaction</span>
+                        <i class="fa fa-file-text-o"></i> <span>Transfer Transaction</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.transferSummaryReport'}}">
                     <a href="{{pathFor 'moneyTransfer.transferSummaryReport'}}">
-                        <i class="fa fa-sun-o"></i> <span>Transfer Summary</span>
+                        <i class="fa fa-file-text-o"></i> <span>Transfer Summary</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.transferDetailReport'}}">
                     <a href="{{pathFor 'moneyTransfer.transferDetailReport'}}">
-                        <i class="fa fa-sun-o"></i> <span>Transfer Detail</span>
+                        <i class="fa fa-file-text-o"></i> <span>Transfer Detail</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.depositWithdrawalReport'}}">
                     <a href="{{pathFor 'moneyTransfer.depositWithdrawalReport'}}">
-                        <i class="fa fa-sun-o"></i> <span>Deposit Withdrawal</span>
+                        <i class="fa fa-file-text-o"></i> <span>Deposit Withdrawal</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.transferBalanceOutstandingReport'}}">
                     <a href="{{pathFor 'moneyTransfer.transferBalanceOutstandingReport'}}">
-                        <i class="fa fa-sun-o"></i> <span>Balance Outstanding</span>
+                        <i class="fa fa-file-text-o"></i> <span>Balance Outstanding</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.transferBalanceReport'}}">
                     <a href="{{pathFor 'moneyTransfer.transferBalanceReport'}}">
-                        <i class="fa fa-sun-o"></i> <span>Balance</span>
+                        <i class="fa fa-file-text-o"></i> <span>Balance</span>
                     </a>
                 </li>
+
+                <!--Borrowing-->
+                <li class="dropdown-header">Borrowing</li>
+                <li class="{{isActiveRoute name='moneyTransfer.borrowingReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.borrowingReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Borrowing</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.borrowingStatusReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.borrowingStatusReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Status</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.borrowingBalanceReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.borrowingBalanceReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Balance</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.borrowingPaymentReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.borrowingPaymentReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Payment</span>
+                    </a>
+                </li>
+
             </ul>
         </li>
 
@@ -84,7 +117,7 @@
     {{#if isInRole 'setting' 'MoneyTransfer'}}
         <li class="treeview">
             <a href="#">
-                <i class="fa fa-cog"></i>
+                <i class="fa fa-cogs"></i>
                 <span>Setting</span>
                 <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -93,72 +126,32 @@
             <ul class="treeview-menu">
                 <li class="{{isActiveRoute name='core.exchange'}}">
                     <a href="{{pathFor 'core.exchange'}}">
-                        <i class="fa fa-sun-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+                        <i class="fa fa-cog"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.fee'}}">
                     <a href="{{pathFor 'moneyTransfer.fee'}}">
-                        <i class="fa fa-sun-o"></i> <span>Product Fee</span>
+                        <i class="fa fa-cog"></i> <span>Product Fee</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.product'}}">
                     <a href="{{pathFor 'moneyTransfer.product'}}">
-                        <i class="fa fa-sun-o"></i> <span>Product</span>
+                        <i class="fa fa-cog"></i> <span>Product</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.exchangeRate'}}">
                     <a href="{{pathFor 'moneyTransfer.exchangeRate'}}">
-                        <i class="fa fa-sun-o"></i> <span>Exchange Rate</span>
+                        <i class="fa fa-cog"></i> <span>Exchange Rate</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.provider'}}">
                     <a href="{{pathFor 'moneyTransfer.provider'}}">
-                        <i class="fa fa-sun-o"></i> <span>Provider</span>
+                        <i class="fa fa-cog"></i> <span>Provider</span>
                     </a>
                 </li>
             </ul>
         </li>
 
     {{/if}}
-
-    <!--Borrowing-->
-    <li class="treeview">
-        <a href="#">
-            <i class="fa fa-file"></i>
-            <span>Borrowing</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            <li class="{{isActiveRoute name='moneyTransfer.borrowing'}}">
-                <a href="{{pathFor 'moneyTransfer.borrowing'}}">
-                    <i class="fa fa-sun-o"></i> <span>Borrowing</span>
-                </a>
-            </li>
-            <li class="{{isActiveRoute name='moneyTransfer.borrowingPayment'}}">
-                <a href="{{pathFor 'moneyTransfer.borrowingPayment'}}">
-                    <i class="fa fa-sun-o"></i> <span>Payment</span>
-                </a>
-            </li>
-
-            <!--Report-->
-            <li class="dropdown-header">Reports</li>
-            <li class="{{isActiveRoute name='moneyTransfer.borrowingReport'}}">
-                <a href="{{pathFor 'moneyTransfer.borrowingReport'}}">
-                    <i class="fa fa-file-text-o"></i> <span>Borrowing</span>
-                </a>
-                <a href="{{pathFor 'moneyTransfer.borrowingStatusReport'}}">
-                    <i class="fa fa-file-text-o"></i> <span>Borrowing Status</span>
-                </a>
-                <a href="{{pathFor 'moneyTransfer.borrowingBalanceReport'}}">
-                    <i class="fa fa-file-text-o"></i> <span>Borrowing Balance</span>
-                </a>
-                <a href="{{pathFor 'moneyTransfer.borrowingPaymentReport'}}">
-                    <i class="fa fa-file-text-o"></i> <span>Borrowing Payment</span>
-                </a>
-            </li>
-        </ul>
-    </li>
 
 </template>

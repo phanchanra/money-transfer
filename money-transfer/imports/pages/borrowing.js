@@ -65,20 +65,20 @@ indexTmpl.events({
         if (this.status == 'Inactive') {
             alertify.borrowing(fa('pencil', 'Borrowing'), renderTemplate(formTmpl, {borrowingId: this._id}));
         } else {
-            displayWarning('This doc can not update');
+            displayWarning('This doc can not update [Status]');
         }
     },
     'click .js-destroy' (event, instance) {
         // Check status
-        // if (this.status == 'Inactive') {
+        if (this.status == 'Inactive') {
             destroyAction(
                 Borrowing,
                 {_id: this._id},
                 {title: 'Borrowing', itemTitle: this._id}
             );
-        // } else {
-        //     displayWarning('This doc can not delete');
-        // }
+        } else {
+            displayWarning('This doc can not delete [Status]');
+        }
     },
     'click .js-display' (event, instance) {
         alertify.borrowingShow(fa('eye', 'Borrowing'), renderTemplate(showTmpl, {borrowingId: this._id}));
@@ -101,6 +101,17 @@ indexTmpl.events({
             displayWarning('This doc can not change [Status]');
         }
     },
+    'dblclick tbody > tr': function (event) {
+        var dataTable = $(event.target).closest('table').DataTable();
+        var rowData = dataTable.row(event.currentTarget).data();
+
+        // Check status
+        if (rowData.status == 'Inactive') {
+            displayWarning('Please active this doc');
+        } else {
+            FlowRouter.go('moneyTransfer.borrowingPayment', {borrowingId: rowData._id});
+        }
+    }
 });
 
 // Status Action
