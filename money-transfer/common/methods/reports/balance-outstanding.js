@@ -130,7 +130,8 @@ export const transferBalanceOutstandingReport = new ValidatedMethod({
                         transferDate: 1,
                         type: 1,
                         accountId: 1,
-                        productDoc: 1
+                        productDoc: 1,
+                        lastBalanceAmount:1
                     },
                 },
                 {

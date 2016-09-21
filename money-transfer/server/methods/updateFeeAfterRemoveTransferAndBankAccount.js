@@ -39,6 +39,7 @@ Meteor.methods({
                 }
                 Meteor.call('updateCustomerExpireDayAfterRemove', {doc});
             } else {
+                //Bank Account
                 if (transferOnTransfer) {
                     Fee.direct.update(
                         fee._id,

@@ -40,6 +40,22 @@ export const SelectOpts = {
         }
         return list;
     },
+    //Exchange Rate condition when deduct self
+    currencyExchange: function (selectOne = true) {
+        let list = [];
+        let selector = {};
+        let baseCurrency = Session.get("baseCurrency");
+        if (baseCurrency) {
+            selector._id = {$ne: baseCurrency}
+        }
+        if (selectOne) {
+            Currency.find(selector)
+                .forEach(function (obj) {
+                    list.push({label: obj._id, value: obj._id});
+                });
+        }
+        return list;
+    },
     product: function (selectOne = true) {
         let list = [];
         if (selectOne) {

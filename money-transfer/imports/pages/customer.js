@@ -60,11 +60,16 @@ indexTmpl.events({
         alertify.customer(fa('pencil', 'Customer'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Customer,
-            {_id: this._id},
-            {title: 'Customer', customerTitle: this._id}
-        );
+        let id = this._id;
+        Meteor.call('customerExist', this._id, function (error, result) {
+            if (result) {
+                swal("Sorry can not remove", "This customer is already used!");
+            } else {
+                destroyAction(
+                    Customer, {_id: id}, {title: 'Customer', customerTitle: id}
+                );
+            }
+        });
     },
     'click .js-display' (event, instance) {
         alertify.customerShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));

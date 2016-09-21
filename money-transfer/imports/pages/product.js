@@ -60,11 +60,18 @@ indexTmpl.events({
         alertify.product(fa('pencil', 'Product'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Product,
-            {_id: this._id},
-            {title: 'Product', productTitle: this._id}
-        );
+        let id = this._id;
+        Meteor.call('productExist', this._id, function (error, result) {
+            if (result) {
+                swal("Sorry can not remove", "This product is already used!");
+            } else {
+                destroyAction(
+                    Product,
+                    {_id: id},
+                    {title: 'Product', productTitle: id}
+                );
+            }
+        });
     },
     'click .js-display' (event, instance) {
         alertify.productShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));

@@ -427,6 +427,237 @@
         }
     });
 ****
+# Currency Exchange
+
+## Todo
+****
+* [X] Provider
+****
+    Provider.generalSchema = new SimpleSchema({
+        name: {
+            type: String
+        },
+        registerDate: {
+            type: Date,
+            defaultValue: moment().toDate(),
+            autoform: {
+                afFieldInput: {
+                    type: "bootstrap-datetimepicker",
+                    dateTimePickerOptions: {
+                        format: 'DD/MM/YYYY',
+                        showTodayButton: true
+                    }
+                }
+            }
+        },
+        status: {
+            type: String,
+            label: "Status",
+            index: true,
+            defaultValue: "E",
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    return [
+                        {label: 'Enabled', value: 'E'},
+                        {label: 'Disabled', value: 'D'},
+                    ];
+                }
+            },
+        },
+        telephone: {
+            type: String
+        },
+        email: {
+            type: String,
+            regEx: SimpleSchema.RegEx.Email,
+            optional: true
+        },
+        address: {
+            type: String,
+            optional:true
+        }
+    });
+****
+* [X] Exchange Rate
+****
+    ExchangeRate.generalSchema = new SimpleSchema({
+        productId: {
+            type: String,
+            label: "Product",
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    return [
+                        {label: "KHR", value: "KHR"},
+                        {label: "USD", value: "USD"},
+                        {label: "USD", value: "USD"}
+                    ];
+                }
+            }
+        },
+        registerDate: {
+            type: Date,
+            defaultValue: moment().toDate(),
+            autoform: {
+                afFieldInput: {
+                    type: "bootstrap-datetimepicker",
+                    dateTimePickerOptions: {
+                        format: 'DD/MM/YYYY',
+                        showTodayButton: true
+                    }
+                }
+            }
+        },
+        currencyFrom: {
+            type: String,
+            label:"Base Currency"
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    return [
+                        {label: "KHR", value: "KHR"},
+                        {label: "USD", value: "USD"},
+                        {label: "USD", value: "USD"}
+                    ];
+                }
+            }
+        }
+    });
+    ExchangeRate.convertSchema = new SimpleSchema({
+        convert: {
+            type: [Object],
+            label: 'Convert Currency',
+            minCount: 1
+        },
+        'convert.$.amount': {
+            type: Number,
+            label: 'Amount',
+            decimal: true,
+            min: 0.01,
+        },
+        'convert.$.currencyTo': {
+            type: Number,
+            label: 'Ex To',
+            decimal: true,
+            min: 0.01,
+        },
+        'convert.$.buy': {
+            type: Number,
+            label: 'Buy',
+            decimal: true,
+            min: 0.01,
+        },
+        'convert.$.sell': {
+            type: Number,
+            label: 'Sell',
+            decimal: true,
+            min: 0.01,
+        },
+        'convert.$.totalAmount': {
+            type: Number,
+            label: 'Sell',
+            decimal: true,
+            min: 0.01,
+        }
+    });
+****
+* [X] Exchange Transaction
+****
+    ExchangeTransaction.generalSchema = new SimpleSchema({
+        productId: {
+            type: String,
+            label: "Product",
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    <!--return [-->
+                        <!--{label: "KHR", value: "KHR"},-->
+                        <!--{label: "USD", value: "USD"},-->
+                        <!--{label: "USD", value: "USD"}-->
+                    <!--];-->
+                }
+            }
+        },
+        exchangeDate: {
+            type: Date,
+            defaultValue: moment().toDate(),
+            autoform: {
+                afFieldInput: {
+                    type: "bootstrap-datetimepicker",
+                    dateTimePickerOptions: {
+                        format: 'DD/MM/YYYY',
+                        showTodayButton: true
+                    }
+                }
+            }
+        },
+        customerId: {
+            type: String,
+            label:"Customer"
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    return [
+                        {label: "KHR", value: "KHR"},
+                        {label: "USD", value: "USD"},
+                        {label: "USD", value: "USD"}
+                    ];
+                }
+            }
+        }
+    });
+    ExchangeTransaction.exchangeSchema = new SimpleSchema({
+        exchange: {
+            type: [Object],
+            label: 'Exchange',
+            minCount: 1
+        },
+        'exchange.$.amount': {
+            type: Number,
+            label: 'Amount',
+            decimal: true,
+            min: 0.01,
+        },
+        'exchange.$.currencyFrom': {
+            type: String,
+            label: 'Exchange From',
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    return [
+                        {label: "KHR", value: "KHR"},
+                        {label: "USD", value: "USD"},
+                        {label: "USD", value: "USD"}
+                    ];
+                }
+            }
+        },
+        'exchange.$.currencyTo': {
+            type: String,
+            label: 'Exchange To',
+            autoform: {
+                type: "select-radio-inline",
+                options: function () {
+                    return [
+                        {label: "KHR", value: "KHR"},
+                        {label: "USD", value: "USD"},
+                        {label: "USD", value: "USD"}
+                    ];
+                }
+            }
+        },
+        'exchange.$.totalAmount': {
+            type: Number,
+            label: 'Total Amount',
+            decimal: true,
+            min: 0.01,
+        }
+    });
+****
 ### Changelog
 - V 0.0.1 (17-08-2016)
+    - init
+### Changelog
+- V 0.0.2 (19-09-2016)
     - init

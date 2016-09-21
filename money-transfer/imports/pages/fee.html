@@ -48,21 +48,7 @@
                     <div class="col-md-9">
                         <fieldset>
                             <legend>Fee</legend>
-                            <div class="col-sm-3">
-                                From Amount
-                            </div>
-                            <div class="col-sm-3">
-                                To Amount
-                            </div>
-                            <div class="col-sm-3">
-                                Customer Fee
-                            </div>
-                            <div class="col-sm-2">
-                                Agent Fee
-                            </div>
-                            <div class="col-sm-1">
-                                Action
-                            </div>
+
                             {{> afArrayField name="service" id="service" template="customArrayFieldForService" subtemplate="customObjectFieldForService"}}
 
                         </fieldset>
@@ -149,7 +135,25 @@
 <!------------Custom contact array field-------------------->
 <template name="afArrayField_customArrayFieldForService">
     <div class="panel panel-default">
-        <div class="panel-heading"></div>
+        <div class="panel-heading">
+            <div style="height: 18px;">
+                <div class="col-sm-3">
+                    From Amount
+                </div>
+                <div class="col-sm-3">
+                    To Amount
+                </div>
+                <div class="col-sm-3">
+                    Customer Fee
+                </div>
+                <div class="col-sm-2">
+                    Agent Fee
+                </div>
+                <div class="col-sm-1">
+                    Action
+                </div>
+            </div>
+        </div>
         <!--{{afFieldLabelText name=this.atts.name}}-->
         <div class="panel-body">
 

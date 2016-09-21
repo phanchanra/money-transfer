@@ -4,7 +4,6 @@
             <i class="fa fa-home"></i> <span>Home</span>
         </a>
     </li>
-
     <!--Data-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'MoneyTransfer'}}
         <li class="treeview">
@@ -19,6 +18,11 @@
                 <li class="{{isActiveRoute name='moneyTransfer.transfer'}}">
                     <a href="{{pathFor 'moneyTransfer.transfer'}}">
                         <i class="fa fa-sun-o"></i> <span>Transfer</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.exchangeTransaction'}}">
+                    <a href="{{pathFor 'moneyTransfer.exchangeTransaction'}}">
+                        <i class="fa fa-sun-o"></i> <span>Exchange Transaction</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='moneyTransfer.customer'}}">
@@ -66,6 +70,11 @@
                         <i class="fa fa-sun-o"></i> <span>Balance Outstanding</span>
                     </a>
                 </li>
+                <li class="{{isActiveRoute name='moneyTransfer.transferBalanceReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.transferBalanceReport'}}">
+                        <i class="fa fa-sun-o"></i> <span>Balance</span>
+                    </a>
+                </li>
             </ul>
         </li>
 
@@ -95,6 +104,16 @@
                 <li class="{{isActiveRoute name='moneyTransfer.product'}}">
                     <a href="{{pathFor 'moneyTransfer.product'}}">
                         <i class="fa fa-sun-o"></i> <span>Product</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.exchangeRate'}}">
+                    <a href="{{pathFor 'moneyTransfer.exchangeRate'}}">
+                        <i class="fa fa-sun-o"></i> <span>Exchange Rate</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.provider'}}">
+                    <a href="{{pathFor 'moneyTransfer.provider'}}">
+                        <i class="fa fa-sun-o"></i> <span>Provider</span>
                     </a>
                 </li>
             </ul>

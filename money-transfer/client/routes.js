@@ -40,6 +40,10 @@ MoneyTransferRoutes.route('/home', {
         parent: 'core.welcome'
     }
 });
+
+/*****************
+ * Transfer
+ ****************/
 // Transfer
 import '../imports/pages/transfer';
 MoneyTransferRoutes.route('/transfer', {
@@ -138,10 +142,61 @@ MoneyTransferRoutes.route('/customer-expired-date', {
     }
 });
 
+/*****************
+ * Exchange
+ ****************/
+//Provider
+import '../imports/pages/provider';
+MoneyTransferRoutes.route('/provider', {
+    name: 'moneyTransfer.provider',
+    title: 'Provider',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_provider');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Provider',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+//Exchange Rate
+import '../imports/pages/exchange-rate';
+MoneyTransferRoutes.route('/exchange-rate', {
+    name: 'moneyTransfer.exchangeRate',
+    title: 'Exchange Rate',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeRate');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Exchange Rate',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+//Exchange Transaction
+import '../imports/pages/exchange-transaction';
+MoneyTransferRoutes.route('/exchange-transaction', {
+    name: 'moneyTransfer.exchangeTransaction',
+    title: 'Exchange Transaction',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeTransaction');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Exchange Transaction',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
 
-/*********************************
+/*****************
  * Borrowing
- ********************************/
+ ****************/
 // Borrowing
 import '../imports/pages/borrowing';
 MoneyTransferRoutes.route('/borrowing', {
@@ -168,7 +223,7 @@ MoneyTransferRoutes.route('/borrowing-payment', {
     name: 'moneyTransfer.borrowingPayment',
     title: 'Borrowing Payment',
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_borrowingPay');
+        Layout.main('MoneyTransfer_borrowingPayment');
     },
     breadcrumb: {
         // params: ['productId', 'currencyId'],

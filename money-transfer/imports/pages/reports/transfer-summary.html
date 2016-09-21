@@ -67,8 +67,8 @@
                                     <th>Amount</th>
                                     <th>Cus Fee</th>
                                     <th>Dis%</th>
-                                    <th>To Fee</th>
-                                    <th>To Amount</th>
+                                    <th>Total Fee</th>
+                                    <th>Total Amount</th>
                                 </tr>
                                 </thead>
 
@@ -85,7 +85,7 @@
                                             {{numFormat totalCustomerFee "0,0.00"}}
                                         </td>
                                         <td align="right">
-                                            {{totalDiscountFee}}
+                                            <!--{{totalDiscountFee}}-->
                                         </td>
                                         <td align="right">
                                             {{numFormat totalTotalFee "0,0.00"}}
@@ -117,7 +117,7 @@
                                         {{numFormat footer.totalCustomerFee "0,0.00"}}
                                     </td>
                                     <td align="right" style="background-color: lightgrey;">
-                                        {{footer.totalDiscountFee}}
+                                        <!--{{footer.totalDiscountFee}}-->
                                     </td>
                                     <td align="right" style="background-color: lightgrey;">
                                         {{numFormat footer.totalTotalFee "0,0.00"}}
