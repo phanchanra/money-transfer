@@ -40,6 +40,9 @@ MoneyTransferRoutes.route('/home', {
         parent: 'core.welcome'
     }
 });
+//-----------------------//
+//--- Money Transfer --- //
+//-----------------------//
 // Transfer
 import '../imports/pages/transfer';
 MoneyTransferRoutes.route('/transfer', {
@@ -120,7 +123,22 @@ MoneyTransferRoutes.route('/bank-account/:productId/:currencyId', {
         parent: 'moneyTransfer.fee'
     }
 });
-
+// Customer Expired Lis
+import '../imports/pages/customerExpiredDate';
+MoneyTransferRoutes.route('/customer-expired-date', {
+    name: 'moneyTransfer.customerExpiredDate',
+    title: 'Customer Expired Date',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_customerExpiredDate');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Customer Expired Date',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
 //--- Borrowing ---
 // Borrowing
 import '../imports/pages/borrowing';
@@ -138,20 +156,54 @@ MoneyTransferRoutes.route('/borrowing', {
         parent: 'moneyTransfer.home'
     }
 });
-// Customer Expired Lis
-import '../imports/pages/customerExpiredDate';
-MoneyTransferRoutes.route('/customer-expired-date', {
-    name: 'moneyTransfer.customerExpiredDate',
-    title: 'Customer Expired Date',
+//--------------------------//
+//--- Currency Exchange --- //
+//--------------------------//
+//Provider
+import '../imports/pages/provider';
+MoneyTransferRoutes.route('/provider', {
+    name: 'moneyTransfer.provider',
+    title: 'Provider',
     action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_customerExpiredDate');
+        Layout.main('MoneyTransfer_provider');
     },
     breadcrumb: {
         // params: ['productId', 'currencyId'],
         //queryParams: ['show', 'color'],
-        title: 'Customer Expired Date',
+        title: 'Provider',
         // icon: 'user',
         parent: 'moneyTransfer.home'
     }
 });
-
+//Exchange Rate
+import '../imports/pages/exchange-rate';
+MoneyTransferRoutes.route('/exchange-rate', {
+    name: 'moneyTransfer.exchangeRate',
+    title: 'Exchange Rate',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeRate');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Exchange Rate',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+//Exchange Transaction
+import '../imports/pages/exchange-transaction';
+MoneyTransferRoutes.route('/exchange-transaction', {
+    name: 'moneyTransfer.exchangeTransaction',
+    title: 'Exchange Transaction',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeTransaction');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Exchange Transaction',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
