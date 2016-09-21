@@ -34,7 +34,7 @@ import {TransferTabular} from '../../common/tabulars/transfer';
 // import {calculateIncome} from '../../common/globalState/calculateIncome'
 // Page
 import './transfer.html';
-import './invoices/invoice.html';
+import '../reports/transferInvoice.html';
 // Declare template
 let indexTmpl = Template.MoneyTransfer_transfer,
     actionTmpl = Template.MoneyTransfer_transferAction,

@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor';
-import {moneyTransferState} from '../../../common/globalState/moneyTransferState';
+import {moneyTransferState} from '../../../common/libs/moneyTransferState';
 import {aggregate} from "meteor/meteorhacks:aggregate";
 import {Customer} from '../../../common/collections/customer';
 import {Product} from '../../../common/collections/product';

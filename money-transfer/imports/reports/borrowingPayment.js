@@ -8,51 +8,43 @@ import 'meteor/theara:autoprint';
 import 'printthis';
 
 // Lib
-import {displaySuccess, displayError} from '../../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 
 // Component
-import '../../../../core/imports/layouts/report/content.html';
-import '../../../../core/imports/layouts/report/sign-footer.html';
-import '../../../../core/client/components/loading.js';
-import '../../../../core/client/components/form-footer.js';
+import '../../../core/imports/layouts/report/content.html';
+import '../../../core/imports/layouts/report/sign-footer.html';
+import '../../../core/client/components/loading.js';
+import '../../../core/client/components/form-footer.js';
 
 // Method
-import {transferBalanceReport} from '../../../common/methods/reports/balance';
+import {borrowingPaymentReport} from '../../common/methods/reports/borrowingPayment';
 
 // Schema
-import {TransferBalanceSchema} from '../../../common/collections/reports/balance';
-
+import {BorrowingPaymentSchema} from '../../common/collections/reports/borrowingPayment';
 
 // Page
-import './../reports/balance.html';
+import './borrowingPayment.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_transferBalanceReport;
+let indexTmpl = Template.MoneyTransfer_borrowingPaymentReport;
 
 // State
 let formDataState = new ReactiveVar(null);
 
 // Index
 indexTmpl.onCreated(function () {
-    this.rptInitState = new ReactiveVar(false);
-    this.rptDataState = new ReactiveVar(null);
+    this.rptInit = new ReactiveVar(false);
+    this.rptData = new ReactiveVar(null);
 
     this.autorun(() => {
-        // Form Filter
-        let user = Meteor.user();
-        if (user) {
-            let rolesBranch = user.rolesBranch;
-            this.subscribe('core.branch', {_id: {$in: rolesBranch}});
-        }
-
         // Report Data
         if (formDataState.get()) {
-            this.rptInitState.set(true);
-            this.rptDataState.set(false);
+            this.rptInit.set(true);
+            this.rptData.set(false);
 
-            transferBalanceReport.callPromise(formDataState.get())
+            borrowingPaymentReport.callPromise(formDataState.get())
                 .then((result)=> {
-                    this.rptDataState.set(result);
+                    this.rptData.set(result);
                 }).catch((err)=> {
                     console.log(err.message);
                 }
@@ -64,23 +56,33 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return TransferBalanceSchema;
+        return BorrowingPaymentSchema;
     },
     rptInit(){
         let instance = Template.instance();
-        return instance.rptInitState.get();
+        return instance.rptInit.get();
     },
     rptData: function () {
         let instance = Template.instance();
-        return instance.rptDataState.get();
+        return instance.rptData.get();
     },
-    no(index){
-        return index + 1;
+    No(index){
+        return index += 1;
+    },
+    calCurrentDue(dueDoc, lastPaymentDoc){
+        let principal = 0, interest = 0;
+        if (dueDoc && lastPaymentDoc && lastPaymentDoc.balanceDoc) {
+            principal = lastPaymentDoc.balanceDoc.principal;
+            interest = dueDoc.currentInterest + lastPaymentDoc.balanceDoc.interest;
+        }
+
+        return {principal, interest};
     }
 });
 
 indexTmpl.events({
-    'click .btn-print'(event, instance){
+    'click .btn-print-this'(event, instance){
+        // Print This Package
         let opts = {
             // debug: true,               // show the iframe for debugging
             // importCSS: true,            // import page CSS
@@ -94,8 +96,15 @@ indexTmpl.events({
             // formValues: true            // preserve input/form values
         };
 
+        $('#print-data').printThis(opts);
+    },
+    'click .btn-print-area'(event, instance){
+        // Print Area Package
+        let opts = {
+            //
+        };
 
-        $('#print-data').printThis();
+        $('#print-data').printArea(opts);
     }
 });
 
@@ -119,4 +128,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_transferBalanceReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_borrowingPaymentReport', hooksObject);

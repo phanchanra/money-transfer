@@ -219,17 +219,17 @@ MoneyTransferRoutes.route('/borrowing', {
 
 // Payment
 import '../imports/pages/borrowingPayment';
-MoneyTransferRoutes.route('/borrowing-payment', {
+MoneyTransferRoutes.route('/borrowing-payment/:borrowingId', {
     name: 'moneyTransfer.borrowingPayment',
     title: 'Borrowing Payment',
     action: function (params, queryParams) {
         Layout.main('MoneyTransfer_borrowingPayment');
     },
     breadcrumb: {
-        // params: ['productId', 'currencyId'],
+        params: ['borrowingId'],
         //queryParams: ['show', 'color'],
-        title: 'Borrowing Payment',
+        title: 'Payment',
         // icon: 'user',
-        parent: 'moneyTransfer.home'
+        parent: 'moneyTransfer.borrowing'
     }
 });

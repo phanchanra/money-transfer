@@ -8,20 +8,20 @@ import 'meteor/theara:autoprint';
 import 'printthis';
 
 // Lib
-import {displaySuccess, displayError} from '../../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 
 
 // Component
-import '../../../../core/imports/layouts/report/content.html';
-import '../../../../core/imports/layouts/report/sign-footer.html';
-import '../../../../core/client/components/loading.js';
-import '../../../../core/client/components/form-footer.js';
+import '../../../core/imports/layouts/report/content.html';
+import '../../../core/imports/layouts/report/sign-footer.html';
+import '../../../core/client/components/loading.js';
+import '../../../core/client/components/form-footer.js';
 
 // Method
-import {borrowingInvoiceReport} from '../../../common/methods/reports/borrowingInvoice';
+import {borrowingInvoiceReport} from '../../common/methods/reports/borrowingInvoice';
 
 // Page
-import '../../stylesheets/theme.css';
+import '../stylesheets/theme.css';
 import './borrowingInvoice.html';
 
 // Declare template

@@ -35,22 +35,7 @@ export const borrowingInvoiceReport = new ValidatedMethod({
             let selector = {};
             selector._id = params.borrowingId;
 
-            rptContent = Borrowing.aggregate([
-                {
-                    $match: selector
-                },
-                {
-                    $lookup: {
-                        from: "moneyTransfer_customer",
-                        localField: "customerId",
-                        foreignField: "_id",
-                        as: "customerDoc"
-                    }
-                },
-                {
-                    $unwind: "$customerDoc"
-                }
-            ])[0];
+            rptContent = Borrowing.findOne(selector);
 
             return {rptTitle, rptHeader, rptContent};
         }

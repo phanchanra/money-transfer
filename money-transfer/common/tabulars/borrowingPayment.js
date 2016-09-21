@@ -20,18 +20,25 @@ Meteor.isClient && require('../../imports/pages/borrowingPayment.html');
 tabularOpts.name = 'moneyTransfer.borrowingPayment';
 tabularOpts.collection = BorrowingPayment;
 tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingPaymemtAction},
+    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_borrowingPaymentAction},
     {data: "_id", title: "ID"},
     {
         data: "paidDate",
-        title: "Date",
+        title: "Paid Date",
         render: function (val, type, doc) {
             return moment(val).format('DD/MM/YYYY');
         }
     },
     {
+        data: "dueDoc.totalAmount",
+        title: "Due Amount",
+        render: function (val, type, doc) {
+            return numeral(val).format('0,0.00');
+        }
+    },
+    {
         data: "paidAmount",
-        title: "Amount",
+        title: "Paid Amount",
         render: function (val, type, doc) {
             return numeral(val).format('0,0.00');
         }
@@ -51,6 +58,7 @@ tabularOpts.columns = [
         }
     },
     {data: "status", title: "Status",},
-    {data: "customerId", title: "Customer ID",},
 ];
+tabularOpts.extraFields = ['borrowingId'];
+
 export const BorrowingPaymentTabular = new Tabular.Table(tabularOpts);

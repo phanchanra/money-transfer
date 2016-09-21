@@ -28,7 +28,7 @@ let MoneyTransferRoutes = FlowRouter.group({
 });
 
 // Transfer Summary
-import '../imports/pages/reports/transfer-summary';
+import '../imports/reports/transfer-summary';
 MoneyTransferRoutes.route('/transfer-summary-report', {
     name: 'moneyTransfer.transferSummaryReport',
     title: "Summary Transfer",
@@ -45,7 +45,7 @@ MoneyTransferRoutes.route('/transfer-summary-report', {
 });
 
 // Detail Transfer
-import '../imports/pages/reports/transfer-detail';
+import '../imports/reports/transfer-detail';
 MoneyTransferRoutes.route('/transfer-detail-report', {
     name: 'moneyTransfer.transferDetailReport',
     title: "Detail Transfer",
@@ -62,7 +62,7 @@ MoneyTransferRoutes.route('/transfer-detail-report', {
 });
 
 // Transfer Transaction
-import '../imports/pages/reports/transfer-transaction';
+import '../imports/reports/transfer-transaction';
 MoneyTransferRoutes.route('/transfer-transaction-report', {
     name: 'moneyTransfer.transferTransactionReport',
     title: "Transfer Transaction",
@@ -79,7 +79,7 @@ MoneyTransferRoutes.route('/transfer-transaction-report', {
 });
 
 // Deposit withdrawal
-import '../imports/pages/reports/deposit-withdrawal';
+import '../imports/reports/deposit-withdrawal';
 MoneyTransferRoutes.route('/deposit-withdrawal-report', {
     name: 'moneyTransfer.depositWithdrawalReport',
     title: "Deposit Withdrawal",
@@ -96,7 +96,7 @@ MoneyTransferRoutes.route('/deposit-withdrawal-report', {
 });
 
 // Balance Outstanding
-import '../imports/pages/reports/balance-outstanding';
+import '../imports/reports/balance-outstanding';
 MoneyTransferRoutes.route('/balance-outstanding-report', {
     name: 'moneyTransfer.transferBalanceOutstandingReport',
     title: "Balance Outstanding",
@@ -112,7 +112,7 @@ MoneyTransferRoutes.route('/balance-outstanding-report', {
     }
 });
 // Balance
-import '../imports/pages/reports/balance';
+import '../imports/reports/balance';
 MoneyTransferRoutes.route('/balance-report', {
     name: 'moneyTransfer.transferBalanceReport',
     title: "Balance",
@@ -131,8 +131,8 @@ MoneyTransferRoutes.route('/balance-report', {
 /********************
  * Borrowing
  *******************/
-// Invoice
-import '../imports/pages/reports/borrowingInvoice';
+// Borrowing Invoice
+import '../imports/reports/borrowingInvoice';
 MoneyTransferRoutes.route('/borrowing-invoice-report', {
     name: 'moneyTransfer.borrowingInvoiceReport',
     title: "Borrowing Invoice",
@@ -142,7 +142,7 @@ MoneyTransferRoutes.route('/borrowing-invoice-report', {
 });
 
 // Borrowing
-import '../imports/pages/reports/borrowing';
+import '../imports/reports/borrowing';
 MoneyTransferRoutes.route('/borrowing-report', {
     name: 'moneyTransfer.borrowingReport',
     title: "Borrowing Report",
@@ -158,8 +158,8 @@ MoneyTransferRoutes.route('/borrowing-report', {
     }
 });
 
-// Borrowing status
-import '../imports/pages/reports/borrowingStatus';
+// Borrowing Status
+import '../imports/reports/borrowingStatus';
 MoneyTransferRoutes.route('/borrowing-status-report', {
     name: 'moneyTransfer.borrowingStatusReport',
     title: "Borrowing Status Report",
@@ -174,8 +174,8 @@ MoneyTransferRoutes.route('/borrowing-status-report', {
         parent: 'moneyTransfer.home'
     }
 });
-// Borrowing balance
-import '../imports/pages/reports/borrowingBalance';
+// Borrowing Balance
+import '../imports/reports/borrowingBalance';
 MoneyTransferRoutes.route('/borrowing-balance-report', {
     name: 'moneyTransfer.borrowingBalanceReport',
     title: "Borrowing Balance Report",
@@ -191,8 +191,8 @@ MoneyTransferRoutes.route('/borrowing-balance-report', {
     }
 });
 
-// Borrowing payment
-import '../imports/pages/reports/borrowingPayment';
+// Borrowing Payment
+import '../imports/reports/borrowingPayment';
 MoneyTransferRoutes.route('/borrowing-payment-report', {
     name: 'moneyTransfer.borrowingPaymentReport',
     title: "Borrowing Payment Report",

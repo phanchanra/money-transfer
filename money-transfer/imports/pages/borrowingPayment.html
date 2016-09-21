@@ -1,8 +1,21 @@
 <!--Index-->
 <template name="MoneyTransfer_borrowingPayment">
     <div class="box-header with-border">
-        <h3 class="box-title">
-            {{> addNewButton}}
+        <h3 class="box-title" style="display: inline">
+            <button type="button" class="btn btn-primary js-create"><i class="fa fa-plus"></i> {{_ "action.addNew"}}
+            </button>
+
+            <div class="pull-right text-blue">
+                {{#if Template.subscriptionsReady}}
+                    {{#with data}}
+                        {{_id}} |
+                        {{_customerDoc.name}} |
+                        Amount: {{numFormat borrowingAmount "0,0.00"}} {{currencyId}}
+                    {{/with}}
+                {{else}}
+                    {{> iconLoading}}
+                {{/if}}
+            </div>
         </h3>
     </div>
     <!-- /.box-header -->
@@ -29,7 +42,7 @@
 <template name="MoneyTransfer_borrowingPaymentForm">
     <div class="box-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <dl class="dl-horizontal">
                     {{#with confirmData}}
                         <dt>Last Active Date</dt>
@@ -43,32 +56,26 @@
                         <dt>Current Interest Due</dt>
                         <dd>{{numFormat currentDue.currentInterest "0,0.00"}} {{currencyId}}</dd>
 
-                        <hr>
                         <dt class="text-red">Total Due</dt>
-                        <dd>{{numFormat currentDue.totalAmount "0,0.00"}} {{currencyId}}</dd>
+                        <dd class="text-red">{{numFormat currentDue.totalAmount "0,0.00"}} {{currencyId}}</dd>
                     {{/with}}
                 </dl>
             </div>
-
-            <div class="col-md-8">
-                {{#autoForm collection=collection id="MoneyTransfer_borrowingPaymentForm" type="insert"}}
-                    <div class="row">
-                        <div class="col-md-6">
-                            {{> afQuickField name="customerId"}}
-                            {{> afQuickField name="borrowingId"}}
-                            {{> afQuickField name="paidDate"}}
-                        </div>
-                        <div class="col-md-6">
-                            {{> afQuickField name="paidAmount" value=confirmData.currentDue.totalAmount}}
-                            {{> afQuickField name="memo"}}
-                            {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
-                        </div>
-                    </div>
-                    {{> formFooterWithButton}}
-                {{/autoForm}}
-
-            </div>
         </div>
+
+        {{#autoForm collection=collection id="MoneyTransfer_borrowingPaymentForm" type="insert"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField type="hidden" name="borrowingId" value=(param "borrowingId")}}
+                    {{> afQuickField name="paidDate"}}
+                    {{> afQuickField name="paidAmount" value=confirmData.currentDue.totalAmount}}
+                    {{> afQuickField name="memo"}}
+                    {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                </div>
+            </div>
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+
     </div>
 </template>
 
@@ -80,8 +87,6 @@
                 <dl class="dl-horizontal">
                     <dt>ID</dt>
                     <dd>{{_id}}</dd>
-                    <dt>Customer</dt>
-                    <dd>{{customerId}}</dd>
                     <dt>Borrowing ID</dt>
                     <dd>{{borrowingId}}</dd>
                     <dt>Paid Date</dt>

@@ -22,18 +22,7 @@ export const lookupBorrowingWithLastPayment = new ValidatedMethod({
                 },
                 {
                     $lookup: {
-                        from: "moneyTransfer_customer",
-                        localField: "customerId",
-                        foreignField: "_id",
-                        as: "customerDoc"
-                    }
-                },
-                {
-                    $unwind: "$customerDoc"
-                },
-                {
-                    $lookup: {
-                        from: "moneyTransfer_borrowingPay",
+                        from: "moneyTransfer_borrowingPayment",
                         localField: "_id",
                         foreignField: "borrowingId",
                         as: "lastPaymentDoc"

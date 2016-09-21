@@ -8,26 +8,26 @@ import 'meteor/theara:autoprint';
 import 'printthis';
 
 // Lib
-import {displaySuccess, displayError} from '../../../../core/client/libs/display-alert.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 
 // Component
-import '../../../../core/imports/layouts/report/content.html';
-import '../../../../core/imports/layouts/report/sign-footer.html';
-import '../../../../core/client/components/loading.js';
-import '../../../../core/client/components/form-footer.js';
+import '../../../core/imports/layouts/report/content.html';
+import '../../../core/imports/layouts/report/sign-footer.html';
+import '../../../core/client/components/loading.js';
+import '../../../core/client/components/form-footer.js';
 
 // Method
-import {transferTransactionReport} from '../../../common/methods/reports/transfer-transaction';
+import {transferBalanceReport} from '../../common/methods/reports/balance';
 
 // Schema
-import {TransferTransactionSchema} from '../../../common/collections/reports/transfer-transaction';
+import {TransferBalanceSchema} from '../../common/collections/reports/balance';
 
 
 // Page
-import './../reports/transfer-transaction.html';
+import './../reports/balance.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_transferTransactionReport;
+let indexTmpl = Template.MoneyTransfer_transferBalanceReport;
 
 // State
 let formDataState = new ReactiveVar(null);
@@ -50,7 +50,7 @@ indexTmpl.onCreated(function () {
             this.rptInitState.set(true);
             this.rptDataState.set(false);
 
-            transferTransactionReport.callPromise(formDataState.get())
+            transferBalanceReport.callPromise(formDataState.get())
                 .then((result)=> {
                     this.rptDataState.set(result);
                 }).catch((err)=> {
@@ -64,7 +64,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return TransferTransactionSchema;
+        return TransferBalanceSchema;
     },
     rptInit(){
         let instance = Template.instance();
@@ -119,4 +119,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('MoneyTransfer_transferTransactionReport', hooksObject);
+AutoForm.addHooks('MoneyTransfer_transferBalanceReport', hooksObject);
