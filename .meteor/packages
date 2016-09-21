@@ -68,8 +68,8 @@ theara:flow-router-breadcrumb
 
 # Collection
 matb33:collection-hooks
-dburles:collection-helpers
 aldeed:collection2
+dburles:collection-helpers
 meteorhacks:aggregate
 aldeed:simple-schema
 #zimme:collection-softremovable

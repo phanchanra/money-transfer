@@ -40,9 +40,10 @@ MoneyTransferRoutes.route('/home', {
         parent: 'core.welcome'
     }
 });
-//-----------------------//
-//--- Money Transfer --- //
-//-----------------------//
+
+/*****************
+ * Transfer
+ ****************/
 // Transfer
 import '../imports/pages/transfer';
 MoneyTransferRoutes.route('/transfer', {
@@ -123,6 +124,7 @@ MoneyTransferRoutes.route('/bank-account/:productId/:currencyId', {
         parent: 'moneyTransfer.fee'
     }
 });
+
 // Customer Expired Lis
 import '../imports/pages/customerExpiredDate';
 MoneyTransferRoutes.route('/customer-expired-date', {
@@ -139,26 +141,10 @@ MoneyTransferRoutes.route('/customer-expired-date', {
         parent: 'moneyTransfer.home'
     }
 });
-//--- Borrowing ---
-// Borrowing
-import '../imports/pages/borrowing';
-MoneyTransferRoutes.route('/borrowing', {
-    name: 'moneyTransfer.borrowing',
-    title: 'Borrowing',
-    action: function (params, queryParams) {
-        Layout.main('MoneyTransfer_borrowing');
-    },
-    breadcrumb: {
-        // params: ['productId', 'currencyId'],
-        //queryParams: ['show', 'color'],
-        title: 'Borrowing',
-        // icon: 'user',
-        parent: 'moneyTransfer.home'
-    }
-});
-//--------------------------//
-//--- Currency Exchange --- //
-//--------------------------//
+
+/*****************
+ * Exchange
+ ****************/
 //Provider
 import '../imports/pages/provider';
 MoneyTransferRoutes.route('/provider', {
@@ -203,6 +189,46 @@ MoneyTransferRoutes.route('/exchange-transaction', {
         // params: ['productId', 'currencyId'],
         //queryParams: ['show', 'color'],
         title: 'Exchange Transaction',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+/*****************
+ * Borrowing
+ ****************/
+// Borrowing
+import '../imports/pages/borrowing';
+MoneyTransferRoutes.route('/borrowing', {
+    name: 'moneyTransfer.borrowing',
+    title: 'Borrowing',
+    subscriptions: function (params, queryParams) {
+        // this.register('customer', Meteor.subscribe('moneyTransfer.customer'));
+    },
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowing');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Borrowing',
+        // icon: 'user',
+        parent: 'moneyTransfer.home'
+    }
+});
+
+// Payment
+import '../imports/pages/borrowingPayment';
+MoneyTransferRoutes.route('/borrowing-payment', {
+    name: 'moneyTransfer.borrowingPayment',
+    title: 'Borrowing Payment',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_borrowingPayment');
+    },
+    breadcrumb: {
+        // params: ['productId', 'currencyId'],
+        //queryParams: ['show', 'color'],
+        title: 'Borrowing Payment',
         // icon: 'user',
         parent: 'moneyTransfer.home'
     }

@@ -8,13 +8,12 @@ import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOptsMethod} from '../../common/methods/select-opts-method';
 import {SelectOpts} from '../../imports/libs/select-opts.js';
 
-export const BorrowingPay = new Mongo.Collection('moneyTransfer_borrowingPay');
+export const BorrowingPayment = new Mongo.Collection('moneyTransfer_borrowingPayment');
 
-BorrowingPay.generalSchema = new SimpleSchema({
+BorrowingPayment.generalSchema = new SimpleSchema({
     customerId: {
         type: String,
         label: 'Customer',
-        optional: true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -32,7 +31,6 @@ BorrowingPay.generalSchema = new SimpleSchema({
     borrowingId: {
         type: String,
         label: 'Borrowing ID',
-        optional: true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -49,7 +47,7 @@ BorrowingPay.generalSchema = new SimpleSchema({
     },
     paidDate: {
         type: Date,
-        label: "BorrowingPay date",
+        label: "Paid date",
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
@@ -65,31 +63,21 @@ BorrowingPay.generalSchema = new SimpleSchema({
         type: Object,
         label: 'Due doc'
     },
-    'dueDoc.principal': {
+    'dueDoc.numOfDay': {
         type: Number,
-        label: 'Principal due',
-        decimal: true,
-        min: 1,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let currencyId = AutoForm.getFieldValue('currencyId');
-                return inputmaskOptions.currency({prefix: ''});
-            }
-        }
+        label: 'No. of day',
+        min: 0,
     },
-    'dueDoc.interest': {
+    'dueDoc.currentInterest': {
         type: Number,
-        label: 'Interest due',
+        label: 'Current interest due',
         decimal: true,
-        min: 1,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let currencyId = AutoForm.getFieldValue('currencyId');
-                return inputmaskOptions.currency({prefix: ''});
-            }
-        }
+        min: 0,
+    },
+    'dueDoc.totalAmount': {
+        type: Number,
+        decimal: true,
+        min: 0.01,
     },
     paidAmount: {
         type: Number,
@@ -106,63 +94,37 @@ BorrowingPay.generalSchema = new SimpleSchema({
     },
     paidDoc: {
         type: Object,
-        label: 'Paid doc'
+        label: 'Paid doc',
+        optional: true
     },
     'paidDoc.principal': {
         type: Number,
         label: 'Pricipal paid',
         decimal: true,
         min: 0,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let currencyId = AutoForm.getFieldValue('currencyId');
-                return inputmaskOptions.currency({prefix: ''});
-            }
-        }
     },
     'paidDoc.interest': {
         type: Number,
         label: 'Interest paid',
         decimal: true,
         min: 0,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let currencyId = AutoForm.getFieldValue('currencyId');
-                return inputmaskOptions.currency({prefix: ''});
-            }
-        }
     },
     balanceDoc: {
         type: Object,
-        label: 'Balance doc'
+        label: 'Balance doc',
+        optional: true
     },
     'balanceDoc.principal': {
         type: Number,
         label: 'Principal balance',
         decimal: true,
         min: 0,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let currencyId = AutoForm.getFieldValue('currencyId');
-                return inputmaskOptions.currency({prefix: ''});
-            }
-        }
     },
     'balanceDoc.interest': {
         type: Number,
         label: 'Interest balance',
         decimal: true,
         min: 0,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                let currencyId = AutoForm.getFieldValue('currencyId');
-                return inputmaskOptions.currency({prefix: ''});
-            }
-        }
     },
     memo: {
         type: String,
@@ -172,9 +134,19 @@ BorrowingPay.generalSchema = new SimpleSchema({
             type: 'textarea'
         }
     },
+    status: {
+        type: String,
+        label: 'Status',
+        optional: true,
+    },
+    lastPaymentDoc: {
+        type: Object,
+        optional: true,
+        blackbox: true
+    },
     branchId: {
         type: String
     }
 });
 
-BorrowingPay.attachSchema([BorrowingPay.generalSchema]);
+BorrowingPayment.attachSchema([BorrowingPayment.generalSchema]);

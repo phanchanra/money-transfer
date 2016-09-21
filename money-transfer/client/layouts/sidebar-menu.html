@@ -136,6 +136,28 @@
                     <i class="fa fa-sun-o"></i> <span>Borrowing</span>
                 </a>
             </li>
+            <li class="{{isActiveRoute name='moneyTransfer.borrowingPayment'}}">
+                <a href="{{pathFor 'moneyTransfer.borrowingPayment'}}">
+                    <i class="fa fa-sun-o"></i> <span>Payment</span>
+                </a>
+            </li>
+
+            <!--Report-->
+            <li class="dropdown-header">Reports</li>
+            <li class="{{isActiveRoute name='moneyTransfer.borrowingReport'}}">
+                <a href="{{pathFor 'moneyTransfer.borrowingReport'}}">
+                    <i class="fa fa-file-text-o"></i> <span>Borrowing</span>
+                </a>
+                <a href="{{pathFor 'moneyTransfer.borrowingStatusReport'}}">
+                    <i class="fa fa-file-text-o"></i> <span>Borrowing Status</span>
+                </a>
+                <a href="{{pathFor 'moneyTransfer.borrowingBalanceReport'}}">
+                    <i class="fa fa-file-text-o"></i> <span>Borrowing Balance</span>
+                </a>
+                <a href="{{pathFor 'moneyTransfer.borrowingPaymentReport'}}">
+                    <i class="fa fa-file-text-o"></i> <span>Borrowing Payment</span>
+                </a>
+            </li>
         </ul>
     </li>
 

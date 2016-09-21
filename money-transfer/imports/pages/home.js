@@ -1,6 +1,8 @@
 import {Template} from  'meteor/templating';
 import {TAPi18n} from 'meteor/tap:i18n';
 import BigNumber from 'bignumber.js';
+// import 'p-loading';
+// import 'p-loading/dist/css/p-loading.css';
 
 // Page
 import './home.html';

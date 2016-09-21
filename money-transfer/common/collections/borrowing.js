@@ -19,6 +19,9 @@ Borrowing.generalSchema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
+                uniDisabled: function () {
+                    return Meteor.isClient && Session.get('disableCustomerId');
+                },
                 optionsMethod: 'moneyTransfer.selectOptsMethod.customer',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
@@ -28,6 +31,16 @@ Borrowing.generalSchema = new SimpleSchema({
                 }
             }
         }
+    },
+    borrowingType: {
+        type: String,
+        label: "Borrowing type",
+        allowedValues: ['GR', 'RS']
+    },
+    refId: {
+        type: String,
+        label: 'Ref ID',
+        optional: true,
     },
     borrowingDate: {
         type: Date,
@@ -42,6 +55,10 @@ Borrowing.generalSchema = new SimpleSchema({
                 }
             }
         }
+    },
+    borrowingDateText: {
+        type: String,
+        optional: true
     },
     term: {
         type: Number,
@@ -122,8 +139,47 @@ Borrowing.generalSchema = new SimpleSchema({
         label: 'Memo',
         optional: true,
         autoform: {
-            type: 'textarea'
+            afFieldInput: {
+                type: 'summernote',
+                class: 'editor', // optional
+                settings: {
+                    height: 100,                 // set editor height
+                    minHeight: null,             // set minimum height of editor
+                    maxHeight: null,             // set maximum height of editor
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']], //['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol']] //['para', ['ul', 'ol', 'paragraph']],
+                        //['insert', ['link', 'picture']], //['insert', ['link', 'picture', 'hr']],
+                    ]
+                } // summernote options goes here
+            }
         }
+    },
+    status: {
+        type: String,
+        allowedValues: ['Inactive', 'Active', 'Reschedule', 'Close']
+    },
+    activeDate: {
+        type: Date,
+        label: 'Active date',
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'bootstrap-datetimepicker',
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
+                }
+            }
+        }
+    },
+    rescheduleDate: {
+        type: Date,
+        optional: true
+    },
+    closeDate: {
+        type: Date,
+        optional: true
     },
     branchId: {
         type: String
