@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="MoneyTransfer_fee">
+<template name="MoneyTransfer_exchangeRate">
     <div class="box-header with-border">
         <h3 class="box-title">
             {{> addNewButton}}
@@ -15,7 +15,7 @@
 </template>
 
 <!--Action-->
-<template name="MoneyTransfer_feeAction">
+<template name="MoneyTransfer_exchangeRateAction">
     {{#columnAction}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
@@ -27,29 +27,30 @@
 <!--<button type="button" name="add-balance" class="btn btn-default add-balance" title="Add opening balance">+</button>-->
 <!--</template>-->
 <!--Product-->
-<template name="MoneyTransfer_feeProduct">
+<template name="MoneyTransfer_exchangeRateProductShowAction">
     <a href="#" class="js-display-product">{{productId}}</a>
 </template>
 
 <!--Form-->
-<template name="MoneyTransfer_feeForm">
+<template name="MoneyTransfer_exchangeRateForm">
     {{#if Template.subscriptionsReady}}
 
         <div class="box-body">
-            {{#autoForm collection=collection validation="blur" id="MoneyTransfer_feeForm" doc=form.doc type=form.type}}
+            {{#autoForm collection=collection validation="blur" id="MoneyTransfer_exchangeRateForm" doc=form.doc type=form.type}}
                 <div class="row">
                     <div class="col-md-3">
                         <fieldset>
                             <legend>General</legend>
-                            {{> afQuickField name='productId'}}
-                            {{> afQuickField name='currencyId'}}
+                            {{> afQuickField name='providerId'}}
+                            {{> afQuickField name='exchangeDate'}}
+                            {{> afQuickField name='baseCurrency'}}
+                            {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                         </fieldset>
                     </div>
                     <div class="col-md-9">
                         <fieldset>
-                            <legend>Fee</legend>
-
-                            {{> afArrayField name="service" id="service" template="customArrayFieldForService" subtemplate="customObjectFieldForService"}}
+                            <legend>Exchange Rate</legend>
+                            {{> afArrayField name="convert" id="convert" template="customArrayFieldForConvert" subtemplate="customObjectFieldForConvert"}}
 
                         </fieldset>
                     </div>
@@ -69,34 +70,36 @@
 </template>
 
 <!--Show-->
-<template name="MoneyTransfer_feeShow">
+<template name="MoneyTransfer_exchangeRateShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
             {{#with data}}
                 <dl class="dl-horizontal">
                     <fieldset>
-                        <legend>Fee</legend>
+                        <legend>Exchange Rate</legend>
                         <dt>ID</dt>
                         <dd>{{_id}}</dd>
                         <dt>Product</dt>
                         <dd>{{productId}}</dd>
-                        <dt>Currency</dt>
-                        <dd>{{currencyId}}</dd>
+                        <dt>Reg Date</dt>
+                        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                        <dt>Base Currency</dt>
+                        <dd>{{baseCurrency}}</dd>
                     </fieldset>
 
                     <fieldset>
-                        <legend>Service</legend>
-                        {{#each service}}
-                            <dt>From Amount</dt>
-                            <dd>{{fromAmount}}</dd>
-                            <dt>To Amount</dt>
-                            <dd>{{toAmount}}</dd>
-                            <dt>Customer Fee</dt>
-                            <dd>{{customerFee}}</dd>
-                            <dt>Owner Fee</dt>
-                            <dd>{{ownerFee}}</dd>
-                            <dt>Agent Fee</dt>
-                            <dd>{{agentFee}}</dd>
+                        <legend>Convert</legend>
+                        {{#each convert}}
+                            <dt>Amount</dt>
+                            <dd>{{amount}}</dd>
+                            <dt>Currency To</dt>
+                            <dd>{{convertTo}}</dd>
+                            <dt>Buying </dt>
+                            <dd>{{buying}}</dd>
+                            <dt>Selling</dt>
+                            <dd>{{selling}}</dd>
+                            <dt>Convert Amount</dt>
+                            <dd>{{convertAmount}}</dd>
                         {{/each}}
                     </fieldset>
                 </dl>
@@ -107,54 +110,57 @@
     </div>
 </template>
 <!--Show-->
-<template name="MoneyTransfer_showProduct">
+<template name="MoneyTransfer_exchangeRateProductShow">
     <div class="box-body">
-    {{#if Template.subscriptionsReady}}
+        {{#if Template.subscriptionsReady}}
 
-        <dl class="dl-horizontal">
-            <fieldset>
-                <legend>Product</legend>
-                <dt>ID</dt>
-                <dd>{{_id}}</dd>
-                <dt>Product</dt>
-                <dd>{{name}}</dd>
-                <dt>Date</dt>
-                <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
-                <dt>Status</dt>
-                <dd>{{status}}</dd>
-                <dt>Address</dt>
-                <dd>{{address}}</dd>
-            </fieldset>
-        </dl>
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>Product</legend>
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Product</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Date</dt>
+                    <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                    <dt>Status</dt>
+                    <dd>{{status}}</dd>
+                    <dt>Address</dt>
+                    <dd>{{address}}</dd>
+                </fieldset>
+            </dl>
 
-    {{else}}
-        {{> loading}}
-    {{/if}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
     </div>
 </template>
 <!------------Custom contact array field-------------------->
-<template name="afArrayField_customArrayFieldForService">
+<template name="afArrayField_customArrayFieldForConvert">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div style="height: 18px;">
-                <div class="col-sm-3">
-                    From Amount
+                <div class="col-sm-2">
+                    Amount
                 </div>
                 <div class="col-sm-3">
-                    To Amount
-                </div>
-                <div class="col-sm-3">
-                    Customer Fee
+                    Convert To
                 </div>
                 <div class="col-sm-2">
-                    Agent Fee
+                    Buying
+                </div>
+                <div class="col-sm-2">
+                    Selling
+                </div>
+                <div class="col-sm-2">
+                    Convert Amount
                 </div>
                 <div class="col-sm-1">
                     Action
                 </div>
             </div>
+            <!--{{afFieldLabelText name=this.atts.name}}-->
         </div>
-        <!--{{afFieldLabelText name=this.atts.name}}-->
         <div class="panel-body">
 
             {{#if afFieldIsInvalid name=this.atts.name}}
@@ -164,7 +170,7 @@
             {{/if}}
 
             {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
-                <div class="row">
+                <div class="row exchange-rate">
                     {{> UI.dynamic template=../atts.subtemplate}}
 
                     <div class="col-sm-1">
@@ -195,20 +201,20 @@
     </div>
 </template>
 
-<template name="customObjectFieldForService">
-    <div class="col-sm-3">
-        {{> afQuickField name=current.fromAmount template="bootstrap3" label=false class="input-sm from-amount" Placeholder="From amount"}}
+<template name="customObjectFieldForConvert">
+    <div class="col-sm-2">
+        {{> afQuickField name=current.amount template="bootstrap3" label=false class="input-sm amount" Placeholder="Amount"}}
     </div>
     <div class="col-sm-3">
-        {{> afQuickField name=current.toAmount template="bootstrap3" label=false class="input-sm to-amount" Placeholder="To amount"}}
-    </div>
-    <div class="col-sm-3">
-        {{> afQuickField name=current.customerFee template="bootstrap3" label=false class="input-sm customer-fee" Placeholder="Customer fee"}}
+        {{> afQuickField name=current.convertTo template="bootstrap3" label=false class="input-sm convert-to" Placeholder="Convert To"}}
     </div>
     <div class="col-sm-2">
-        {{> afQuickField name=current.agentFee template="bootstrap3" label=false class="input-sm agent-fee"}}
-        <span style="display: none;">
-        {{> afQuickField name=current.ownerFee value=ownerFee template="bootstrap3" label=false class="input-sm owner-fee" Placeholder="Owner fee"}}
-        </span>
+        {{> afQuickField name=current.buying template="bootstrap3" readonly=true label=false class="input-sm buying" Placeholder="Buying"}}
+    </div>
+    <div class="col-sm-2">
+        {{> afQuickField name=current.selling template="bootstrap3" readonly=true label=false class="input-sm selling" Placeholder="Selling"}}
+    </div>
+    <div class="col-sm-2">
+        {{> afQuickField name=current.convertAmount template="bootstrap3" readonly=true label=false class="input-sm convert-amount" Placeholder="Convert Amount"}}
     </div>
 </template>

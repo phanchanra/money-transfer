@@ -9,7 +9,7 @@ import {moment} from  'meteor/momentjs:moment';
 import {Customer} from '../collections/customer.js';
 import {Product} from '../collections/product';
 import {Exchange} from '../../../core/common/collections/exchange';
-
+import {Provider} from '../collections/provider'
 export let SelectOptsMethod = {};
 
 SelectOptsMethod.customer = new ValidatedMethod({
@@ -46,7 +46,6 @@ SelectOptsMethod.customer = new ValidatedMethod({
         }
     }
 });
-
 SelectOptsMethod.product = new ValidatedMethod({
     name: 'moneyTransfer.selectOptsMethod.product',
     validate: null,
@@ -83,38 +82,7 @@ SelectOptsMethod.product = new ValidatedMethod({
         }
     }
 });
-// SelectOptsMethod.item = new ValidatedMethod({
-//     name: 'moneyTransfer.selectOptsMethod.item',
-//     validate: null,
-//     run(options) {
-//         if (!this.isSimulation) {
-//             this.unblock();
-//
-//             let list = [], selector = {};
-//             let searchText = options.searchText;
-//             let values = options.values;
-//
-//             if (searchText) {
-//                 selector = {
-//                     $or: [
-//                         {_id: {$regex: searchText, $options: 'i'}},
-//                         {name: {$regex: searchText, $options: 'i'}}
-//                     ]
-//                 };
-//             } else if (values.length) {
-//                 selector = {_id: {$in: values}};
-//             }
-//
-//             let data = Item.find(selector, {limit: 10});
-//             data.forEach(function (value) {
-//                 let label = value._id + ' : ' + value.name;
-//                 list.push({label: label, value: value._id});
-//             });
-//
-//             return list;
-//         }
-//     }
-// });
+
 
 SelectOptsMethod.exchange = new ValidatedMethod({
     name: 'moneyTransfer.selectOptsMethod.exchange',
@@ -146,3 +114,42 @@ SelectOptsMethod.exchange = new ValidatedMethod({
     }
 });
 
+//-----------------//
+//--- Provider  ---//
+//-----------------//
+SelectOptsMethod.provider = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.provider',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
+
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+
+            if (searchText) {
+                selector = {
+                    $or: [
+                        {_id: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
+                    status: "E"
+                };
+            } else if (values.length) {
+                selector = {_id: {$in: values}, status: "E"};
+            } else {
+                selector = {status: "E"}
+            }
+
+
+            let data = Provider.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                let label = value._id + ' : ' + value.name;
+                list.push({label: label, value: value._id});
+            });
+
+            return list;
+        }
+    }
+});

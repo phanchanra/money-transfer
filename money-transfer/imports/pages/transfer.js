@@ -168,6 +168,7 @@ formTmpl.onCreated(function () {
     this.senderPhone = new ReactiveVar();
     this.receiverPhone = new ReactiveVar();
     this.currencyList = new ReactiveVar();
+
     //this.afterDisAmountFee = new ReactiveVar();
     //this.totalAmount = new ReactiveVar();
     // console.log(Session.get("productId"));
@@ -334,7 +335,7 @@ formTmpl.events({
                 instance.$('.save').prop('disabled', false);
                 instance.$('.save-print').prop('disabled', false);
                 //, feeDoc: result
-            }else{
+            } else {
                 instance.$('.save').prop('disabled', true);
                 instance.$('.save-print').prop('disabled', true);
                 swal("Please check", "Your balance are out of fee, not yet setting!");

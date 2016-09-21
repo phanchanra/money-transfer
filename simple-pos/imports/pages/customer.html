@@ -87,7 +87,9 @@
 <!------------Custom contact array field-------------------->
 <template name="afArrayField_customArrayFieldForContact">
     <div class="panel panel-default">
-        <div class="panel-heading">{{afFieldLabelText name=this.atts.name}}</div>
+        <div class="panel-heading">
+            {{afFieldLabelText name=this.atts.name}}
+        </div>
         <div class="panel-body">
 
             {{#if afFieldIsInvalid name=this.atts.name}}

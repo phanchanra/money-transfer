@@ -7,11 +7,15 @@ import './home.html';
 
 Template.MoneyTransfer_home.onCreated(function () {
     this.state = new ReactiveVar();
+    this.bigNumberTest=new ReactiveVar();
 });
 
 Template.MoneyTransfer_home.helpers({
     data(){
         return Template.instance().state.get();
+    },
+    test(){
+        return Template.instance().bigNumberTest.get()
     }
 });
 
@@ -27,8 +31,11 @@ Template.MoneyTransfer_home.events({
         // let val2 = new  BigNumber(0.3);
         let val1 = new BigNumber(0.3);
         let val2 = new BigNumber(0.1);
+        // or
+        //BigNumber(2).add(10);
         //instance.state.set(new BigNumber((val1).times(val2)).toNumber());
-        instance.state.set(new BigNumber((val1).minus(val2)).toNumber());
+        instance.bigNumberTest.set(new BigNumber(0.3).minus(new BigNumber(0.1)).toNumber());
+        // instance.bigNumberTest.set(new BigNumber((val1).minus(val2)).toNumber());
     },
     'click .alertDate'(e, instance){
         // var lastDate = moment('1/9/2016', 'DD/MM/YYYY');
