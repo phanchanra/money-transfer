@@ -9,10 +9,10 @@ import {moment} from  'meteor/momentjs:moment';
 import {Company} from '../../../../core/common/collections/company';
 import {Branch} from '../../../../core/common/collections/branch';
 
-import {Borrowing} from '../../collections/borrowing';
+import {BorrowingPayment} from '../../collections/borrowingPayment';
 
-export const borrowingInvoiceReport = new ValidatedMethod({
-    name: 'simplePos.borrowingInvoiceReport',
+export const borrowingPaymentInvoiceReport = new ValidatedMethod({
+    name: 'simplePos.borrowingPaymentInvoiceReport',
     mixins: [CallPromiseMixin],
     validate: null,
     run(params) {
@@ -33,9 +33,24 @@ export const borrowingInvoiceReport = new ValidatedMethod({
 
             // --- Content ---
             let selector = {};
-            selector._id = params.borrowingId;
+            selector._id = params.borrowingPaymentId;
 
-            rptContent = Borrowing.findOne(selector);
+            rptContent = BorrowingPayment.aggregate([
+                {
+                    $match: selector
+                },
+                {
+                    $lookup: {
+                        from: "moneyTransfer_borrowing",
+                        localField: "borrowingId",
+                        foreignField: "_id",
+                        as: "borrowingDoc"
+                    }
+                },
+                {
+                    $unwind: "$borrowingDoc"
+                }
+            ])[0];
 
             return {rptTitle, rptHeader, rptContent};
         }

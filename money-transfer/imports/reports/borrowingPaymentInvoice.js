@@ -14,14 +14,14 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {borrowingInvoiceReport} from '../../common/methods/reports/borrowingInvoice';
+import {borrowingPaymentInvoiceReport} from '../../common/methods/reports/borrowingPaymentInvoice';
 
 // Page
 import '../stylesheets/theme.css';
-import './borrowingInvoice.html';
+import './borrowingPaymentInvoice.html';
 
 // Declare template
-let rptTmpl = Template.MoneyTransfer_borrowingInvoiceReport;
+let rptTmpl = Template.MoneyTransfer_borrowingPaymentInvoiceReport;
 
 
 // Generate
@@ -32,7 +32,9 @@ rptTmpl.onCreated(function () {
         let queryParams = FlowRouter.current().queryParams;
         queryParams.branchId = Session.get('currentBranch');
 
-        borrowingInvoiceReport.callPromise(queryParams)
+        console.log(queryParams);
+
+        borrowingPaymentInvoiceReport.callPromise(queryParams)
             .then((result)=> {
                 this.rptData.set(result);
             }).catch((err)=> {
@@ -44,6 +46,9 @@ rptTmpl.onCreated(function () {
 rptTmpl.helpers({
     rptData(){
         return Template.instance().rptData.get();
+    },
+    totalInterestDue(oldInterest, currentInterest){
+        return oldInterest + currentInterest;
     },
     memoSafeString(memo){
         return Spacebars.SafeString(memo);

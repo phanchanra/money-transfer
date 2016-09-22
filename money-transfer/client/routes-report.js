@@ -141,6 +141,16 @@ MoneyTransferRoutes.route('/borrowing-invoice-report', {
     },
 });
 
+// Borrowing Payment Invoice
+import '../imports/reports/borrowingPaymentInvoice';
+MoneyTransferRoutes.route('/borrowing-payment-invoice-report', {
+    name: 'moneyTransfer.borrowingPaymentInvoiceReport',
+    title: "Borrowing Payment Invoice",
+    action: function (params, queryParams) {
+        Layout.report('MoneyTransfer_borrowingPaymentInvoiceReport');
+    },
+});
+
 // Borrowing
 import '../imports/reports/borrowing';
 MoneyTransferRoutes.route('/borrowing-report', {

@@ -20,33 +20,36 @@
                         <div style="width: 50%; float: left">
                             <div style="padding-bottom: 1em"><strong>លេខកូដ:</strong> {{_id}}</div>
                             <div class="borrow-invoice">
-                                <strong>អតិថិជន:</strong>
-                                {{_customerDoc.name}},
-                                ទូរស័ព្ទ: {{_customerDoc.telephone}}
+                                <strong>អតិថិជន:</strong> {{_customerDoc.name}} ({{_customerDoc.gender}})
                             </div>
-                            <div class="borrow-invoice"><strong>កាលបរិច្ឆេទខ្ចី:</strong> {{moFormat borrowingDate
-                                                                                                     "DD/MM/YYYY"}}
+                            <div class="borrow-invoice">
+                                <strong>ទូរស័ព្ទ</strong>: {{_customerDoc.telephone}}
                             </div>
-                            <div class="borrow-invoice"><strong>ចំនួនខែខ្ចី:</strong> {{term}} ខែ</div>
-                            <div class="borrow-invoice"><strong>កាលបរិច្ចេទបញ្ចប់:</strong> {{moFormat maturityDate
-                                                                                                       "DD/MM/YYYY"}}
+                            <div class="borrow-invoice">
+                                <strong>កាលបរិច្ឆេទខ្ចី:</strong> {{moFormat borrowingDate "DD/MM/YYYY"}}
+                            </div>
+                            <div class="borrow-invoice">
+                                <strong>ចំនួនខែខ្ចី:</strong> {{term}} ខែ
+                            </div>
+                            <div class="borrow-invoice">
+                                <strong>កាលបរិច្ចេទបញ្ចប់:</strong> {{moFormat maturityDate "DD/MM/YYYY"}}
                             </div>
                             <div class="borrow-invoice"><strong>ចំនួនថ្ងៃសរុប:</strong> {{tenor}} ថ្ងៃ</div>
                         </div>
 
                         <div style="width: 50%; float: right">
                             <div class="borrow-invoice"><strong>រូបិយប័ណ្ណ:</strong> {{currencyId}}</div>
-                            <div class="borrow-invoice"><strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate
-                                                                                                     "0,0.00"}} %
-                                ក្នុងមួយខែ
+                            <div class="borrow-invoice">
+                                <strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate "0,0.00"}} % ក្នុងមួយខែ
                             </div>
-                            <div class="borrow-invoice"><strong>ចំនួនប្រាក់ខ្ចី:</strong> {{numFormat borrowingAmount
-                                                                                                      "0,0.00"}} {{currencyId}}
+                            <div class="borrow-invoice">
+                                <strong>ចំនួនប្រាក់ខ្ចី:</strong> {{numFormat borrowingAmount "0,0.00"}} {{currencyId}}
                             </div>
-                            <div class="borrow-invoice"><strong>ចំនួនការប្រាក់សរុប:</strong> {{numFormat projectInterest
-                                                                                                         "0,0.00"}} {{currencyId}}
+                            <div class="borrow-invoice">
+                                <strong>ចំនួនការប្រាក់សរុប:</strong>
+                                {{numFormat projectInterest "0,0.00"}} {{currencyId}}
                             </div>
-                            <div class="borrow-invoice"><strong>បរិយាយ:</strong> {{memo}}</div>
+                            <div class="borrow-invoice"><strong>បរិយាយ:</strong> {{memoSafeString memo}}</div>
                         </div>
                     </div>
                 {{/with}}

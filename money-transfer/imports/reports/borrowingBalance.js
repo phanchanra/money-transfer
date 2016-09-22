@@ -44,8 +44,6 @@ indexTmpl.onCreated(function () {
 
             borrowingBalanceReport.callPromise(formDataState.get())
                 .then((result)=> {
-                    console.log(result);
-
                     this.rptData.set(result);
                 }).catch((err)=> {
                     console.log(err.message);

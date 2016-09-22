@@ -18,7 +18,7 @@ export const borrowingPaymentReport = new ValidatedMethod({
     validate: null,
     run(params) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(2000);
+            Meteor._sleepForMs(200);
 
             let rptTitle, rptHeader, rptContent, rptFooter;
 

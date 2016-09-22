@@ -113,11 +113,13 @@
                                             <td>{{moFormat dataByCurrency.maturityDate "DD/MM/YYYY"}}</td>
                                             <td>{{dataByCurrency.tenor}}</td>
                                             <td>{{numFormat dataByCurrency.interestRate "0,0.00"}}</td>
-                                            <td>{{status}}</td>
-                                            <td class="text-right">{{numFormat dataByCurrency.borrowingAmount
-                                                                               "0,0.00"}}</td>
-                                            <td class="text-right">{{numFormat dataByCurrency.projectInterest
-                                                                               "0,0.00"}}</td>
+                                            <td>{{dataByCurrency.status}}</td>
+                                            <td class="text-right">
+                                                {{numFormat dataByCurrency.borrowingAmount "0,0.00"}}
+                                            </td>
+                                            <td class="text-right">
+                                                {{numFormat dataByCurrency.projectInterest "0,0.00"}}
+                                            </td>
                                         </tr>
                                     {{/each}}
                                 {{/each}}
