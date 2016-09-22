@@ -45,9 +45,6 @@ indexTmpl.onRendered(function () {
                     subtitle: {
                         text: 'Source: Rabbit Technology'
                     },
-                    credits: {
-                        enabled: false
-                    },
                     xAxis: {
                         type: 'category',
                         title: {
@@ -76,6 +73,7 @@ indexTmpl.onRendered(function () {
                         headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
                         pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}$</b><br/>'
                     },
+
                     series: [{
                         name: 'Brands',
                         colorByPoint: true,
