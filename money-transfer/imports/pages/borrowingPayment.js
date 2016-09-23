@@ -49,9 +49,14 @@ indexTmpl.onCreated(function () {
     createNewAlertify('borrowingPayment');
     createNewAlertify('borrowingPaymentShow');
 
+    // Get borrowing doc
+    this.borrowingDoc = new ReactiveVar();
     this.autorun(()=> {
         let borrowingId = FlowRouter.getParam('borrowingId');
-        this.subscribe('moneyTransfer.borrowingById', borrowingId);
+        let handle = this.subscribe('moneyTransfer.borrowingById', borrowingId);
+        if (handle.ready()) {
+            this.borrowingDoc.set(Borrowing.findOne(borrowingId));
+        }
     });
 });
 
@@ -59,9 +64,18 @@ indexTmpl.helpers({
     tabularTable(){
         return BorrowingPaymentTabular;
     },
+    tabularSelector(){
+        return {borrowingId: FlowRouter.getParam('borrowingId')};
+    },
     data () {
-        let borrowingId = FlowRouter.getParam('borrowingId');
-        return Borrowing.findOne(borrowingId);
+        return Template.instance().borrowingDoc.get();
+    },
+    isActiveStatus(status){
+        if (status == 'Active') {
+            return true;
+        }
+
+        return false;
     }
 });
 
@@ -70,27 +84,33 @@ indexTmpl.events({
         alertify.borrowingPayment(fa('plus', 'Payment'), renderTemplate(formTmpl));
     },
     'click .js-destroy' (event, instance) {
-        // Check last
-        $.blockUI();
+        // Check status
+        let borrowingDoc = instance.borrowingDoc.get();
+        if (borrowingDoc.status == 'Reschedule') {
+            displayWarning('Can not delete this, because borrowing status is [Reschedule]');
+        } else {
+            $.blockUI();
 
-        getLastPaymentByBorrowing.callPromise({
-            borrowingId: this.borrowingId
-        }).then((result)=> {
-            $.unblockUI();
+            // Check last
+            getLastPaymentByBorrowing.callPromise({
+                borrowingId: this.borrowingId
+            }).then((result)=> {
+                $.unblockUI();
 
-            if (this._id != result._id) {
-                displayWarning('This doc can not delete');
-            } else {
-                destroyAction(
-                    BorrowingPayment,
-                    {_id: this._id},
-                    {title: 'Payment', itemTitle: this._id}
-                );
-            }
-        }).catch((err)=> {
-                console.log(err.message);
-            }
-        );
+                if (this._id != result._id) {
+                    displayWarning('Can not delete this, because it\'s not last');
+                } else {
+                    destroyAction(
+                        BorrowingPayment,
+                        {_id: this._id},
+                        {title: 'Payment', itemTitle: this._id}
+                    );
+                }
+            }).catch((err)=> {
+                    console.log(err.message);
+                }
+            );
+        }
     },
     'click .js-display' (event, instance) {
         alertify.borrowingPaymentShow(fa('eye', 'Payment'), renderTemplate(showTmpl, {borrowingPaymentId: this._id}));
@@ -105,7 +125,7 @@ indexTmpl.events({
 });
 
 // Form
-var borrowingDocState = new ReactiveVar();
+var borrowingDocWithLastPyamentState = new ReactiveVar();
 var paidDateState = new ReactiveVar(null);
 
 formTmpl.onCreated(function () {
@@ -136,7 +156,7 @@ formTmpl.onRendered(function () {
 
                 console.log(result);
 
-                borrowingDocState.set(result);
+                borrowingDocWithLastPyamentState.set(result);
 
                 $.unblockUI();
             }).catch((err)=> {
@@ -153,7 +173,7 @@ formTmpl.helpers({
         return BorrowingPayment;
     },
     confirmData(){
-        let borrowingDoc = borrowingDocState.get();
+        let borrowingDoc = borrowingDocWithLastPyamentState.get();
 
         if (borrowingDoc && paidDateState.get()) {
             let numOfDay = 0, currentInterest = 0, totalAmount = 0;
@@ -186,7 +206,7 @@ formTmpl.helpers({
 formTmpl.events({
     'blur [name="paidAmount"]'(event, instance){
         let totalDue = 0;
-        let borrowingDoc = borrowingDocState.get();
+        let borrowingDoc = borrowingDocWithLastPyamentState.get();
         if (borrowingDoc && borrowingDoc.currentDue) {
             totalDue = borrowingDoc.currentDue.totalAmount;
         }
@@ -199,7 +219,7 @@ formTmpl.events({
 });
 
 formTmpl.onDestroyed(function () {
-    borrowingDocState.set(null);
+    borrowingDocWithLastPyamentState.set(null);
     paidDateState.set(null);
 });
 
@@ -222,7 +242,7 @@ showTmpl.helpers({
 let hooksObject = {
     before: {
         insert: function (doc) {
-            let borrowingDoc = borrowingDocState.get();
+            let borrowingDoc = borrowingDocWithLastPyamentState.get();
             if (borrowingDoc && borrowingDoc.currentDue) {
                 doc.dueDoc = borrowingDoc.currentDue;
                 doc.lastPaymentDoc = borrowingDoc.lastPaymentDoc;
