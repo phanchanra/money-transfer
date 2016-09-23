@@ -2,15 +2,19 @@
 <template name="MoneyTransfer_borrowingPayment">
     <div class="box-header with-border">
         <h3 class="box-title" style="display: inline">
-            <button type="button" class="btn btn-primary js-create"><i class="fa fa-plus"></i> {{_ "action.addNew"}}
-            </button>
+            <!--Check Status-->
+            {{#if isActiveStatus data.status}}
+                <button type="button" class="btn btn-primary js-create"><i class="fa fa-plus"></i> {{_ "action.addNew"}}
+                </button>
+            {{/if}}
 
             <div class="pull-right text-blue">
-                {{#if Template.subscriptionsReady}}
+                {{#if data}}
                     {{#with data}}
                         {{_id}} |
                         {{_customerDoc.name}} |
-                        Amount: {{numFormat borrowingAmount "0,0.00"}} {{currencyId}}
+                        Amount: {{numFormat borrowingAmount "0,0.00"}} {{currencyId}} |
+                        Status: {{status}}
                     {{/with}}
                 {{else}}
                     {{> iconLoading}}
@@ -22,7 +26,7 @@
 
     <div class="box-body">
         <!--Tabular-->
-        {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
+        {{> tabular table=tabularTable selector=tabularSelector class="table table-striped table-bordered table-condensed"}}
     </div>
     <!-- /.box-body -->
 </template>

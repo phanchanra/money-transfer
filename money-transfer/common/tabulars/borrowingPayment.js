@@ -57,7 +57,16 @@ tabularOpts.columns = [
             return numeral(val).format('0,0.00');
         }
     },
-    {data: "status", title: "Status",},
+    {
+        data: "status",
+        title: "Status",
+        render: function (val, type, doc) {
+            if (val == 'Close') {
+                val = `<span class="text-red">${val}</span>`;
+            }
+            return val;
+        }
+    },
 ];
 tabularOpts.extraFields = ['borrowingId'];
 
