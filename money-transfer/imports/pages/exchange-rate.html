@@ -50,7 +50,7 @@
                     <div class="col-md-9">
                         <fieldset>
                             <legend>Exchange Rate</legend>
-                            {{> afArrayField name="convert" id="convert" template="customArrayFieldForConvert" subtemplate="customObjectFieldForConvert"}}
+                            {{> afArrayField name="convertCurrency" id="convertCurrency" template="customArrayFieldForConvertCurrency" subtemplate="customObjectFieldForConvertCurrency"}}
 
                         </fieldset>
                     </div>
@@ -82,13 +82,13 @@
                         <dt>Product</dt>
                         <dd>{{productId}}</dd>
                         <dt>Reg Date</dt>
-                        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                        <dd>{{moFormat exchangeDate "DD/MM/YYYY"}}</dd>
                         <dt>Base Currency</dt>
                         <dd>{{baseCurrency}}</dd>
                     </fieldset>
 
                     <fieldset>
-                        <legend>Convert</legend>
+                        <legend>Convert Currency</legend>
                         {{#each convert}}
                             <dt>Amount</dt>
                             <dd>{{amount}}</dd>
@@ -100,6 +100,7 @@
                             <dd>{{selling}}</dd>
                             <dt>Convert Amount</dt>
                             <dd>{{convertAmount}}</dd>
+                            <hr>
                         {{/each}}
                     </fieldset>
                 </dl>
@@ -136,7 +137,7 @@
     </div>
 </template>
 <!------------Custom contact array field-------------------->
-<template name="afArrayField_customArrayFieldForConvert">
+<template name="afArrayField_customArrayFieldForConvertCurrency">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div style="height: 18px;">
@@ -201,7 +202,7 @@
     </div>
 </template>
 
-<template name="customObjectFieldForConvert">
+<template name="customObjectFieldForConvertCurrency">
     <div class="col-sm-2">
         {{> afQuickField name=current.amount template="bootstrap3" label=false class="input-sm amount" Placeholder="Amount"}}
     </div>

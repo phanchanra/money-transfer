@@ -8,7 +8,8 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {TAPi18n} from 'meteor/tap:i18n';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {moment} from 'meteor/momentjs:moment';
-
+import BigNumber from 'bignumber.js';
+BigNumber.config({ERRORS: false});
 // Lib
 import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
 import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
@@ -21,7 +22,6 @@ import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
-import BigNumber from 'bignumber.js';
 // Collection
 import {Fee} from '../../common/collections/fee';
 import {Product} from '../../common/collections/product';
@@ -29,7 +29,6 @@ import {Transfer} from '../../common/collections/transfer';
 // Tabular
 import {FeeTabular} from '../../common/tabulars/fee';
 //function
-import {calculateAgentFee} from '../../common/libs/calculateAgentFee'
 import {tmpCollection} from '../../common/collections/tmpCollection';
 // Page
 import './fee.html';
@@ -220,23 +219,20 @@ formTmpl.events({
 serviceTmpl.events({
     'keyup .customer-fee'(e, instance){
         let customerFee = $(e.currentTarget).val();
-        let ownerFee = instance.$('.owner-fee').val();
-
-        instance.state.set(calculateAgentFee(customerFee, ownerFee));
-        // let agentFee=calculateAgentFee(customerFee, ownerFee);
-        // instance.$('.agent-fee').val(agentFee);
+        let agentFee = instance.$('.agent-fee').val();
+        instance.state.set(new BigNumber(customerFee).minus(new BigNumber(agentFee)));
     },
     'keyup .agent-fee'(e, instance){
         let agentFee = $(e.currentTarget).val();
         let customerFee = instance.$('.customer-fee').val();
-        if (agentFee > customerFee) {
-            //alertify.error("Owner Fee must be less than customer fee!");
-            swal("Please check owner fee", "Owner Fee must be less than customer fee!");
+        //if (customerFee < agentFee) {
+        if (Number(agentFee) > Number(customerFee)) {
+            swal("Please check agent fee", "Agent Fee must be less than customer fee!");
             instance.$(".agent-fee").val(0);
+            instance.$(".owner-fee").val(0);
+        } else {
+            instance.state.set(new BigNumber(customerFee).minus(new BigNumber(agentFee)));
         }
-        instance.state.set(calculateAgentFee(customerFee, agentFee));
-        // let agentFee=calculateAgentFee(customerFee, ownerFee);
-        // instance.$('.agent-fee').val(agentFee);
     },
 });
 // Show

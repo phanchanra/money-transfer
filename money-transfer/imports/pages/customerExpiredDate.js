@@ -73,7 +73,7 @@ indexTmpl.helpers({
         return moment(currentDate).diff(expiredDate, 'days');
     },
     // are there more customer to show?
-    hasMorePosts: function () {
+    hasMore: function () {
         return Template.instance().customers().count() >= Template.instance().limit.get();
     }
 });

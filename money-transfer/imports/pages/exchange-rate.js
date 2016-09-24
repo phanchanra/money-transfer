@@ -62,21 +62,9 @@ indexTmpl.events({
             {_id: this._id},
             {title: 'Exchange Rate', exchangeRateTitle: this._id}
         );
-        // let id = this._id;
-        // Meteor.call('productFeeExist', this.productId, this.currencyId, function (error, result) {
-        //     if (result) {
-        //         swal("Sorry can not remove", "This product fee is already used!");
-        //     } else {
-        //         destroyAction(
-        //             exchangeRate,
-        //             {_id: id},
-        //             {title: 'Exchange Rate', exchangeRateTitle: id}
-        //         );
-        //     }
-        // });
     },
     'click .js-display' (event, instance) {
-        alertify.exchangeRateShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
+        alertify.exchangeRateShow(fa('eye', 'Exchange Rate'), renderTemplate(showTmpl, this));
     },
     'click .js-display-product' (event, instance) {
         Meteor.call("getProduct", this.productId, function (error, result) {
@@ -84,12 +72,6 @@ indexTmpl.events({
         });
     },
 });
-
-
-// Form
-// formTmpl.onRendered(function () {
-// });
-
 formTmpl.onCreated(function () {
     Session.set("baseCurrency", 'USD');
     this.autorun(()=> {
@@ -99,9 +81,7 @@ formTmpl.onCreated(function () {
         }
     });
 });
-// serviceTmpl.onCreated(function () {
-//     this.state = new ReactiveVar();
-// });
+
 //helper
 formTmpl.helpers({
     collection(){
@@ -142,15 +122,11 @@ formTmpl.events({
         let amount     = parentsObj.find('.amount').val();
         let convertTo  = parentsObj.find('.convert-to').val();
         let buying     = parentsObj.find('.buying').val();
+        amount = _.isEmpty(amount) ? 0 : parseFloat(amount);
+        buying = _.isEmpty(buying) ? 0 : parseFloat(buying);
 
-        if (amount > 0) {
-            parentsObj.find('.convert-to').prop("disabled", false);
-        } else {
-            parentsObj.find('.convert-to').prop("disabled", true);
-        }
         if (convertTo != '') {
             parentsObj.find('.buying').prop("readonly", false);
-
         } else {
             parentsObj.find('.buying').prop("readonly", true);
         }
@@ -215,22 +191,3 @@ function calculateExchangeRate(baseCurrency, convertTo, amount, buying) {
     }
     return convertAmount
 }
-// if (Session.get("baseCurrency") == 'KHR') {
-//     let convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
-//     if (convertTo == 'USD') {
-//         currentObj.parents('.exchange-rate').find('.convert-amount').val(convertAmount);
-//     } else {
-//         currentObj.parents('.exchange-rate').find('.convert-amount').val(convertAmount);
-//     }
-// } else if (Session.get("baseCurrency") == 'THB') {
-//     if (convertTo == 'KHR') {
-//         let convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed();
-//         currentObj.parents('.exchange-rate').find('.convert-amount').val(convertAmount);
-//     } else {
-//         let convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
-//         currentObj.parents('.exchange-rate').find('.convert-amount').val(convertAmount);
-//     }
-// } else {
-//     let convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
-//     currentObj.parents('.exchange-rate').find('.convert-amount').val(convertAmount);
-// }
