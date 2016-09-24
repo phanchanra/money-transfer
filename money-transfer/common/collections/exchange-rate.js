@@ -58,17 +58,15 @@ ExchangeRate.generalSchema = new SimpleSchema({
     },
 });
 
-ExchangeRate.convertSchema = new SimpleSchema({
-    convert: {
+ExchangeRate.convertCurrencySchema = new SimpleSchema({
+    convertCurrency: {
         type: [Object],
         minCount: 1,
         maxCount: 2
     },
-    'convert.$.amount': {
+    'convertCurrency.$.amount': {
         type: Number,
         decimal: true,
-        defaultValue: 0,
-        min: 0.01,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -77,7 +75,7 @@ ExchangeRate.convertSchema = new SimpleSchema({
             }
         }
     },
-    'convert.$.convertTo': {
+    'convertCurrency.$.convertTo': {
         type: String,
         autoform: {
             type: 'select',
@@ -86,17 +84,15 @@ ExchangeRate.convertSchema = new SimpleSchema({
             }
         }
     },
-    'convert.$.buying': {
+    'convertCurrency.$.buying': {
         type: Number,
         decimal: true,
-        defaultValue: 0,
-        min: 0.01
     },
-    'convert.$.selling': {
+    'convertCurrency.$.selling': {
         type: Number,
         decimal: true
     },
-    'convert.$.convertAmount': {
+    'convertCurrency.$.convertAmount': {
         type: Number,
         decimal: true
     }
@@ -104,7 +100,7 @@ ExchangeRate.convertSchema = new SimpleSchema({
 
 ExchangeRate.attachSchema([
     ExchangeRate.generalSchema,
-    ExchangeRate.convertSchema
+    ExchangeRate.convertCurrencySchema
 ]);
 
 

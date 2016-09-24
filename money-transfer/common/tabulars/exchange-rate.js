@@ -24,9 +24,9 @@ tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_exchangeRateAction},
     {data: "_id", title: "ID"},
     {
-        data: 'productId',
+        data: 'providerId',
         title: "Product",
-        tmpl: Meteor.isClient && Template.MoneyTransfer_exchangeRateProductShowAction
+        // tmpl: Meteor.isClient && Template.MoneyTransfer_exchangeRateProductShowAction
     },
     {
         data: "exchangeDate",

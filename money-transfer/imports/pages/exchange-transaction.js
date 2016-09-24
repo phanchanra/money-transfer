@@ -22,21 +22,23 @@ import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
+// Method
+
 // Collection
 import {ExchangeTransaction} from '../../common/collections/exchange-transaction';
-// import {Product} from '../../common/collections/product';
-// import {Customer} from '../../common/collections/customer';
-// import {ExchangeRate} from '../../common/collections/exchange-rate';
+
 // Tabular
 import {ExchangeTransactionTabular} from '../../common/tabulars/exchange-transaction';
 // Page
 import './exchange-transaction.html';
+import './transaction-items.js';
 // Declare template
-let indexTmpl  = Template.MoneyTransfer_exchangeTransaction,
+let itemsCollection = new Mongo.Collection(null);
+
+let indexTmpl = Template.MoneyTransfer_exchangeTransaction,
     actionTmpl = Template.MoneyTransfer_exchangeTransactionAction,
-    newTmpl    = Template.MoneyTransfer_exchangeTransactionNew,
-    editTmpl   = Template.MoneyTransfer_exchangeTransactionEdit,
-    showTmpl   = Template.MoneyTransfer_exchangeTransactionShow;
+    formTmpl = Template.MoneyTransfer_exchangeTransactionForm,
+    showTmpl = Template.MoneyTransfer_exchangeTransactionShow;
 
 // Index
 indexTmpl.onCreated(function () {
@@ -49,15 +51,18 @@ indexTmpl.onCreated(function () {
 indexTmpl.helpers({
     tabularTable(){
         return ExchangeTransactionTabular;
+    },
+    selector() {
+        return {branchId: Session.get('currentBranch')};
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.exchangeTransaction(fa('plus', 'Exchange Transaction'), renderTemplate(newTmpl));
+        alertify.exchangeTransaction(fa('plus', 'Exchange Transaction'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.exchangeTransaction(fa('pencil', 'Exchange Transaction'), renderTemplate(editTmpl, this));
+        alertify.exchangeTransaction(fa('pencil', 'Exchange Transaction'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
@@ -71,31 +76,78 @@ indexTmpl.events({
     },
 });
 
-
-// Insert
-
-newTmpl.helpers({
-    collection(){
-        return ExchangeTransaction;
-    }
-});
-newTmpl.events({
-});
-//Update
-editTmpl.onCreated(function () {
+formTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('moneyTransfer.exchangeTransactionById', this.data._id);
+        let currentData = Template.currentData();
+        if (currentData) {
+            this.subscribe('moneyTransfer.exchangeTransactionById', currentData._id);
+        }
     });
+    let self = this;
+    self.isLoading = new ReactiveVar(false);
+    self.transactionDoc = new ReactiveVar();
+    //
+    // self.autorun(()=> {
+    //     let currentData = Template.currentData();
+    //     if (currentData) {
+    //         self.isLoading.set(true);
+    //
+    //         lookupOrder.callPromise({
+    //             orderId: currentData.orderId
+    //         }).then((result)=> {
+    //             // Add items to local collection
+    //             _.forEach(result.items, (value)=> {
+    //                 itemsCollection.insert(value);
+    //             });
+    //
+    //             self.transactionDoc.set(result);
+    //             self.isLoading.set(false);
+    //         }).catch((err)=> {
+    //             console.log(err);
+    //         });
+    //     }
+    // });
 });
-
-editTmpl.helpers({
+// Insert
+formTmpl.helpers({
     collection(){
         return ExchangeTransaction;
     },
+    
+    isLoading(){
+        return Template.instance().isLoading.get();
+    },
     data () {
-        let data = ExchangeTransaction.findOne(this._id);
+        let data = {
+            formType: 'insert',
+            doc: {}
+        };
+
+        let currentData = Template.currentData();
+        if (currentData) {
+            data.formType = 'update';
+            data.doc = Template.instance().transactionDoc.get();
+        }
+
         return data;
+    },
+    itemsCollection(){
+        return itemsCollection;
+    },
+    disabledSubmitBtn: function () {
+        let count = itemsCollection.find().count();
+        if (count == 0) {
+            return {disabled: true};
+        }
+
+        return {};
     }
+});
+formTmpl.events({
+});
+formTmpl.onDestroyed(function () {
+    // Remove items collection
+    itemsCollection.remove({});
 });
 // Show
 showTmpl.onCreated(function () {
@@ -125,28 +177,6 @@ let hooksObject = {
 
     }
 };
-AutoForm.addHooks([
-    'MoneyTransfer_exchangeTransactionNew',
-    'MoneyTransfer_exchangeTransactionEdit'
-], hooksObject);
-function clearForm() {
-    $('.convert-to').val('');
-    $('.buying').val('');
-    $('.selling').val('');
-    $('.convert-amount').val('');
-}
-function calculateExchangeRate(baseCurrency, convertTo, amount, buying) {
-    let convertAmount = {};
-    if (baseCurrency == 'KHR') {
-        convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
-    } else if (baseCurrency == 'USD') {
-        convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
-    } else {
-        if (convertTo == 'KHR') {
-            convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed();
-        } else {
-            convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
-        }
-    }
-    return convertAmount
-}
+AutoForm.addHooks(['MoneyTransfer_exchangeTransactionForm'], hooksObject);
+
+

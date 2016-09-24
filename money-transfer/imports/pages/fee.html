@@ -97,6 +97,7 @@
                             <dd>{{ownerFee}}</dd>
                             <dt>Agent Fee</dt>
                             <dd>{{agentFee}}</dd>
+                            <hr>
                         {{/each}}
                     </fieldset>
                 </dl>
@@ -206,7 +207,7 @@
         {{> afQuickField name=current.customerFee template="bootstrap3" label=false class="input-sm customer-fee" Placeholder="Customer fee"}}
     </div>
     <div class="col-sm-2">
-        {{> afQuickField name=current.agentFee template="bootstrap3" label=false class="input-sm agent-fee"}}
+        {{> afQuickField name=current.agentFee template="bootstrap3" label=false class="input-sm agent-fee" Placeholder="Agent fee"}}
         <span style="display: none;">
         {{> afQuickField name=current.ownerFee value=ownerFee template="bootstrap3" label=false class="input-sm owner-fee" Placeholder="Owner fee"}}
         </span>

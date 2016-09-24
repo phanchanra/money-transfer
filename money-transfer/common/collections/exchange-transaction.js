@@ -15,8 +15,44 @@ import {SelectOpts} from '../../imports/libs/select-opts.js';
 //     });
 //}
 export const ExchangeTransaction = new Mongo.Collection("currencyExchange_ExchangeTransaction");
-
-ExchangeTransaction.generalSchema = new SimpleSchema({
+// Items sub schema
+ExchangeTransaction.itemsSchema = new SimpleSchema({
+    itemId: {
+        type: String,
+        label: 'Item'
+    },
+    baseCurrency: {
+        type: String,
+        label: 'Base Currency'
+    },
+    convertTo: {
+        type: String,
+        label: 'Convert To',
+    },
+    baseAmount: {
+        type: Number,
+        label: 'Base Amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    toAmount: {
+        type: Number,
+        label: 'To Amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    }
+});
+ExchangeTransaction.schema = new SimpleSchema({
     providerId: {
         type: String,
         label: 'Provider',
@@ -55,55 +91,14 @@ ExchangeTransaction.generalSchema = new SimpleSchema({
             }
         }
     },
+    items: {
+        type: [ExchangeTransaction.itemsSchema],
+    },
     branchId: {
         type: String,
         optional: true,
     }
 });
 
-ExchangeTransaction.transactionSchema = new SimpleSchema({
-    transaction: {
-        type: [Object],
-        label: 'Transaction',
-        maxCount:2
-    },
-    'transaction.$.amount': {
-        type: Number,
-        label: 'Amount',
-        decimal: true,
-        min: 0.01,
-    },
-    'transaction.$.baseCurrency': {
-        type: String,
-        label: 'Base Currency',
-        autoform: {
-            type: 'select',
-            options: function () {
-                return SelectOpts.currency();
-            }
-        }
-    },
-    'transaction.$.convertTo': {
-        type: String,
-        label: 'Convert To',
-        autoform: {
-            type: 'select',
-            options: function () {
-                return SelectOpts.currency();
-            }
-        }
-    },
-    'transaction.$.convertAmount': {
-        type: Number,
-        label: 'Convert Amount',
-        decimal: true,
-        min: 0.01,
-    }
-});
-
-ExchangeTransaction.attachSchema([
-    ExchangeTransaction.generalSchema,
-    ExchangeTransaction.transactionSchema
-]);
-
+ExchangeTransaction.attachSchema(ExchangeTransaction.schema);
 

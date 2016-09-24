@@ -23,46 +23,14 @@
     {{/columnAction}}
 </template>
 
-<!--<template name="MoneyTransfer_exchangeProductShowAction">-->
-<!--<a href="#" class="js-display-product">{{productId}}</a>-->
-<!--</template>-->
-
 <!--Form New-->
-<template name="MoneyTransfer_exchangeTransactionNew">
+<template name="MoneyTransfer_exchangeTransactionForm">
     <div class="box-body">
-        {{#autoForm collection=collection validation="blur" id="MoneyTransfer_exchangeTransactionNew" type="insert"}}
-            <div class="row">
-                <div class="col-md-3">
-                    <fieldset>
-                        <legend>General</legend>
-                        {{> afQuickField name='providerId'}}
-                        {{> afQuickField name='exchangeDate'}}
-                        {{> afQuickField name='customerId'}}
-                        {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
-                    </fieldset>
-                </div>
-                <div class="col-md-9">
-                    <fieldset>
-                        <legend>Exchange Transaction</legend>
-                        {{> afArrayField name="transaction" id="transaction" template="customArrayFieldForTransaction" subtemplate="customObjectFieldForTransaction"}}
-                    </fieldset>
-                </div>
-            </div>
-            <div class="form-footer">
-                <button type="submit" name="save" class="btn btn-primary"><i
-                        class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
-                <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}
-                </button>
-            </div>
-            <!--{{> formFooterWithButton}}-->
-        {{/autoForm}}
-    </div>
-</template>
-<!--Form Update-->
-<template name="MoneyTransfer_exchangeTransactionEdit">
-    {{#if Template.subscriptionsReady}}
-        <div class="box-body">
-            {{#autoForm collection=collection validation="blur" id="MoneyTransfer_exchangeTransactionEdit"  type=update}}
+        {{#if isLoading}}
+            {{> loading}}
+        {{else}}
+            {{#autoForm collection=collection validation="blur" id="MoneyTransfer_exchangeTransactionForm" doc=data.doc type=data.formType
+            resetOnSuccess=false}}
                 <div class="row">
                     <div class="col-md-3">
                         <fieldset>
@@ -71,13 +39,12 @@
                             {{> afQuickField name='exchangeDate'}}
                             {{> afQuickField name='customerId'}}
                             {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
-
                         </fieldset>
                     </div>
                     <div class="col-md-9">
                         <fieldset>
                             <legend>Exchange Transaction</legend>
-                            {{> afArrayField name="transaction" id="transaction" template="customArrayFieldForTransaction" subtemplate="customObjectFieldForTransaction"}}
+                            {{> MoneyTransfer_transactionItems itemsCollection=itemsCollection}}
                         </fieldset>
                     </div>
                 </div>
@@ -89,11 +56,10 @@
                 </div>
                 <!--{{> formFooterWithButton}}-->
             {{/autoForm}}
-        </div>
-    {{else}}
-        {{> loading}}
-    {{/if}}
+        {{/if}}
+    </div>
 </template>
+
 <!--Show-->
 <template name="MoneyTransfer_exchangeTransactionShow">
     <div class="box-body">
@@ -134,107 +100,5 @@
         {{/if}}
     </div>
 </template>
-<!--Show-->
-<!--<template name="MoneyTransfer_productShow">-->
-<!--<div class="box-body">-->
-        <!--{{#if Template.subscriptionsReady}}-->
-<!--<dl class="dl-horizontal">-->
-<!--<fieldset>-->
-<!--<legend>Product</legend>-->
-<!--<dt>ID</dt>-->
-<!--<dd>{{_id}}</dd>-->
-<!--<dt>Product</dt>-->
-<!--<dd>{{name}}</dd>-->
-<!--<dt>Date</dt>-->
-<!--<dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>-->
-<!--<dt>Status</dt>-->
-<!--<dd>{{status}}</dd>-->
-<!--<dt>Address</dt>-->
-<!--<dd>{{address}}</dd>-->
-<!--</fieldset>-->
-<!--</dl>-->
 
-        <!--{{else}}-->
-<!--{{> loading}}-->
-        <!--{{/if}}-->
-<!--</div>-->
-<!--</template>-->
-<!------------Custom contact array field-------------------->
-<!--customer object array-->
-<template name="afArrayField_customArrayFieldForTransaction">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div style="height: 18px;">
-                <div class="col-sm-3">
-                    Amount
-                </div>
-                <div class="col-sm-3">
-                    Base Currency
-                </div>
-                <div class="col-sm-3">
-                    Convert To
-                </div>
-                <div class="col-sm-2">
-                    Convert Amount
-                </div>
-                <div class="col-sm-1">
-                    Action
-                </div>
-            </div>
-            <!--{{afFieldLabelText name=this.atts.name}}-->
-        </div>
-        <div class="panel-body">
-
-            {{#if afFieldIsInvalid name=this.atts.name}}
-                <div class="has-error">
-                    <span class="help-block">{{{afFieldMessage name=this.atts.name}}}</span>
-                </div>
-            {{/if}}
-
-            {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
-                <div class="row">
-                    {{> UI.dynamic template=../atts.subtemplate}}
-
-                    <div class="col-sm-1">
-                        {{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount
-                        maxCount=../atts.maxCount}}
-                            <button type="button" class="btn btn-sm btn-danger autoform-remove-item">
-                                <span class="glyphicon glyphicon-minus"></span>
-                            </button>
-                        {{/if}}
-                    </div>
-                </div>
-            {{/afEachArrayItem}}
-
-            {{#if afArrayFieldHasLessThanMaximum name=this.atts.name minCount=this.atts.minCount
-            maxCount=this.atts.maxCount}}
-                <div class="row">
-                    <div class="col-sm-1 col-md-offset-11">
-                        <button type="button" class="btn btn-primary autoform-add-item btn-sm"
-                                data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}"
-                                data-autoform-maxCount="{{this.atts.maxCount}}">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </div>
-                </div>
-            {{/if}}
-
-        </div>
-    </div>
-</template>
-<!--Custom object field-->
-<template name="customObjectFieldForTransaction">
-    <div class="col-sm-3">
-        {{> afQuickField name=current.amount template="bootstrap3" label=false class="input-sm amount" placeholder="Amount"}}
-    </div>
-    <div class="col-sm-3">
-        {{> afQuickField name=current.baseCurrency template="bootstrap3" label=false class="input-sm base-currency" placeholder="Base Currency"}}
-    </div>
-    <div class="col-sm-3">
-        {{> afQuickField name=current.convertTo template="bootstrap3" label=false class="input-sm convert-to" placeholder="Convert To"}}
-    </div>
-    <div class="col-sm-2">
-        {{> afQuickField name=current.convertAmount template="bootstrap3" label=false class="input-sm convert-amount" placeholder="Convert Amount"}}
-    </div>
-</template>
 

@@ -1,0 +1,58 @@
+<!--Item Temporary-->
+<template name="MoneyTransfer_transactionItems">
+    <!--Item form-->
+    {{> MoneyTransfer_transactionItemsNew}}
+    <!--<hr>-->
+
+    <!--Items list-->
+    {{> reactiveTable settings=tableSettings}}
+</template>
+
+<!--Action-->
+<template name="MoneyTransfer_transactionItemsAction">
+    <ul class="list-inline">
+        <li><a href="#" class="js-update-item"><i class="fa fa-pencil"></i></a></li>
+        <li><a href="#" class="js-destroy-item"><i class="fa fa-remove"></i></a></li>
+    </ul>
+</template>
+
+<!--New Item-->
+<template name="MoneyTransfer_transactionItemsNew">
+    {{#autoForm schema=schema id="MoneyTransfer_transactionItemsNew"}}
+        <div class="row">
+            <div class="col-sm-3">
+                {{> afQuickField name="baseCurrency" class='base-currency' label=false placeholder="Base Currency"}}
+            </div>
+            <div class="col-sm-3">
+                {{> afQuickField name="convertTo" class='convert-to' label=false placeholder="Convert To"}}
+            </div>
+            <div class="col-sm-3">
+                {{> afQuickField name="baseAmount" class="base-amount" label=false placeholder="Base Amount"}}
+            </div>
+            <div class="col-sm-2">
+                {{> afQuickField name="toAmount" class="to-amount" label=false placeholder="To Amount" }}
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-primary js-add-item" {{disabledAddItemBtn}}>+</button>
+            </div>
+        </div>
+    {{/autoForm}}
+</template>
+
+<!--Edit Item-->
+<template name="MoneyTransfer_transactionItemsEdit">
+    <div class="box-body">
+        {{#autoForm schema=schema id="MoneyTransfer_transactionItemsEdit" doc=data}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="baseCurrency"}}
+                    {{> afQuickField name="convertTo"}}
+                    {{> afQuickField name="baseAmount" }}
+                    {{> afQuickField name="toAmount" readonly="true"}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
