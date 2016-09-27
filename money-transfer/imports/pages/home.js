@@ -18,7 +18,16 @@ Template.MoneyTransfer_home.helpers({
     },
     test(){
         return Template.instance().bigNumberTest.get()
+    },
+    dateData(){
+        let t=1000 * 60 * 60 * 24;
+        return t;
+        // Meteor.setTimeout(function() {
+        //     //Tasks.remove(_id);
+        //     alert("It's times");
+        // }, 1000 * 60 * 60 * 24); // 2 seconds delay
     }
+
 });
 
 Template.MoneyTransfer_home.events({

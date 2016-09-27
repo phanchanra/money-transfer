@@ -194,7 +194,14 @@ formTmpl.events({
         } else {
             symbol = 'B'
         }
-        Session.set("currencySymbol", symbol);
+        // UIBlock.block('Wait...');
+        $.blockUI();
+        Meteor.setTimeout(()=> {
+            // UIBlock.unblock();
+            Session.set("currencySymbol", symbol);
+            //clear
+            $.unblockUI();
+        }, 200);
 
         //Session.set("currencyId", currencySymbol);
         let productId = $('[name="productId"]').val();

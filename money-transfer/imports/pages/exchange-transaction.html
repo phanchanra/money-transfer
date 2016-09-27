@@ -35,9 +35,9 @@
                     <div class="col-md-3">
                         <fieldset>
                             <legend>General</legend>
-                            {{> afQuickField name='providerId'}}
                             {{> afQuickField name='exchangeDate'}}
                             {{> afQuickField name='customerId'}}
+                            {{> afQuickField name="memo"}}
                             {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                         </fieldset>
                     </div>
@@ -67,12 +67,10 @@
             {{#with data}}
                 <dl class="dl-horizontal">
                     <fieldset>
-                        <legend>Exchange Rate</legend>
+                        <legend>Exchange</legend>
                         <dt>ID</dt>
                         <dd>{{_id}}</dd>
-                        <dt>Product</dt>
-                        <dd>{{productId}}</dd>
-                        <dt>Reg Date</dt>
+                        <dt>Exchange Date</dt>
                         <dd>{{moFormat exchangeDate "DD/MM/YYYY"}}</dd>
                         <dt>Customer</dt>
                         <dd>{{customerId}}</dd>
@@ -80,17 +78,15 @@
 
                     <fieldset>
                         <legend>Transaction</legend>
-                        {{#each convert}}
-                            <dt>Amount</dt>
-                            <dd>{{amount}}</dd>
-                            <dt>Currency To</dt>
-                            <dd>{{convertTo}}</dd>
-                            <dt>Buying</dt>
-                            <dd>{{buying}}</dd>
-                            <dt>Selling</dt>
-                            <dd>{{selling}}</dd>
-                            <dt>Transaction Amount</dt>
-                            <dd>{{convertAmount}}</dd>
+                        {{#each items}}
+                            <dt>Base Currency</dt>
+                            <dd>{{baseCurrency}}</dd>
+                            <dt>Convert To</dt>
+                            <dd>{{ convertTo }}</dd>
+                            <dt>Base Amount</dt>
+                            <dd>{{numFormat baseAmount "0.00"}}</dd>
+                            <dt>To Amount</dt>
+                            <dd>{{numFormat toAmount "0.00"}}</dd>
                         {{/each}}
                     </fieldset>
                 </dl>

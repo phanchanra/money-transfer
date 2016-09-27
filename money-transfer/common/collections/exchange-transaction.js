@@ -6,21 +6,17 @@ import {moment} from 'meteor/momentjs:moment';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/select-opts.js';
 
-// let currencySymbol = new ReactiveVar();
+// let baseCurrencySymbol = new ReactiveVar();
 // if (Meteor.isClient) {
 //     Tracker.autorun(function () {
-//         if (Session.get('currencySymbol')) {
-//             currencySymbol.set(Session.get('currencySymbol'));
+//         if (Session.get('baseCurrencySymbol')) {
+//             baseCurrencySymbol.set(Session.get('baseCurrencySymbol'));
 //         }
 //     });
-//}
+// }
 export const ExchangeTransaction = new Mongo.Collection("currencyExchange_ExchangeTransaction");
 // Items sub schema
 ExchangeTransaction.itemsSchema = new SimpleSchema({
-    itemId: {
-        type: String,
-        label: 'Item'
-    },
     baseCurrency: {
         type: String,
         label: 'Base Currency'
@@ -33,39 +29,28 @@ ExchangeTransaction.itemsSchema = new SimpleSchema({
         type: Number,
         label: 'Base Amount',
         decimal: true,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.currency();
-            }
-        }
+        // autoform: {
+        //     type: 'inputmask',
+        //     inputmaskOptions: function () {
+        //         let baseSymbol = baseCurrencySymbol.get();
+        //         console.log(baseSymbol);
+        //         return inputmaskOptions.currency({prefix: `${baseSymbol} `});
+        //     }
+        // }
     },
     toAmount: {
         type: Number,
         label: 'To Amount',
         decimal: true,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.currency();
-            }
-        }
+        // autoform: {
+        //     type: 'inputmask',
+        //     inputmaskOptions: function () {
+        //         return inputmaskOptions.currency();
+        //     }
+        // }
     }
 });
 ExchangeTransaction.schema = new SimpleSchema({
-    providerId: {
-        type: String,
-        label: 'Provider',
-        index: true,
-        autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'moneyTransfer.selectOptsMethod.provider'
-            }
-        }
-
-    },
     exchangeDate: {
         type: Date,
         defaultValue: moment().toDate(),
@@ -88,6 +73,27 @@ ExchangeTransaction.schema = new SimpleSchema({
                 uniPlaceholder: 'Select One',
                 optionsMethod: 'moneyTransfer.selectOptsMethod.customer',
 
+            }
+        }
+    },
+    memo: {
+        type: String,
+        label: 'Memo',
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'summernote',
+                class: 'editor', // optional
+                settings: {
+                    height: 100,                 // set editor height
+                    minHeight: null,             // set minimum height of editor
+                    maxHeight: null,             // set maximum height of editor
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']], //['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol']] //['para', ['ul', 'ol', 'paragraph']],
+                        //['insert', ['link', 'picture']], //['insert', ['link', 'picture', 'hr']],
+                    ]
+                } // summernote options goes here
             }
         }
     },
