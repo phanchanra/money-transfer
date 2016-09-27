@@ -25,11 +25,6 @@ tabularOpts.columns = [
     {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_exchangeTransactionAction},
     {data: "_id", title: "ID"},
     {
-        data: 'productId',
-        title: "Product"
-
-    },
-    {
         data: "exchangeDate",
         title: "Exchange Date",
         render: function (val, type, doc) {
@@ -37,8 +32,7 @@ tabularOpts.columns = [
         }
     },
     {data: "customerId", title: "Customer"},
-    {data: "baseCurrency", title: "Base Currency"},
 
 ];
-//tabularOpts.extraFields = ['service'];
+tabularOpts.extraFields = ['items'];
 export const ExchangeTransactionTabular = new Tabular.Table(tabularOpts);

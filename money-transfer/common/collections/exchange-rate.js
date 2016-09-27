@@ -56,6 +56,10 @@ ExchangeRate.generalSchema = new SimpleSchema({
             }
         },
     },
+    branchId: {
+        type: String,
+        optional: true
+    }
 });
 
 ExchangeRate.convertCurrencySchema = new SimpleSchema({

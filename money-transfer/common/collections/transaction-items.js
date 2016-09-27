@@ -11,19 +11,19 @@ import {SelectOpts} from '../../imports/libs/select-opts.js';
 
 // Method
 //import {lookupItem} from '../../common/methods/lookup-item.js';
-
+let baseCurrencySymbol = new ReactiveVar();
+let convertToSymbol = new ReactiveVar();
+if (Meteor.isClient) {
+    Tracker.autorun(function () {
+        if (Session.get('baseCurrencySymbol')) {
+            baseCurrencySymbol.set(Session.get('baseCurrencySymbol'));
+        }
+        if(Session.get('convertToSymbol')){
+            convertToSymbol.set(Session.get('convertToSymbol'))
+        }
+    });
+}
 export const TransactionItemsSchema = new SimpleSchema({
-    // itemId: {
-    //     type: String,
-    //     label: 'Item',
-    //     autoform: {
-    //         type: 'universe-select',
-    //         afFieldInput: {
-    //             uniPlaceholder: 'Please search... (limit 10)',
-    //             optionsMethod: 'simplePos.selectOptsMethod.item'
-    //         }
-    //     }
-    // },
     baseCurrency: {
         type: String,
         label: 'Base Currency',
@@ -46,22 +46,28 @@ export const TransactionItemsSchema = new SimpleSchema({
         type: Number,
         label: 'Base Amount',
         decimal: true,
-        // autoform: {
-        //     type: 'inputmask',
-        //     inputmaskOptions: function () {
-        //         return inputmaskOptions.currency();
-        //     }
-        // }
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let baseSymbol = baseCurrencySymbol.get();
+                if (baseSymbol) {
+                    return inputmaskOptions.currency({prefix: `${baseSymbol} `});
+                }
+            }
+        }
     },
     toAmount: {
         type: Number,
         label: 'To Amount',
         decimal: true,
-        // autoform: {
-        //     type: 'inputmask',
-        //     inputmaskOptions: function () {
-        //         return inputmaskOptions.currency();
-        //     }
-        // }
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let convertSymbol = convertToSymbol.get();
+                if (convertSymbol) {
+                    return inputmaskOptions.currency({prefix: `${convertSymbol} `});
+                }
+            }
+        }
     }
 });

@@ -30,7 +30,7 @@
                 {{> afQuickField name="baseAmount" class="base-amount" label=false placeholder="Base Amount"}}
             </div>
             <div class="col-sm-2">
-                {{> afQuickField name="toAmount" class="to-amount" label=false placeholder="To Amount" }}
+                {{> afQuickField name="toAmount" value=toAmount class="to-amount" label=false placeholder="To Amount" }}
             </div>
             <div class="col-sm-1">
                 <button type="button" class="btn btn-primary js-add-item" {{disabledAddItemBtn}}>+</button>
@@ -48,7 +48,7 @@
                     {{> afQuickField name="baseCurrency"}}
                     {{> afQuickField name="convertTo"}}
                     {{> afQuickField name="baseAmount" }}
-                    {{> afQuickField name="toAmount" readonly="true"}}
+                    {{> afQuickField name="toAmount" value=toAmount readonly="true"}}
                 </div>
             </div>
 

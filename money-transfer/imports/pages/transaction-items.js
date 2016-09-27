@@ -61,8 +61,20 @@ indexTmpl.helpers({
         reactiveTableSettings.showColumnToggles = false;
         reactiveTableSettings.collection = itemsCollection;
         reactiveTableSettings.fields = [
-            {key: 'baseCurrency', label: 'Base Currency'},
-            {key: 'convertTo', label: 'Convert To'},
+            {
+                key: 'baseCurrency',
+                label: 'Base Currency',
+                fn(value, obj, key){
+                    return Spacebars.SafeString(`<span class="base-currency">${value}</span>`)
+                }
+            },
+            {
+                key: 'convertTo',
+                label: 'Convert To',
+                fn(value, obj, key){
+                    return Spacebars.SafeString(`<span class="convert-to">${value}</span>`);
+                }
+            },
             {
                 key: 'baseAmount',
                 label: 'Base Amount',
@@ -73,8 +85,9 @@ indexTmpl.helpers({
             {
                 key: 'toAmount',
                 label: 'To Amount',
-                fn(value, obj, key){
-                    return Spacebars.SafeString(`<input type="text" value="${value}" class="to-amount">`);
+                fn (value, object, key) {
+                    //return numeral(value).format('0,0.00');
+                    return Spacebars.SafeString(`<span class="to-amount">${numeral(value).format('0,0.00')}</span>`);
                 }
             },
             {
@@ -105,87 +118,123 @@ indexTmpl.events({
             {title: 'Transaction Item', itemTitle: this.exchangeTransaction}
         );
     },
-    // 'keyup .item-qty,.item-price'(event, instance){
-    //     let $parents = $(event.currentTarget).parents('tr');
-    //
-    //     let itemId = $parents.find('.itemId').text();
-    //     let qty = $parents.find('.item-qty').val();
-    //     let price = $parents.find('.item-price').val();
-    //     qty = _.isEmpty(qty) ? 0 : parseInt(qty);
-    //     price = _.isEmpty(price) ? 0 : parseFloat(price);
-    //     let amount = numeral(qty * price).format("0,0.00");
-    //
-    //     $parents.find('.amount').text(amount);
-    // },
-    // 'blur .item-qty,.item-price': function (event, instance) {
-    //     let $parents = $(event.currentTarget).parents('tr');
-    //
-    //     let itemId = $parents.find('.itemId').text();
-    //     let qty = $parents.find('.item-qty').val();
-    //     let price = $parents.find('.item-price').val();
-    //     qty = _.isEmpty(qty) ? 0 : parseInt(qty);
-    //     price = _.isEmpty(price) ? 0 : parseFloat(price);
-    //     amount = math.round(qty * price, 2);
-    //
-    //     // Update
-    //     $parents.find('.amount').text('');
-    //     itemsCollection.update(
-    //         {_id: itemId},
-    //         {$set: {qty: qty, price: price, amount: amount}}
-    //     );
-    // }
+    'change .base-amount'(event, instance){
+        let $parents = $(event.currentTarget).parents('tr');
+        let baseCurrency = $parents.find('.base-currency').text();
+        let convertTo = $parents.find('.convert-to').text();
+        let baseAmount = $parents.find('.base-amount').val();
+        baseAmount = _.isEmpty(baseAmount) ? 0 : parseFloat(baseAmount);
+        if (baseCurrency && convertTo && baseAmount) {
+            Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
+                $parents.find('.to-amount').val(result);
+            });
+        }
+    },
+    'blur .base-amount': function (event, instance) {
+        let $parents = $(event.currentTarget).parents('tr');
+        let baseCurrency = $parents.find('.base-currency').text();
+        let convertTo = $parents.find('.convert-to').text();
+        let baseAmount = $parents.find('.base-amount').val();
+        baseAmount = _.isEmpty(baseAmount) ? 0 : parseFloat(baseAmount);
+        if (baseCurrency && convertTo && baseAmount) {
+            Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
+                itemsCollection.update(
+                    {baseCurrency: baseCurrency, convertTo: convertTo},
+                    {$set: {baseAmount: baseAmount, toAmount: result}}
+                );
+            });
+        }
+    }
 });
 
 // New
 newTmpl.onCreated(function () {
     // State
-    this.baseCurrency = new ReactiveVar();
-    this.convertTo = new ReactiveVar();
-    this.baseAmount = new ReactiveVar(0);
-    this.toAmount = new ReactiveVar(0);
+    //this.baseCurrency = new ReactiveVar();
+    //this.convertTo = new ReactiveVar();
+    //this.baseAmount = new ReactiveVar(0);
+    this.toAmount = new ReactiveVar();
 });
 
 newTmpl.helpers({
     schema(){
         return TransactionItemsSchema;
     },
-    // disabledAddItemBtn: function () {
-    //     const instance = Template.instance();
-    //     if (instance.toAmount.get() > 0) {
-    //         return {};
-    //     }
-    //
-    //     return {disabled: true};
-    // },
+    disabledAddItemBtn: function () {
+        const instance = Template.instance();
+        if (instance.toAmount.get() > 0) {
+            return {};
+        }
+        return {disabled: true};
+    },
+    toAmount: function () {
+        const instance = Template.instance();
+        return instance.toAmount.get();
+    }
 });
 
 newTmpl.events({
-
     'change .base-currency'(e, instance){
-        Session.set("baseCurrency", $(e.currentTarget).val());
-    },
-    'change .base-amount,.base-currency,.convert-to'(e, instance){
-        let baseAmount = $(e.currentTarget).val();
+        let baseCurrency = $(e.currentTarget).val();
 
+        let baseCurrencySymbol;
+        if (baseCurrency == 'USD') {
+            baseCurrencySymbol = '$'
+        } else if (baseCurrency == 'KHR') {
+            baseCurrencySymbol = '៛'
+        } else {
+            baseCurrencySymbol = 'B'
+        }
+        // UIBlock.block('Wait...');
+        $.blockUI();
+        Meteor.setTimeout(()=> {
+            // UIBlock.unblock();
+            Session.set("baseCurrency", baseCurrency);
+            Session.set("baseCurrencySymbol", baseCurrencySymbol);
+            //clear
+            //clearForm();
+            $.unblockUI();
+        }, 200);
+    },
+    'change .convert-to,.base-amount'(e, instance){
+        let baseAmount = instance.$('[name="baseAmount"]').val();
         let baseCurrency = instance.$('[name="baseCurrency"]').val();
         let convertTo = instance.$('[name="convertTo"]').val();
-        Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function(error, result) {
-            console.log(result+'test');
-            instance.$('[name="toAmount"]').val(result);
-        });
+
+        let convertToSymbol;
+        if (convertTo == 'USD') {
+            convertToSymbol = '$'
+        } else if (convertTo == 'KHR') {
+            convertToSymbol = '៛'
+        } else {
+            convertToSymbol = 'B'
+        }
+        Session.set("convertToSymbol", convertToSymbol);
+
+        if (baseCurrency && convertTo && baseAmount) {
+            Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
+                if (!result) {
+                    clear();
+                    swal("Please check", "Your exchange rate are not yet data Entry!");
+                } else {
+                    instance.toAmount.set(result);
+                }
+            });
+        }
     },
     'click .js-add-item': function (event, instance) {
         let baseCurrency = instance.$('[name="baseCurrency"]').val();
         let convertTo = instance.$('[name="convertTo"]').val();
         let baseAmount = math.round(parseFloat(instance.$('[name="baseAmount"]').val()), 2);
         let toAmount = math.round(parseFloat(instance.$('[name="toAmount"]').val()), 2);
-        // clearFrom();
+        clearFrom();
+        Session.set("baseCurrencySymbol", false);
+        Session.set("convertToSymbol", false);
         // Check exist
         let exist = itemsCollection.findOne({baseCurrency: baseCurrency, convertTo: convertTo});
         if (exist) {
             baseAmount += parseFloat(exist.baseAmount);
             toAmount += parseFloat(exist.toAmount);
-
             itemsCollection.update(
                 {baseCurrency: baseCurrency, convertTo: convertTo},
                 {$set: {baseAmount: baseAmount, toAmount: toAmount}}
@@ -198,20 +247,18 @@ newTmpl.events({
                 toAmount: toAmount
             });
         }
+        instance.toAmount.set(0);
     },
 });
 
 // Edit
-// editTmpl.onCreated(function () {
-//     this.qty = new ReactiveVar(0);
-//     this.price = new ReactiveVar(0);
-//
-//     this.autorun(()=> {
-//         let data = Template.currentData();
-//         this.qty.set(data.qty);
-//         this.price.set(data.price);
-//     });
-// });
+editTmpl.onCreated(function () {
+    this.toAmount = new ReactiveVar(0);
+    this.autorun(()=> {
+        let data = Template.currentData();
+        this.toAmount.set(data.toAmount);
+    });
+});
 //
 editTmpl.helpers({
     schema(){
@@ -221,101 +268,110 @@ editTmpl.helpers({
         let data = Template.currentData();
         return data;
     },
-    // price: function () {
-    //     return Template.instance().price.get();
-    // },
-    // amount: function () {
-    //     const instance = Template.instance();
-    //     let amount = instance.qty.get() * instance.price.get();
-    //     return amount;
-    // }
+    toAmount: function () {
+        const instance = Template.instance();
+        return instance.toAmount.get();
+    }
 });
 //
-// editTmpl.events({
-//     'change [name="itemId"]': function (event, instance) {
-//         let itemId = event.currentTarget.value;
-//
-//         // Check item value
-//         if (itemId) {
-//             $.blockUI();
-//             lookupItem.callPromise({
-//                 itemId: itemId
-//             }).then((result)=> {
-//                 instance.price.set(result.price);
-//
-//                 Meteor.setTimeout(()=> {
-//                     $.unblockUI();
-//                 }, 100);
-//
-//             }).catch((err)=> {
-//                 console.log(err.message);
-//             });
-//         } else {
-//             instance.price.set(0);
-//         }
-//     },
-//     'keyup [name="qty"],[name="price"]': function (event, instance) {
-//         let qty = instance.$('[name="qty"]').val();
-//         let price = instance.$('[name="price"]').val();
-//         qty = _.isEmpty(qty) ? 0 : parseInt(qty);
-//         price = _.isEmpty(price) ? 0 : parseFloat(price);
-//
-//         instance.qty.set(qty);
-//         instance.price.set(price);
-//     }
-// });
+editTmpl.events({
+    'change [name="baseCurrency"]'(e, instance){
+        let baseCurrency = $(e.currentTarget).val();
+        clear();
+        let baseCurrencySymbol;
+        if (baseCurrency == 'USD') {
+            baseCurrencySymbol = '$'
+        } else if (baseCurrency == 'KHR') {
+            baseCurrencySymbol = '៛'
+        } else {
+            baseCurrencySymbol = 'B'
+        }
+        Session.set("baseCurrency", baseCurrency);
+        Session.set("baseCurrencySymbol", baseCurrencySymbol);
+    },
+    'change [name="convertTo"],[name="baseAmount"]'(e, instance){
+        let baseAmount = instance.$('[name="baseAmount"]').val();
+        let baseCurrency = instance.$('[name="baseCurrency"]').val();
+        let convertTo = instance.$('[name="convertTo"]').val();
+
+        let convertToSymbol;
+        if (convertTo == 'USD') {
+            convertToSymbol = '$'
+        } else if (convertTo == 'KHR') {
+            convertToSymbol = '៛'
+        } else {
+            convertToSymbol = 'B'
+        }
+        Session.set("convertToSymbol", convertToSymbol);
+
+        if (baseCurrency && convertTo && baseAmount) {
+            Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
+                if (!result) {
+                    clear();
+                    swal("Please check", "Your exchange rate are not yet data Entry!");
+                } else {
+                    instance.toAmount.set(result);
+                }
+            });
+        }
+    },
+});
 
 let hooksObject = {
-    // onSubmit: function (insertDoc, updateDoc, currentDoc) {
-    //     this.event.preventDefault();
-    //
-    //     // Check old item
-    //     if (insertDoc.itemId == currentDoc.itemId) {
-    //         itemsCollection.update(
-    //             {_id: currentDoc.itemId},
-    //             updateDoc
-    //         );
-    //     } else {
-    //         itemsCollection.remove({_id: currentDoc.itemId});
-    //
-    //         // Check exist item
-    //         let exist = itemsCollection.findOne({_id: insertDoc.itemId});
-    //         if (exist) {
-    //             let newQty = exist.qty + insertDoc.qty;
-    //             let newPrice = insertDoc.price;
-    //             let newAmount = math.round(newQty * newPrice, 2);
-    //
-    //             itemsCollection.update(
-    //                 {_id: insertDoc.itemId},
-    //                 {$set: {qty: newQty, price: newPrice, amount: newAmount}}
-    //             );
-    //         } else {
-    //             let itemName = _.split($('[name="itemId"] option:selected').text(), " : ")[1];
-    //
-    //             itemsCollection.insert({
-    //                 _id: insertDoc.itemId,
-    //                 itemId: insertDoc.itemId,
-    //                 itemName: itemName,
-    //                 qty: insertDoc.qty,
-    //                 price: insertDoc.price,
-    //                 amount: insertDoc.amount
-    //             });
-    //         }
-    //     }
-    //
-    //     this.done();
-    // },
-    // onSuccess: function (formType, result) {
-    //     alertify.exchangeTransaction().close();
-    //     displaySuccess();
-    // },
-    // onError: function (formType, error) {
-    //     displayError(error.message);
-    // }
+    onSubmit: function (insertDoc, updateDoc, currentDoc) {
+        this.event.preventDefault();
+
+        // Check old item
+        if (insertDoc.baseCurrency == currentDoc.baseCurrency && insertDoc.convertTo == currentDoc.convertTo) {
+            itemsCollection.update(
+                {baseCurrency: currentDoc.baseCurrency, convertTo: currentDoc.convertTo},
+                updateDoc
+            );
+        } else {
+            itemsCollection.remove({baseCurrency: currentDoc.baseCurrency, convertTo: currentDoc.convertTo});
+            // Check exist item
+            let exist = itemsCollection.findOne({baseCurrency: insertDoc.baseCurrency, convertTo: insertDoc.convertTo});
+            if (exist) {
+                let newBaseAmount = new BigNumber(exist.baseAmount).add(new BigNumber(insertDoc.baseAmount));
+                let newToAmount = new BigNumber(exist.toAmount).add(new BigNumber(insertDoc.toAmount));
+
+                itemsCollection.update(
+                    {baseCurrency: insertDoc.baseCurrency, convertTo: insertDoc.converTo},
+                    {
+                        $set: {
+                            baseAmount: newBaseAmount,
+                            toAmount: newToAmount
+                        }
+                    }
+                );
+            } else {
+                itemsCollection.insert({
+                    baseCurrency: insertDoc.baseCurrency,
+                    convertTo: insertDoc.convertTo,
+                    baseAmount: insertDoc.baseAmount,
+                    toAmount: insertDoc.toAmount
+                });
+            }
+        }
+
+        this.done();
+    },
+    onSuccess: function (formType, result) {
+        alertify.item().close();
+        displaySuccess();
+    },
+    onError: function (formType, error) {
+        displayError(error.message);
+    }
 };
 AutoForm.addHooks(['MoneyTransfer_transactionItemsEdit'], hooksObject);
 function clearFrom() {
     $('[name="baseCurrency"]').val('');
+    $('[name="convertTo"]').val('');
+    $('[name="baseAmount"]').val('');
+    $('[name="toAmount"]').val('');
+}
+function clear() {
     $('[name="convertTo"]').val('');
     $('[name="baseAmount"]').val('');
     $('[name="toAmount"]').val('');

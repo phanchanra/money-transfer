@@ -23,6 +23,7 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 // Method
+import {lookupExchangeTransaction} from '../../common/methods/lookup-exchange-transaction';
 
 // Collection
 import {ExchangeTransaction} from '../../common/collections/exchange-transaction';
@@ -62,7 +63,7 @@ indexTmpl.events({
         alertify.exchangeTransaction(fa('plus', 'Exchange Transaction'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.exchangeTransaction(fa('pencil', 'Exchange Transaction'), renderTemplate(formTmpl, this));
+        alertify.exchangeTransaction(fa('pencil', 'Exchange Transaction'), renderTemplate(formTmpl, {exchangeTransactionId: this._id}));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
@@ -87,33 +88,32 @@ formTmpl.onCreated(function () {
     self.isLoading = new ReactiveVar(false);
     self.transactionDoc = new ReactiveVar();
     //
-    // self.autorun(()=> {
-    //     let currentData = Template.currentData();
-    //     if (currentData) {
-    //         self.isLoading.set(true);
-    //
-    //         lookupOrder.callPromise({
-    //             orderId: currentData.orderId
-    //         }).then((result)=> {
-    //             // Add items to local collection
-    //             _.forEach(result.items, (value)=> {
-    //                 itemsCollection.insert(value);
-    //             });
-    //
-    //             self.transactionDoc.set(result);
-    //             self.isLoading.set(false);
-    //         }).catch((err)=> {
-    //             console.log(err);
-    //         });
-    //     }
-    // });
+    self.autorun(()=> {
+        let currentData = Template.currentData();
+        if (currentData) {
+            self.isLoading.set(true);
+
+            lookupExchangeTransaction.callPromise({
+                exchangeTransactionId: currentData.exchangeTransactionId
+            }).then((result)=> {
+                // Add items to local collection
+                _.forEach(result.items, (value)=> {
+                    itemsCollection.insert(value);
+                });
+
+                self.transactionDoc.set(result);
+                self.isLoading.set(false);
+            }).catch((err)=> {
+                console.log(err);
+            });
+        }
+    });
 });
 // Insert
 formTmpl.helpers({
     collection(){
         return ExchangeTransaction;
     },
-    
     isLoading(){
         return Template.instance().isLoading.get();
     },
@@ -143,8 +143,7 @@ formTmpl.helpers({
         return {};
     }
 });
-formTmpl.events({
-});
+
 formTmpl.onDestroyed(function () {
     // Remove items collection
     itemsCollection.remove({});
@@ -165,7 +164,19 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
+    before: {
+        insert: function (doc) {
+            doc.items = itemsCollection.find().fetch();
+            return doc;
+        },
+        update: function (doc) {
+            doc.$set.items = itemsCollection.find().fetch();
 
+            delete doc.$unset;
+
+            return doc;
+        }
+    },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.exchangeTransaction().close();

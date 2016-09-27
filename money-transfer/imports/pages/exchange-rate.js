@@ -111,20 +111,26 @@ formTmpl.events({
         } else {
             symbol = 'B'
         }
-        Session.set("baseCurrency", baseCurrency);
-        Session.set("currencySymbol", symbol);
-        //clear
-        clearForm();
+        // UIBlock.block('Wait...');
+        $.blockUI();
+        Meteor.setTimeout(()=> {
+            // UIBlock.unblock();
+            Session.set("baseCurrency", baseCurrency);
+            Session.set("currencySymbol", symbol);
+            //clear
+            clearForm();
+            $.unblockUI();
+        }, 200);
+
     },
     'change .amount,.convert-to,.buying'(e, instance){
         let currentObj = $(e.currentTarget);
         let parentsObj = currentObj.parents('.exchange-rate');
-        let amount     = parentsObj.find('.amount').val();
-        let convertTo  = parentsObj.find('.convert-to').val();
-        let buying     = parentsObj.find('.buying').val();
+        let amount = parentsObj.find('.amount').val();
+        let convertTo = parentsObj.find('.convert-to').val();
+        let buying = parentsObj.find('.buying').val();
         amount = _.isEmpty(amount) ? 0 : parseFloat(amount);
         buying = _.isEmpty(buying) ? 0 : parseFloat(buying);
-
         if (convertTo != '') {
             parentsObj.find('.buying').prop("readonly", false);
         } else {
@@ -135,7 +141,9 @@ formTmpl.events({
         } else {
             parentsObj.find('.selling').prop("readonly", true);
         }
-        parentsObj.find('.convert-amount').val(calculateExchangeRate(Session.get("baseCurrency"), convertTo, amount, buying));
+        if (Session.get("baseCurrency") && convertTo && amount && buying) {
+            parentsObj.find('.convert-amount').val(calculateExchangeRate(Session.get("baseCurrency"), convertTo, amount, buying));
+        }
     }
 });
 
@@ -156,7 +164,12 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
-
+    before: {
+        insert: function (doc) {
+            doc.branchId = Session.get('currentBranch');
+            return doc;
+        }
+    },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.exchangeRate().close();
@@ -191,3 +204,4 @@ function calculateExchangeRate(baseCurrency, convertTo, amount, buying) {
     }
     return convertAmount
 }
+
