@@ -182,6 +182,7 @@ let hooksObject = {
             alertify.exchangeTransaction().close();
         }
         displaySuccess();
+        itemsCollection.remove({});
     },
     onError (formType, error) {
         displayError(error.message);

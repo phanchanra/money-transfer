@@ -30,6 +30,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Collection
 import {TransactionItemsSchema} from '../../common/collections/transaction-items';
+import {ExchangeRate} from '../../common/collections/exchange-rate';
 
 // Page
 import './transaction-items.html';
@@ -105,6 +106,7 @@ indexTmpl.helpers({
 
         return reactiveTableSettings;
     }
+
 });
 
 indexTmpl.events({
@@ -170,6 +172,23 @@ newTmpl.helpers({
     toAmount: function () {
         const instance = Template.instance();
         return instance.toAmount.get();
+    },
+    baseExchangeShow(){
+        let getBaseCurrency = Session.get("baseCurrency");
+        let baseCur = {};
+        if (getBaseCurrency) {
+            if (getBaseCurrency == "USD") {
+                baseCur = 1 + "USD";
+            } else if (getBaseCurrency == "KHR") {
+                baseCur = 1 + "KHR";
+            } else if (getBaseCurrency == "THB") {
+                baseCur = 1 + "THB";
+            }
+            return baseCur;
+        }
+    },
+    exchangeRateLabel(){
+        return Session.get("exchangeRateLabelOnHelper");
     }
 });
 
@@ -210,6 +229,12 @@ newTmpl.events({
             convertToSymbol = 'B'
         }
         Session.set("convertToSymbol", convertToSymbol);
+
+        if (baseCurrency && convertTo) {
+            Meteor.call("exchangeItemsLabel", baseCurrency, convertTo, function (err, res) {
+                Session.set("exchangeRateLabelOnHelper", res);
+            });
+        }
 
         if (baseCurrency && convertTo && baseAmount) {
             Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {

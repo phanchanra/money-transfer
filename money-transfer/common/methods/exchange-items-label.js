@@ -3,36 +3,36 @@ BigNumber.config({ERRORS: false});
 
 import {ExchangeRate} from '../collections/exchange-rate';
 Meteor.methods({
-    calculateExchangeRateSelling: function (baseCurrency, convertTo, baseAmount) {
+    exchangeItemsLabel: function (baseCurrency, convertTo) {
         let exchangeRate = ExchangeRate.findOne(
             {baseCurrency: baseCurrency, 'convertCurrency.convertTo': convertTo},
             {sort: {_id: -1}}
         );
+        let exchangeCurrencyRate ={};
+
         if (exchangeRate) {
             let sellingRate = exchangeRate.convertCurrency.find(x=>x.convertTo === convertTo).selling;
-            if (baseCurrency && convertTo && baseAmount) {
-                let convertAmount = {};
+            if (baseCurrency && convertTo) {
                 if (baseCurrency == 'KHR') {
                     if (convertTo == 'USD') {
-                        convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
+                        exchangeCurrencyRate = new BigNumber(1).div(new BigNumber(sellingRate));
                     } else if (convertTo == 'THB') {
-                        convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
+                        exchangeCurrencyRate = new BigNumber(1).div(new BigNumber(sellingRate));
                     }
                 } else if (baseCurrency == 'USD') {
                     if (convertTo == 'KHR') {
-                        convertAmount = new BigNumber(baseAmount).times(new BigNumber(sellingRate)).toFixed(2);
+                        exchangeCurrencyRate = sellingRate;
                     } else if (convertTo == 'THB') {
-                        convertAmount = new BigNumber(baseAmount).times(new BigNumber(sellingRate)).toFixed(2);
+                        exchangeCurrencyRate = sellingRate;
                     }
                 } else  {
                     if (convertTo == 'KHR') {
-                        convertAmount = new BigNumber(baseAmount).times(new BigNumber(sellingRate)).toFixed(2);
+                        exchangeCurrencyRate = sellingRate;
                     } else if (convertTo == 'USD') {
-                        convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
+                        exchangeCurrencyRate = new BigNumber(1).div(new BigNumber(sellingRate));
                     }
                 }
-                console.log(convertAmount);
-                return convertAmount;
+                return exchangeCurrencyRate;
             } else {
                 throw new Meteor.Error("Don't have any exchange Rate.");
             }

@@ -72,12 +72,17 @@ indexTmpl.events({
         });
     },
 });
+formTmpl.onDestroyed(function () {
+    //Session.set('baseCurrency', undefined);
+    delete Session.keys['baseCurrency'];
+});
 formTmpl.onCreated(function () {
     Session.set("baseCurrency", 'USD');
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
             this.subscribe('moneyTransfer.exchangeRateById', currentData._id);
+
         }
     });
 });
@@ -94,6 +99,21 @@ formTmpl.helpers({
         if (currentData) {
             data.doc = ExchangeRate.findOne({_id: currentData._id});
             data.type = 'update';
+
+            let baseCurrency = data.doc.baseCurrency;
+            if (baseCurrency == 'USD') {
+                symbol = '$';
+                Session.set("baseCurrency", baseCurrency);
+                Session.set("currencySymbol", symbol);
+            } else if (baseCurrency == 'KHR') {
+                symbol = '៛';
+                Session.set("baseCurrency", baseCurrency);
+                Session.set("currencySymbol", symbol);
+            } else {
+                symbol = 'B';
+                Session.set("baseCurrency", baseCurrency);
+                Session.set("currencySymbol", symbol);
+            }
         }
         return data;
     }
@@ -114,7 +134,7 @@ formTmpl.events({
         // UIBlock.block('Wait...');
         $.blockUI();
         Meteor.setTimeout(()=> {
-            // UIBlock.unblock();
+            UIBlock.unblock();
             Session.set("baseCurrency", baseCurrency);
             Session.set("currencySymbol", symbol);
             //clear
@@ -141,6 +161,7 @@ formTmpl.events({
         } else {
             parentsObj.find('.selling').prop("readonly", true);
         }
+        console.log(Session.get("baseCurrency"));
         if (Session.get("baseCurrency") && convertTo && amount && buying) {
             parentsObj.find('.convert-amount').val(calculateExchangeRate(Session.get("baseCurrency"), convertTo, amount, buying));
         }
