@@ -12,11 +12,13 @@ export const ExchangeStock = new Mongo.Collection("currencyExchange_stock");
 ExchangeStock.schema = new SimpleSchema({
     baseCurrency:{
         type: String,
-        optional: true
+        optional: true,
+        index:true
     },
     convertTo: {
         type: String,
-        optional: true
+        optional: true,
+        index:true
     },
     exchangeDate: {
         type: Date,

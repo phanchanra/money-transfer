@@ -23,14 +23,13 @@ ExchangeRate.after.insert(function (userId, doc) {
                 convertTo: obj.convertTo
             }, {sort: {_id: -1}});
             if (exchangeStock) {
-                let balanceAmount = exchangeStock.balanceAmount;
                 data._id = id;
                 data.baseCurrency = doc.baseCurrency;
                 data.convertTo = obj.convertTo;
                 data.exchangeDate = doc.exchangeDate;
                 data.status = "IN";
                 data.amount = obj.convertAmount;
-                data.balanceAmount = new BigNumber(obj.convertAmount).add(new BigNumber(balanceAmount)).toFixed(2);
+                data.balanceAmount = new BigNumber(obj.convertAmount).add(new BigNumber(exchangeStock.balanceAmount)).toFixed(2);
                 data.exchangeId = doc._id;
                 data.branchId = doc.branchId;
             } else {
@@ -55,6 +54,7 @@ ExchangeRate.after.update(function (userId, doc) {
                 baseCurrency: doc.baseCurrency,
                 convertTo: obj.convertTo,
             }, {sort: {_id: -1}});
+
             let previousExchangeStock = ExchangeStock.findOne({
                 baseCurrency: doc.baseCurrency,
                 convertTo: obj.convertTo,
@@ -90,7 +90,13 @@ ExchangeRate.after.update(function (userId, doc) {
     });
 });
 ExchangeRate.after.remove(function (userId, doc) {
-
-
-    
+    Meteor.defer(function () {
+        doc.convertCurrency.forEach(function (obj) {
+            let exchangeStock = ExchangeStock.findOne({
+                baseCurrency: doc.baseCurrency,
+                convertTo: obj.convertTo
+            }, {sort: {_id: -1}});
+            ExchangeStock.remove({_id:exchangeStock._id});
+        });
+    });
 });

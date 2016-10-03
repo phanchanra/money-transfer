@@ -21,13 +21,22 @@
     {{#autoForm schema=schema id="MoneyTransfer_transactionItemsNew"}}
         <div class="row">
             <div class="col-sm-3">
+                <span class="label label-primary">Base Currency Exchange: {{baseExchangeShow}}</span>
+            </div>
+            <div class="col-sm-3">
+                <span class="label label-primary">Exchange Rate: {{exchangeRateLabel}}</span>
+            </div>
+            <div class="col-sm-6"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
                 {{> afQuickField name="baseCurrency" class='base-currency' label=false placeholder="Base Currency"}}
             </div>
             <div class="col-sm-3">
                 {{> afQuickField name="convertTo" class='convert-to' label=false placeholder="Convert To"}}
             </div>
             <div class="col-sm-3">
-                {{> afQuickField name="baseAmount" class="base-amount" label=false placeholder="Base Amount"}}
+                                {{> afQuickField name="baseAmount" class="base-amount" label=false placeholder="Base Amount"}}
             </div>
             <div class="col-sm-2">
                 {{> afQuickField name="toAmount" value=toAmount class="to-amount" label=false placeholder="To Amount" }}

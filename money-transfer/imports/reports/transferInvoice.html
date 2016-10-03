@@ -15,26 +15,25 @@
                     <div class="row">
                         <div class="col-xs-6">
                             <address>
-                                <strong>ID: </strong> {{_id}}<br>
-                                <strong>Transfer Type:</strong> {{transferType}}<br>
-                                <strong>Date: </strong> {{moFormat transferDate "DD/MM/YYYY"}}<br>
-                                <strong>Ref Code: </strong> {{refCode}}<br>
-                                <strong>Sender: </strong> {{sender._id}}-{{sender.name}}<br>
-                                <strong>Sender Phone :</strong> {{senderTelephone}}<br>
-                                <strong>Receiver: </strong> {{receiver._id}}-{{receiver.name}}<br>
-                                <strong>Receiver Phone :</strong> {{receiverTelephone}}
-
+                                លេខកូដ: {{_id}} <br>
+                                ប្រភេទនៃការផ្ទេរ: {{type}}<br>
+                                ថ្ងៃផ្ទេរ: {{moFormat transferDate "DD/MM/YYYY"}}<br>
+                                លេខកូដសំងាត់:  {{refCode}}<br>
+                                អ្នកផ្ញើរ:  {{sender._id}}-{{sender.name}}<br>
+                                លេខទូរស័ព្ទអ្នកផ្ញើរ : {{senderTelephone}}<br>
+                                អ្នកទទួល:  {{receiver._id}}-{{receiver.name}}<br>
+                                លេខទូរស័ព្ទអ្នកទទួល : {{receiverTelephone}}
                             </address>
                         </div>
                         <div class="col-xs-6 text-right">
                             <address>
-                                <strong>Product:</strong> {{product._id}}-{{product.name}}<br>
-                                <strong>Currency:</strong> {{currencyId}}<br>
-                                <strong>Amount:</strong>​ {{numFormat amount "0,0.00"}}<br>
-                                <strong>Fee Amount:</strong> {{numFormat customerFee "0,0.00"}}<br>
-                                <strong>Discount Fee:</strong> {{discountFee}}<br>
-                                <strong>Total Fee:</strong> {{numFormat totalFee "0,0.00"}}<br>
-                                <strong>Total Amount:</strong> {{numFormat totalAmount "0,0.00"}}
+                                ផលិតផល: {{product._id}}-{{product.name}}<br>
+                                ប្រភេទរូបិយប័ណ្្ណ: {{currencyId}}<br>
+                                ចំនួនទឹកប្រាក់:​ {{numFormat amount "0,0.00"}}<br>
+                                ចំនួនកំរៃសេវា: {{numFormat customerFee "0,0.00"}}<br>
+                                ចំនួនបញ្ចុះតម្លៃ {{discountFee}}<br>
+                                សរុបចំនួនកំរៃសេវា: {{numFormat totalFee "0,0.00"}}<br>
+                                សរុបចំនួនទឹកប្រាក់: {{numFormat totalAmount "0,0.00"}}
                             </address>
                         </div>
                     </div>
@@ -43,15 +42,21 @@
             <div class="row">
                 <div class="col-md-12">
                     <div style="text-align: center; width: 50%; float: right;">
-                        <span>Cashier Sign</span>
+                        <span>អ្នកទទួល</span>
                         <br><br><br><br><br>
-                        Date:............/............./.............
+                        ថ្ងៃទទួល:............/............./.............
                     </div>
+                    <div style="text-align: center; width: 50%;">
+                        <span>អ្នកប្រគល់</span>
+                        <br><br><br><br><br>
+                        ថ្ងៃប្រគល់:............/............./.............
+                    </div>
+                    <div style="height: 20px;" ></div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12" style="text-align: center;">
-                    <span>Thank you Please see you again!</span>
+                    <span>អរគុណ សូមអញ្ចើញមកម្តងទៀត!</span>
                     <br>
                     <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;">
                         <p style="text-align: center;">Powered by <a href="rabbitis.com" target="_blank">Rabbit
