@@ -1,0 +1,104 @@
+<!--Report-->
+<template name="Cash_chartListReport">
+    <div class="box-body">
+        <!--Form-->
+        {{#autoForm schema=schema id="Cash_chartListReport" resetOnSuccess=false type="normal"}}
+            <div class="row">
+                <div class="col-md-6">
+                    {{> afQuickField name="cashType"}}
+
+                    {{> formFooterWithButton}}
+                </div>
+            </div>
+
+        {{/autoForm}}
+
+        <!--Report Paper-->
+        <div class="rpt rpt-portrait-a4">
+            {{#if rptInit}}
+                {{#if rptData}}
+
+                    <!--Print Button-->
+                    <hr>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-success btn-print-area">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                        <!--<button type="button" class="btn btn-primary btn-print-this">-->
+                        <!--<i class="fa fa-print"></i> Print This-->
+                        <!--</button>-->
+                    </div>
+
+                    <!--Print data-->
+                    <div id="print-data">
+
+                        {{#with rptData}}
+
+                            <!--Title-->
+                                <!--{{#with rptTitle}}-->
+                            <div class="rpt-title">
+                                <div class="rpt-title-3x rpt-kh-muol">{{rptTitle.khName}}</div>
+                                <div class="rpt-title-3x">{{rptTitle.enName}}</div>
+                                <div class="rpt-title-2x"><u>Chart Cash List</u></div>
+                                <div>{{rptTitle.enAddress}}</div>
+                            </div>
+                                <!--{{/with}}-->
+
+                            <!--Header-->
+                            {{#with rptHeader}}
+                                <div style="width: 100%">
+                                    <div style="width: 100%; float: left">
+                                        <div><strong>Cash Type:</strong> {{cashType}}</div>
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Content-->
+                            <table class="rpt rpt-content">
+                                <thead class="rpt-content-header">
+                                <tr>
+                                    <th>No</th>
+                                    <th>ID</th>
+                                    <th>Chart Name</th>
+                                    <th>Memo</th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="rpt-content-body">
+
+                                <!--Data-->
+                                {{#each data in rptContent}}
+                                    <tr>
+                                        <td class="text-bold" colspan="4">{{data._id}}</td>
+                                    </tr>
+
+                                    {{#each chart in data.charts}}
+                                        <tr>
+                                            <td class="text-right">{{No @index}}</td>
+                                            <td>{{chart._id}}</td>
+                                            <td>{{chart.name}}</td>
+                                            <td>{{chart.memo}}</td>
+                                        </tr>
+                                    {{/each}}
+                                {{/each}}
+
+                                </tbody>
+                            </table>
+
+                        {{/with}}
+
+                    </div>
+                    <!--/Print data-->
+
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        <!--/#print-data-->
+
+    </div>
+    <!-- /.box-body -->
+</template>

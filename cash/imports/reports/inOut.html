@@ -1,0 +1,132 @@
+<!--Report-->
+<template name="Cash_inOutReport">
+    <div class="box-body">
+        <!--Form-->
+        {{#autoForm schema=schema id="Cash_inOutReport" resetOnSuccess=false type="normal"}}
+            <div class="row">
+                <div class="col-md-6">
+                    {{> afQuickField name="branchId"}}
+                    {{> afQuickField name="currencyId"}}
+                </div>
+                <div class="col-md-6">
+                    {{> afQuickField name="repDate"}}
+                    {{> afQuickField name="exchangeId"}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+
+        <!--Report Paper-->
+        <div class="rpt rpt-portrait-a4">
+            {{#if rptInit}}
+                {{#if rptData}}
+
+                    <!--Print Button-->
+                    <hr>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-success btn-print-area">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                        <!--<button type="button" class="btn btn-primary btn-print-this">-->
+                        <!--<i class="fa fa-print"></i> Print This-->
+                        <!--</button>-->
+                    </div>
+
+                    <!--Print data-->
+                    <div id="print-data">
+
+                        {{#with rptData}}
+
+                            <!--Title-->
+                                <!--{{#with rptTitle}}-->
+                            <div class="rpt-title">
+                                <div class="rpt-title-3x rpt-kh-muol">{{rptTitle.khName}}</div>
+                                <div class="rpt-title-3x">{{rptTitle.enName}}</div>
+                                <div class="rpt-title-2x"><u>Cash {{rptHeader.cashType}} Report</u></div>
+                                <div>{{rptTitle.enAddress}}</div>
+                            </div>
+                                <!--{{/with}}-->
+
+                            <!--Header-->
+                            {{#with rptHeader}}
+                                <div style="width: 100%">
+                                    <div style="width: 50%; float: left">
+                                        <div><strong>Branch:</strong> {{branchHeader}}</div>
+                                        <div><strong>Currency:</strong> {{currencyId}}</div>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <div>
+                                            <strong>Date:</strong>
+                                            {{moFormat repDate.[0] "DD/MM/YYYY"}}
+                                            -
+                                            {{moFormat repDate.[1] "DD/MM/YYYY"}}
+                                        </div>
+                                        <div><strong>Exchange:</strong> {{exchangeHeader}}</div>
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Content-->
+                            <table class="rpt rpt-content">
+                                <thead class="rpt-content-header">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Chart Cash</th>
+                                    <th>KHR</th>
+                                    <th>USD</th>
+                                    <th>THB</th>
+                                    <th>Amount As USD</th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="rpt-content-body">
+                                {{#each data in rptContent.data}}
+                                    <tr>
+                                        <td>{{No @index}}</td>
+                                        <td>{{data._id}} : {{data.name}}</td>
+                                        <td class="text-right"> {{numFormat data.amountKHR "0,0.00"}}</td>
+                                        <td class="text-right"> {{numFormat data.amountUSD "0,0.00"}}</td>
+                                        <td class="text-right"> {{numFormat data.amountTHB "0,0.00"}}</td>
+                                        <td class="text-right"> {{numFormat data.amountAsUSD "0,0.00"}}</td>
+                                    </tr>
+                                {{/each}}
+                                </tbody>
+
+                                <tfoot class="rpt-content-footer">
+                                <tr>
+                                    <td class="text-bold text-right" colspan="2">Total:</td>
+                                    <td class="text-bold text-right">{{numFormat rptContent.totalKHR "0,0.00"}}</td>
+                                    <td class="text-bold text-right">{{numFormat rptContent.totalUSD "0,0.00"}}</td>
+                                    <td class="text-bold text-right">{{numFormat rptContent.totalTHB "0,0.00"}}</td>
+                                    <td class="text-bold text-right">{{numFormat rptContent.totalAsUSD "0,0.00"}}</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+
+                        {{/with}}
+
+                        <!--&lt;!&ndash;Sign&ndash;&gt;-->
+                        <!--{{> ReportSignFooter classSize="rpt-2x"}}-->
+                        {{> ReportSignFooter}}
+
+
+                        <!--Auto print-->
+                        <!--{{autoprint close="true"}}-->
+
+                    </div>
+                    <!--/Print data-->
+
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        <!--/#print-data-->
+
+    </div>
+    <!-- /.box-body -->
+</template>

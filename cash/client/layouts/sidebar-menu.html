@@ -1,0 +1,62 @@
+<template name="Cash_sidebarMenu">
+    <li class="{{isActiveRoute name='cash.home'}}">
+        <a href="{{pathFor 'cash.home'}}">
+            <i class="fa fa-home"></i> <span>{{_ "cash.sidebarMenu.home"}}</span>
+        </a>
+    </li>
+
+    <!--Data-->
+    {{#if isInRole 'insert,update,remove' 'Cash'}}
+        <li class="header"><i class="fa fa-database"></i> DATA</li>
+        <li class="{{isActiveRoute name='cash.transaction'}}">
+            <a href="{{pathFor 'cash.transaction'}}">
+                <i class="fa fa-circle-o"></i> <span>Transaction</span>
+            </a>
+        </li>
+    {{/if}}
+
+    <!--Report-->
+    {{#if isInRole 'report' 'Cash'}}
+        <li class="header"><i class="fa fa-file-text-o"></i> REPORT</li>
+        <li class="{{isActiveRoute name='cash.transactionReport'}}">
+            <a href="{{pathFor 'cash.transactionReport'}}">
+                <i class="fa fa-file-o"></i> <span>Transaction</span>
+            </a>
+            <a href="{{pathFor 'cash.inReport'}}">
+                <i class="fa fa-file-o"></i> <span>Cash In</span>
+            </a>
+            <a href="{{pathFor 'cash.outReport'}}">
+                <i class="fa fa-file-o"></i> <span>Cash Out</span>
+            </a>
+            <a href="{{pathFor 'cash.balanceReport'}}">
+                <i class="fa fa-file-o"></i> <span>Cash Balance (In - Out)</span>
+            </a>
+            <a href="{{pathFor 'cash.flowReport'}}">
+                <i class="fa fa-file-o"></i> <span>Cash Flow</span>
+            </a>
+            <a href="{{pathFor 'cash.chartListReport'}}">
+                <i class="fa fa-file-o"></i> <span>Chart Cash List</span>
+            </a>
+        </li>
+    {{/if}}
+
+    <!--Settings-->
+    {{#if isInRole 'setting' 'Cash'}}
+        <li class="header"><i class="fa fa-cogs"></i> SETTING</li>
+        <li class="{{isActiveRoute name='core.exchange'}}">
+            <a href="{{pathFor 'core.exchange'}}">
+                <i class="fa fa-cog"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='cash.chartCash'}}">
+            <a href="{{pathFor 'cash.chartCash'}}">
+                <i class="fa fa-cog"></i> <span>Chart Cash</span>
+            </a>
+        </li>
+        <!--<li class="{{isActiveRoute name='cash.lookupValue'}}">-->
+            <!--<a href="{{pathFor 'cash.lookupValue'}}">-->
+                <!--<i class="fa fa-cog"></i> <span>Lookup Value</span>-->
+            <!--</a>-->
+        <!--</li>-->
+    {{/if}}
+</template>

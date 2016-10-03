@@ -1,0 +1,54 @@
+<!--Item Temporary-->
+<template name="Cash_transactionItems">
+    {{#autoForm schema=schema id="Cash_transactionItems" resetOnSuccess=true}}
+        <div class="row">
+            <div class="col-sm-7">
+                {{> afQuickField name="chartCashId" label=false}}
+            </div>
+            <div class="col-sm-4">
+                {{> afQuickField name="amount" label=false}}
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-primary js-add-item" {{disabledAddItemBtn}}>+</button>
+            </div>
+        </div>
+    {{/autoForm}}
+    <!--<hr>-->
+
+    <!--Reactive table-->
+    {{> reactiveTable settings=tableSettings}}
+
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="pull-right">Total:</div>
+        </div>
+        <div class="col-sm-4">
+            {{> afQuickField name="totalAmount" value=totalAmount label=false readonly="true"}}
+        </div>
+    </div>
+</template>
+
+<!--Action-->
+<template name="Cash_transactionItemsAction">
+    <ul class="list-inline">
+        <li><a href="#" class="js-update-item"><i class="fa fa-pencil"></i></a></li>
+        <li><a href="#" class="js-destroy-item"><i class="fa fa-remove"></i></a></li>
+    </ul>
+</template>
+
+<!--Edit Item-->
+<template name="Cash_transactionItemsEdit">
+    <div class="box-body">
+        {{#autoForm schema=schema id="Cash_transactionItemsEdit" doc=data}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="chartCashId"}}
+                    {{> afQuickField name="amount"}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
