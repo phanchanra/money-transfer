@@ -96,7 +96,8 @@ indexTmpl.events({
                 );
                 alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this));
             } else {
-                swal("Sorry can not remove", "This transfer is not last!");
+                displayError("This record is not last!");
+                //swal("Sorry can not remove", "This transfer is not last!");
             }
         });
 
@@ -115,7 +116,8 @@ indexTmpl.events({
                     {title: 'Transfer', transferTitle: id}
                 );
             } else {
-                swal("Sorry can not remove", "This transfer is not last!");
+                displayError("This record is not last");
+                //swal("Sorry can not remove", "This transfer is not last!");
             }
         });
     },
@@ -300,6 +302,20 @@ formTmpl.events({
         }
         //Session.set("currencyId", currencyId);
         Session.set("currencySymbol", symbol);
+
+        Meteor.call("checkValidateDepositWithdrawal", Session.get("productId"), currencyId, function (error, result) {
+            if (result) {
+                instance.$('.save').prop('disabled', false);
+                instance.$('.save-print').prop('disabled', false);
+            } else {
+                instance.$('.save').prop('disabled', true);
+                instance.$('.save-print').prop('disabled', true);
+                instance.$('[name="amount"]').prop("readonly", true);
+                displayError("You are not yet deposit amount!");
+                //swal("Please check", "You are not yet deposit amount!");
+            }
+        });
+
         clearOnchange();
         tmpCollection.remove({});
         if (currencyId) {
@@ -316,16 +332,7 @@ formTmpl.events({
             clearOnKeyupAmount();
         }
         Session.set("amount", amount);
-        Meteor.call("checkValidateDepositWithdrawal", productId, currencyId, function (error, result) {
-            if (result) {
-                instance.$('.save').prop('disabled', false);
-                instance.$('.save-print').prop('disabled', false);
-            } else {
-                instance.$('.save').prop('disabled', true);
-                instance.$('.save-print').prop('disabled', true);
-                swal("Please check", "You are not yet deposit amount!");
-            }
-        });
+
         Meteor.call("getFee", productId, currencyId, amount, function (error, result) {
             if (result) {
                 tmpCollection.remove({});
@@ -339,7 +346,8 @@ formTmpl.events({
             } else {
                 instance.$('.save').prop('disabled', true);
                 instance.$('.save-print').prop('disabled', true);
-                swal("Please check", "Your balance are out of fee, not yet setting!");
+                displayError("Your balance are exceeded of fee");
+                //swal("Please check", "Your balance are out of fee, not yet setting!");
             }
         });
     },

@@ -88,7 +88,8 @@ indexTmpl.events({
             if (result) {
                 alertify.bankAccount(fa('pencil', 'Bank Account'), renderTemplate(formTmpl, this));
             } else {
-                swal("Sorry can not remove", "This bank account is not last!");
+                displayError("This record is not last to update!");
+                //swal("Sorry can not remove", "This bank account is not last!");
             }
         });
     },
@@ -108,7 +109,8 @@ indexTmpl.events({
                     {title: 'Transfer', transferTitle: id}
                 );
             } else {
-                swal("Sorry can not remove", "This bank account is not last!");
+                displayError("This record is not last to remove");
+                //swal("Sorry can not remove", "This bank account is not last!");
             }
         });
     },

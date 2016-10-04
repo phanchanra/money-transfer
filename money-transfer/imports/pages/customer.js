@@ -63,7 +63,8 @@ indexTmpl.events({
         let id = this._id;
         Meteor.call('customerExist', this._id, function (error, result) {
             if (result) {
-                swal("Sorry can not remove", "This customer is already used!");
+                displayError("This record has already used !");
+                //swal("Sorry can not remove", "This customer is already used!");
             } else {
                 destroyAction(
                     Customer, {_id: id}, {title: 'Customer', customerTitle: id}

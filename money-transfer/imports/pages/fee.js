@@ -69,7 +69,8 @@ indexTmpl.events({
         let id = this._id;
         Meteor.call('productFeeExist', this.productId, this.currencyId, function (error, result) {
             if (result) {
-                swal("Sorry can not remove", "This product fee is already used!");
+                displayError("This product fee is already used!");
+                //swal("Sorry can not remove", "This product fee is already used!");
             } else {
                 destroyAction(
                     Fee,
@@ -174,7 +175,8 @@ formTmpl.events({
             if (result) {
                 if (feeId != result) {
                     instance.$('[name="save"]').prop('disabled', true);
-                    swal("Please check", "Product and currency are already exist!");
+                    displayError("Product and currency are already exist!");
+                    //swal("Please check", "Product and currency are already exist!");
                 } else {
                     instance.$('[name="save"]').prop('disabled', false);
                 }
@@ -211,7 +213,8 @@ formTmpl.events({
             if (result) {
                 if (feeId != result) {
                     instance.$('[name="save"]').prop('disabled', true);
-                    swal("Please check", "Product and currency are already exist!");
+                     displayError("Product and currency are already exist!");
+                    //swal("Please check", "Product and currency are already exist!");
                 } else {
                     instance.$('[name="save"]').prop('disabled', false);
                 }
@@ -235,7 +238,8 @@ serviceTmpl.events({
         let customerFee = instance.$('.customer-fee').val();
         //if (customerFee < agentFee) {
         if (Number(agentFee) > Number(customerFee)) {
-            swal("Please check agent fee", "Agent Fee must be less than customer fee!");
+            displayError("Agent Fee must be less than customer fee!");
+            //swal("Please check agent fee", "Agent Fee must be less than customer fee!");
             instance.$(".agent-fee").val(0);
             instance.$(".owner-fee").val(0);
         } else {
@@ -260,19 +264,7 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
-    // before: {
-    //     insert(doc){
-    //         doc.lastOpeningAmount = $('[name="openingAmount"]').val();
-    //         doc.lastOpeningAmountFee = $('[name="openingAmount"]').val();
-    //         return doc;
-    //     },
-    //     update(doc){
-    //         doc.$set.lastOpeningAmount = $('[name="openingAmount"]').val();
-    //         doc.$set.lastOpeningAmountFee = $('[name="openingAmount"]').val();
-    //
-    //         return doc;
-    //     }
-    // },
+
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.fee().close();
