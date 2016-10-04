@@ -72,12 +72,10 @@ indexTmpl.events({
         });
     },
 });
-formTmpl.onDestroyed(function () {
-    //Session.set('baseCurrency', undefined);
-    delete Session.keys['baseCurrency'];
-});
 formTmpl.onCreated(function () {
     Session.set("baseCurrency", 'USD');
+    Session.set("currencySymbol", "$");
+    ///this.checkBaseCurrency = new ReactiveVar();
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
@@ -151,6 +149,22 @@ formTmpl.events({
         let buying = parentsObj.find('.buying').val();
         amount = _.isEmpty(amount) ? 0 : parseFloat(amount);
         buying = _.isEmpty(buying) ? 0 : parseFloat(buying);
+        //check Duplicate
+        let arr = [];
+        $('.exchange-rate .convert-to').each(function () {
+            let exchangeRate = $(this).val();
+            if (exchangeRate != "") {
+                arr.push(exchangeRate);
+            }
+        });
+        if (duplicateEntry(arr)) {
+            let checkSlice = arr.splice(0, 1);
+            $(".save").prop("disabled", true);
+            displayError("Convert to already exist!"+'  '+ checkSlice);
+
+        }else{
+            $(".save").prop("disabled", false);
+        }
         if (convertTo != '') {
             parentsObj.find('.buying').prop("readonly", false);
         } else {
@@ -161,12 +175,15 @@ formTmpl.events({
         } else {
             parentsObj.find('.selling').prop("readonly", true);
         }
-        console.log(Session.get("baseCurrency"));
         if (Session.get("baseCurrency") && convertTo && amount && buying) {
             parentsObj.find('.convert-amount').val(calculateExchangeRate(Session.get("baseCurrency"), convertTo, amount, buying));
         }
     }
 });
+formTmpl.destroyed = function () {
+    Session.set('baseCurrency', null);
+    Session.set('currencySymbol', null);
+};
 
 // Show
 showTmpl.onCreated(function () {
@@ -224,5 +241,8 @@ function calculateExchangeRate(baseCurrency, convertTo, amount, buying) {
         }
     }
     return convertAmount
+}
+function duplicateEntry(arr) {
+    return (arr.length != _.uniq(arr).length);
 }
 
