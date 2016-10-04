@@ -50,7 +50,6 @@ Fee.generalSchema = new SimpleSchema({
     },
     'os.date': {
         type: Date,
-        defaultValue: moment().toDate(),
         optional:true
     },
     'os.balanceAmount': {

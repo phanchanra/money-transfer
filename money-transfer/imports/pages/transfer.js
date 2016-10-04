@@ -285,6 +285,7 @@ formTmpl.events({
 
             }
         });
+
     },
     'change [name="currencyId"]'(e, instance){
         let currencyId = $(e.currentTarget).val();

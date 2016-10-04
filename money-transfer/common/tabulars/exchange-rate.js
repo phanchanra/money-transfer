@@ -25,7 +25,7 @@ tabularOpts.columns = [
     {data: "_id", title: "ID"},
     {
         data: 'providerId',
-        title: "Product",
+        title: "Provider",
         // tmpl: Meteor.isClient && Template.MoneyTransfer_exchangeRateProductShowAction
     },
     {
