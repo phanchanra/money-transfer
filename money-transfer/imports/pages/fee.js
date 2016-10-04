@@ -159,17 +159,18 @@ serviceTmpl.helpers({
     //     return agentFee.state.get();
     // }
 });
-formTmpl.onRendered(function () {
+formTmpl.onCreated(function () {
     Session.set("currencySymbol", "$");
-
+    Session.set("currencyId", "USD");
 });
 formTmpl.events({
     'change [name="productId"]'(e, instance){
         let productId = $(e.currentTarget).val();
-        //Session.set("productId", productId);
-        let currencySymbol = $('[name="currencyId"]').val();
+        let currencyId = Session.get("currencyId");
+        //let currencyId = $('[name="currencyId"]').val();
+        console.log(currencyId);
         let feeId = Session.get('existFeeId');
-        Meteor.call("productAvailableInsert", productId, currencySymbol, function (error, result) {
+        Meteor.call("productAvailableInsert", productId, currencyId, function (error, result) {
             if (result) {
                 if (feeId != result) {
                     instance.$('[name="save"]').prop('disabled', true);
@@ -195,15 +196,15 @@ formTmpl.events({
             symbol = 'B'
         }
         // UIBlock.block('Wait...');
-        $.blockUI();
-        Meteor.setTimeout(()=> {
-            // UIBlock.unblock();
-            Session.set("currencySymbol", symbol);
-            //clear
-            $.unblockUI();
-        }, 200);
+        //$.blockUI();
+        //Meteor.setTimeout(()=> {
+        // UIBlock.unblock();
+        Session.set("currencySymbol", symbol);
+        //clear
+        // $.unblockUI();
+        //}, 200);
 
-        //Session.set("currencyId", currencySymbol);
+        Session.set("currencyId", currencySymbol);
         let productId = $('[name="productId"]').val();
         let feeId = Session.get('existFeeId');
         Meteor.call("productAvailableInsert", productId, currencySymbol, function (error, result) {
