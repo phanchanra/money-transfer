@@ -147,8 +147,13 @@ formTmpl.helpers({
 
 formTmpl.events({
     'change [name="cashType"]'(event, instance){
+        // Set session
         Session.set('cashType', event.currentTarget.value);
 
+        // Clear
+        clearItems();
+    },
+    'change [name="currencyId"]'(event, instance){
         // Clear
         clearItems();
     }
