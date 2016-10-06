@@ -63,7 +63,7 @@ export const BorrowingSchema = new SimpleSchema({
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
                 optionsPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'simplePos.selectOptsMethod.exchange'
+                optionsMethod: 'moneyTransfer.selectOptsMethod.exchange'
             }
         }
     }
