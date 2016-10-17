@@ -31,7 +31,6 @@ Meteor.methods({
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
                     }
                 }
-                console.log(convertAmount);
                 return convertAmount;
             } else {
                 throw new Meteor.Error("Don't have any exchange Rate.");

@@ -9,8 +9,8 @@ Transfer.before.insert(function (userId, doc) {
         productId: doc.productId,
         currencyId: doc.currencyId
     }, {sort: {_id: -1}});
-    let prefix = doc.branchId + '-';
-    doc._id = idGenerator.genWithPrefix(Transfer, prefix, 8);
+    // let prefix = doc.branchId + '-';
+    // doc._id = idGenerator.genWithPrefix(Transfer, prefix, 8);
 
     if (doc.type == "CD") {
         if (checkBalanceAmount) {

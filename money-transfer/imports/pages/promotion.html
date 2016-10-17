@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="MoneyTransfer_customer">
+<template name="MoneyTransfer_promotion">
     <div class="box-header with-border">
         <h3 class="box-title">
             {{> addNewButton}}
@@ -15,7 +15,7 @@
 </template>
 
 <!--Action-->
-<template name="MoneyTransfer_customerAction">
+<template name="MoneyTransfer_promotionAction">
     {{#columnAction}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
@@ -24,21 +24,18 @@
 </template>
 
 <!--Form-->
-<template name="MoneyTransfer_customerForm">
+<template name="MoneyTransfer_promotionForm">
     {{#if Template.subscriptionsReady}}
 
         <div class="box-body">
-            {{#autoForm collection=collection id="MoneyTransfer_customerForm" doc=form.doc type=form.type}}
+            {{#autoForm collection=collection id="MoneyTransfer_promotionForm" doc=form.doc type=form.type}}
                 <div class="row">
                     <div class="col-md-12">
                         {{> afQuickField name='name'}}
-                        {{> afQuickField name='gender'}}
-                        {{> afQuickField name='dob'}}
-                        {{> afQuickField name='notificationDay'}}
-                        {{> afQuickField name='telephone'}}
-                        {{> afQuickField name='address'}}
-                        {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
-
+                        {{> afQuickField name='startDate'}}
+                        {{> afQuickField name='expiredDate'}}
+                        {{> afQuickField name='type'}}
+                        {{> afQuickField name='amount'}}
                     </div>
                 </div>
                 {{> formFooterWithButton}}
@@ -51,7 +48,7 @@
 </template>
 
 <!--Show-->
-<template name="MoneyTransfer_customerShow">
+<template name="MoneyTransfer_promotionShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
             {{#with data}}
@@ -62,16 +59,12 @@
                         <dd>{{_id}}</dd>
                         <dt>Name</dt>
                         <dd>{{name}}</dd>
-                        <dt>Gender</dt>
-                        <dd>{{gender}}</dd>
-                        <dt>Date of birth</dt>
-                        <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
-                        <dt>Address</dt>
-                        <dd>{{address}}</dd>
-                        <dt>telephone</dt>
-                        <dd>{{telephone}}</dd>
-                        <dt>E-mail</dt>
-                        <dd>{{email}}</dd>
+                        <dt>Start Date</dt>
+                        <dd>{{moFormat startDate "DD/MM/YYYY"}}</dd>
+                        <dt>Expired Date</dt>
+                        <dd>{{moFormat expiredDate "DD/MM/YYYY"}}</dd>
+                        <dt>Percent(%)</dt>
+                        <dd>{{percent}}</dd>
                     </fieldset>
 
 

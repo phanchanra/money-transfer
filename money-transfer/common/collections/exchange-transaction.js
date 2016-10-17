@@ -21,6 +21,11 @@ ExchangeTransaction.itemsSchema = new SimpleSchema({
         type: String,
         label: 'Base Currency'
     },
+    selling:{
+        type: Number,
+        decimal:true,
+        optional:true
+    },
     convertTo: {
         type: String,
         label: 'Convert To',
@@ -66,7 +71,7 @@ ExchangeTransaction.schema = new SimpleSchema({
     },
     customerId: {
         type: String,
-        label:"Customer",
+        label: "Customer",
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -103,6 +108,14 @@ ExchangeTransaction.schema = new SimpleSchema({
     branchId: {
         type: String,
         optional: true,
+    },
+    transferId: {
+        type: String,
+        optional: true
+    },
+    transactionExchangeRef: {
+        type: String,
+        optional: true
     }
 });
 

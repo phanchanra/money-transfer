@@ -63,7 +63,6 @@ Customer.generalSchema = new SimpleSchema({
     telephone: {
         type: String,
         label: 'Telephone',
-        optional: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -77,12 +76,6 @@ Customer.generalSchema = new SimpleSchema({
     },
     lastInvoice: {
         type: String,
-        optional: true
-    },
-    email: {
-        type: String,
-        label: 'Email',
-        regEx: SimpleSchema.RegEx.Email,
         optional: true
     },
     branchId: {

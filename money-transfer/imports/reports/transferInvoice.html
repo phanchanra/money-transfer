@@ -3,66 +3,203 @@
         <div class="container print" id="print-invoice" style="width: 559px;">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="invoice-title" align="center">
-                        {{#with title}}
-                            <h4>{{khName}}<br>{{enName}}</h4>
-                            <h3>វិក័យប័ត្រ</h3>
-                            <p align="center">អាស័យដ្ឋាន:{{khAddress}}&nbsp;&nbsp;<i class="fa fa-phone-square"></i>&nbsp;&nbsp;{{telephone}}
-                            </p>
-                        {{/with}}
-                    </div>
-                    <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;"></div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <address>
-                                លេខកូដ: {{_id}} <br>
-                                ប្រភេទនៃការផ្ទេរ: {{type}}<br>
-                                ថ្ងៃផ្ទេរ: {{moFormat transferDate "DD/MM/YYYY"}}<br>
-                                លេខកូដសំងាត់:  {{refCode}}<br>
-                                អ្នកផ្ញើរ:  {{sender._id}}-{{sender.name}}<br>
-                                លេខទូរស័ព្ទអ្នកផ្ញើរ : {{senderTelephone}}<br>
-                                អ្នកទទួល:  {{receiver._id}}-{{receiver.name}}<br>
-                                លេខទូរស័ព្ទអ្នកទទួល : {{receiverTelephone}}
-                            </address>
+                    <div class="invoice-title">
+                        <div class="row">
+
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-10">
+                                <table width="100%">{{#with title}}
+                                    <tr>
+                                        <td><h4 style="font-family: 'Khmer OS Muol'"><b>{{khName}}</b></h4></td>
+                                        <td><h5 style="font-family: 'Khmer OS Muol'">
+                                            <b>វិក្កយបត្រ ផ្ទេរប្រាក់ ខ្មែរ~{{transferTypeIn}}</b></h5></td>
+                                    </tr>
+                                    <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
+                                        <td>{{khAddress}}</td>
+                                        <td>លេខវិក្កយបត្រ: {{invoiceId}}</td>
+                                    </tr>
+                                    <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
+                                        <td>{{telephone}}</td>
+                                        <td>ចំណាំ {{moFormat dateTimeNote "DD/MM/YYYY H:mm:ss a"}}</td>
+                                    </tr>
+                                {{/with}}
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-xs-6 text-right">
-                            <address>
-                                ផលិតផល: {{product._id}}-{{product.name}}<br>
-                                ប្រភេទរូបិយប័ណ្្ណ: {{currencyId}}<br>
-                                ចំនួនទឹកប្រាក់:​ {{numFormat amount "0,0.00"}}<br>
-                                ចំនួនកំរៃសេវា: {{numFormat customerFee "0,0.00"}}<br>
-                                ចំនួនបញ្ចុះតម្លៃ {{discountFee}}<br>
-                                សរុបចំនួនកំរៃសេវា: {{numFormat totalFee "0,0.00"}}<br>
-                                សរុបចំនួនទឹកប្រាក់: {{numFormat totalAmount "0,0.00"}}
-                            </address>
+                    </div>
+                    <!--<div style="border-top: dotted 1px black; margin-bottom: 1px;"></div>-->
+
+                    <div style="font-size: 12px; line-height: 230%; font-family: 'Khmer OS Battambang';">
+                        <div class="row">
+                            <div class="col-xs-12" style="font-style: italic"><b>អ្នកផ្ញើរប្រាក់</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">ថ្ងៃខែឆ្នាំ :​ {{moFormat transferDate "DD/MM/YYYY"}}</div>
+                            <div class="col-xs-4">ម៉ោងបានផ្ញើរ : {{moFormat transferDate "H:mm:ss a"}}</div>
+                            <div class="col-xs-4">លេខបញ្ជីរធនាគារ : {{refCode}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">ឈ្មេាះអ្នកផ្ញើរ : {{sender._id}}-{{sender.name}}</div>
+                            <div class="col-xs-6">លេខទូរស័ព្ទ : {{senderTelephone}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12" style="font-style: italic"><b>អ្នកទទួលប្រាក់</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">ឈ្មេាះអ្នកទទួល : {{receiver._id}}-{{receiver.name}}</div>
+                            <div class="col-xs-6">លេខទូរស័ព្ទ : {{receiverTelephone}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">ប្រាក់ : {{amount}} {{currencyId}}</div>
+                            <div class="col-xs-4">ថ្លៃសេវា : {{numFormat customerFee "0,0.00"}}{{currencyId}}</div>
+                            <div class="col-xs-4">ប្រាក់នៅសល់ : {{numFormat totalAmount "0,0.00"}}{{currencyId}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>
+                            {{#each items}}
+                                <div class="col-xs-4"> ប្រាក់ :{{numFormat toAmount "0,0.00"}} {{convertTo}}</div>
+                            {{/each}}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div style="text-align: center; width: 50%; float: right;">
-                        <span>អ្នកទទួល</span>
-                        <br><br><br><br><br>
-                        ថ្ងៃទទួល:............/............./.............
+            <div style="font-size: 12px; font-family: 'Khmer OS Battambang';">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="text-align: center; width: 50%; float: right;">
+                            <span>ឈ្មេាះ/ស្នាមេដៃអ្នកទទួល</span>
+
+                            <br><br><br>
+                        </div>
+                        <div style="text-align: center; width: 50%;">
+                            <span>ឈ្មេាះនិង ហត្ថលេខា បេឡា</span>
+                            <br><br><br>
+
+                        </div>
+                        <div style="height: 20px;"></div>
                     </div>
-                    <div style="text-align: center; width: 50%;">
-                        <span>អ្នកប្រគល់</span>
-                        <br><br><br><br><br>
-                        ថ្ងៃប្រគល់:............/............./.............
+                </div>
+                <div class="row">
+                    <div class="col-md-12"
+                         style="text-align: center; font-family: 'Khmer OS Battambang'; font-size: 10px;">
+                        <span>អរគុណ សូមអញ្ចើញមកម្តងទៀត!</span>
+                        <br>
+                        <!--<div style="border-top: dotted 1px black; margin-bottom: 1px;">-->
+                            <p style="text-align: center;">Powered by Rabbit Technology</p>
+                        <!--</div>-->
                     </div>
-                    <div style="height: 20px;" ></div>
                 </div>
             </div>
+            <!--</div>-->
+
+            <!---->
+
             <div class="row">
-                <div class="col-md-12" style="text-align: center;">
-                    <span>អរគុណ សូមអញ្ចើញមកម្តងទៀត!</span>
-                    <br>
-                    <div style="border-top: gainsboro 1px solid; border-top-style: ridge; margin-bottom: 15px;">
-                        <p style="text-align: center;">Powered by <a href="rabbitis.com" target="_blank">Rabbit
-                            Technology</a>&nbsp;&nbsp;&nbsp;<i class="fa fa-phone-square"></i> 053 50 66 777</p>
+                <div class="col-xs-12">
+                    <hr style="border: 0 none;
+  border-top: 1px dashed #322f32;
+  background: none;
+  height:0;">
+                    <!--<div style="border-bottom: dotted 1px black; margin-bottom: 1px;">-->
+                        <!--<p>&nbsp;</p>-->
+                    <!--</div>-->
+                </div>
+            </div>
+
+            <!---->
+            <!--<div class="container print" id="print-invoice" style="width: 559px;">-->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="invoice-title">
+                        <div class="row">
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-10">
+                                <table width="100%">{{#with title}}
+                                    <tr>
+                                        <td><h4 style="font-family: 'Khmer OS Muol'"><b>{{khName}}</b></h4></td>
+                                        <td><h5 style="font-family: 'Khmer OS Muol'">
+                                            <b>វិក្កយបត្រ ផ្ទេរប្រាក់ ខ្មែរ~ថៃ</b></h5></td>
+                                    </tr>
+                                    <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
+                                        <td>{{khAddress}}</td>
+                                        <td>លេខវិក្កយបត្រ: {{invoiceId}}</td>
+                                    </tr>
+                                    <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
+                                        <td>{{telephone}}</td>
+                                        <td>ចំណាំ {{moFormat dateTimeNote "DD/MM/YYYY H:mm:ss a"}}</td>
+                                    </tr>
+                                {{/with}}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div style="border-top: dotted 1px black; margin-bottom: 1px;"></div>-->
+
+                    <div style="font-size: 12px; line-height: 230%; font-family: 'Khmer OS Battambang';">
+                        <div class="row">
+                            <div class="col-xs-12" style="font-style: italic"><b>អ្នកផ្ញើរប្រាក់</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">ថ្ងៃខែឆ្នាំ :​ {{moFormat transferDate "DD/MM/YYYY"}}</div>
+                            <div class="col-xs-4">ម៉ោងបានផ្ញើរ : {{moFormat transferDate "H:mm:ss a"}}</div>
+                            <div class="col-xs-4">លេខបញ្ជីរធនាគារ : {{refCode}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">ឈ្មេាះអ្នកផ្ញើរ : {{sender._id}}-{{sender.name}}</div>
+                            <div class="col-xs-6">លេខទូរស័ព្ទ : {{senderTelephone}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12" style="font-style: italic"><b>អ្នកទទួលប្រាក់</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">ឈ្មេាះអ្នកទទួល : {{receiver._id}}-{{receiver.name}}</div>
+                            <div class="col-xs-6">លេខទូរស័ព្ទ : {{receiverTelephone}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">ប្រាក់ : {{amount}} {{currencyId}}</div>
+                            <div class="col-xs-4">ថ្លៃសេវា : {{numFormat customerFee "0,0.00"}}{{currencyId}}</div>
+                            <div class="col-xs-4">ប្រាក់នៅសល់ : {{numFormat totalAmount "0,0.00"}}{{currencyId}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>
+                            {{#each items}}
+                                <div class="col-xs-4"> ប្រាក់ :{{numFormat toAmount "0,0.00"}} {{convertTo}}</div>
+                            {{/each}}
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div style="font-size: 12px; font-family: 'Khmer OS Battambang';">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="text-align: center; width: 50%; float: right;">
+                            <span>ឈ្មេាះ/ស្នាមេដៃអ្នកទទួល</span>
+
+                            <br><br><br>
+                        </div>
+                        <div style="text-align: center; width: 50%;">
+                            <span>ឈ្មេាះនិង ហត្ថលេខា បេឡា</span>
+                            <br><br><br>
+
+                        </div>
+                        <div style="height: 20px;"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"
+                         style="text-align: center; font-family: 'Khmer OS Battambang'; font-size: 10px;">
+                        <span>អរគុណ សូមអញ្ចើញមកម្តងទៀត!</span>
+                        <br>
+                        <div style="margin-bottom: 1px;">
+                            <p style="text-align: center;">Powered by Rabbit Technology</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="border-top: dotted 1px black; margin-bottom: 1px; margin-top: 20px;"></div>
             </div>
         </div>
         <div class="container" style="width: 559px;">
@@ -83,6 +220,7 @@
                 </div>
             </div>
         </div>
+        <!---->
 
     {{else}}
         {{> loading}}

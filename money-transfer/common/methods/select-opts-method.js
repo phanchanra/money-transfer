@@ -9,7 +9,8 @@ import {moment} from  'meteor/momentjs:moment';
 import {Customer} from '../collections/customer.js';
 import {Product} from '../collections/product';
 import {Exchange} from '../../../core/common/collections/exchange';
-import {Provider} from '../collections/provider'
+import {Provider} from '../collections/provider';
+import {Promotion} from '../collections/promotion';
 export let SelectOptsMethod = {};
 
 SelectOptsMethod.customer = new ValidatedMethod({
@@ -28,7 +29,8 @@ SelectOptsMethod.customer = new ValidatedMethod({
                 selector = {
                     $or: [
                         {_id: {$regex: searchText, $options: 'i'}},
-                        {name: {$regex: searchText, $options: 'i'}}
+                        {name: {$regex: searchText, $options: 'i'}},
+                        {telephone: {$regex: searchText, $options: 'i'}}
                     ],
                     branchId: params.branchId
                 };
@@ -38,7 +40,7 @@ SelectOptsMethod.customer = new ValidatedMethod({
 
             let data = Customer.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.name;
+                let label = value.name + ' : ' + value.telephone;
                 list.push({label: label, value: value._id});
             });
 
@@ -56,22 +58,25 @@ SelectOptsMethod.product = new ValidatedMethod({
             let list = [], selector = {};
             let searchText = options.searchText;
             let values = options.values;
+            let params = options.params || {};
 
-            if (searchText) {
+            if (searchText && params.transferType) {
                 selector = {
                     $or: [
                         {_id: {$regex: searchText, $options: 'i'}},
                         {name: {$regex: searchText, $options: 'i'}}
                     ],
-                    status: "E"
+                    status: "E",
+                    type: params.type
                 };
             } else if (values.length) {
-                selector = {_id: {$in: values}, status: "E"};
+                params._id = {$in: values};
+                params.status = "E";
+                selector = params;
             } else {
-                selector = {status: "E"}
+                params.status = "E";
+                selector = params;
             }
-
-
             let data = Product.find(selector, {limit: 10});
             data.forEach(function (value) {
                 let label = value._id + ' : ' + value.name;
@@ -82,7 +87,7 @@ SelectOptsMethod.product = new ValidatedMethod({
         }
     }
 });
-
+//provider
 SelectOptsMethod.provider = new ValidatedMethod({
     name: 'moneyTransfer.selectOptsMethod.provider',
     validate: null,
@@ -110,6 +115,41 @@ SelectOptsMethod.provider = new ValidatedMethod({
 
 
             let data = Provider.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                let label = value._id + ' : ' + value.name;
+                list.push({label: label, value: value._id});
+            });
+
+            return list;
+        }
+    }
+});
+//promotion
+SelectOptsMethod.promotion = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.promotion',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
+
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+
+            if (searchText) {
+                selector = {
+                    $or: [
+                        {_id: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
+                    //status: "E"
+                };
+            } else if (values.length) {
+                selector = {_id: {$in: values}};
+            }
+
+
+            let data = Promotion.find(selector, {limit: 10});
             data.forEach(function (value) {
                 let label = value._id + ' : ' + value.name;
                 list.push({label: label, value: value._id});

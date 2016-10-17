@@ -23,60 +23,60 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // Collection
-import {Customer} from '../../common/collections/customer';
+import {Promotion} from '../../common/collections/promotion';
 
 // Tabular
-import {CustomerTabular} from '../../common/tabulars/customer';
+import {PromotionTabular} from '../../common/tabulars/promotion';
 //function
 // import {calculateIncome} from '../../common/globalState/calculateIncome'
 // Page
-import './customer.html';
+import './promotion.html';
 
 // Declare template
-let indexTmpl = Template.MoneyTransfer_customer,
-    actionTmpl = Template.MoneyTransfer_customerAction,
-    formTmpl = Template.MoneyTransfer_customerForm,
-    showTmpl = Template.MoneyTransfer_customerShow;
+let indexTmpl = Template.MoneyTransfer_promotion,
+    actionTmpl = Template.MoneyTransfer_promotionAction,
+    formTmpl = Template.MoneyTransfer_promotionForm,
+    showTmpl = Template.MoneyTransfer_promotionShow;
 
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('customer');
-    createNewAlertify('customerShow');
-});
-indexTmpl.onDestroyed(function () {
-    Session.set('customerId', undefined);
+    createNewAlertify('promotion');
+    createNewAlertify('promotionShow');
 });
 
 indexTmpl.helpers({
     tabularTable(){
-        return CustomerTabular;
+        return PromotionTabular;
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.customer(fa('plus', 'Customer'), renderTemplate(formTmpl));
+        alertify.promotion(fa('plus', 'Promotion'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.customer(fa('pencil', 'Customer'), renderTemplate(formTmpl, this));
+        alertify.promotion(fa('pencil', 'Promotion'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        let id = this._id;
-        Meteor.call('customerExist', this._id, function (error, result) {
-            if (result) {
-                displayError("This record has already used !");
-                //swal("Sorry can not remove", "This customer is already used!");
-            } else {
-                destroyAction(
-                    Customer, {_id: id}, {title: 'Customer', customerTitle: id}
-                );
-            }
-        });
+        destroyAction(
+            Promotion, {_id: this._id}, {title: 'Promotion', promotionTitle: this._id}
+        );
+        // let id = this._id;
+        // Meteor.call('customerExist', this._id, function (error, result) {
+        //     if (result) {
+        //         displayError("This record has already used !");
+        //         //swal("Sorry can not remove", "This customer is already used!");
+        //     } else {
+        //         destroyAction(
+        //             Customer, {_id: id}, {title: 'Customer', customerTitle: id}
+        //         );
+        //     }
+        // });
     },
     'click .js-display' (event, instance) {
-        alertify.customerShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
+        alertify.promotionShow(fa('eye', 'Product'), renderTemplate(showTmpl, this));
     }
 });
 
@@ -85,21 +85,21 @@ formTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
         if (currentData) {
-            this.subscribe('moneyTransfer.customerById', currentData._id);
+            this.subscribe('moneyTransfer.promotionById', currentData._id);
         }
     });
 });
 
 formTmpl.helpers({
     collection(){
-        return Customer;
+        return Promotion;
     },
     form(){
         let data = {doc: {}, type: 'insert'};
         let currentData = Template.currentData();
 
         if (currentData) {
-            data.doc = Customer.findOne({_id: currentData._id});
+            data.doc = Promotion.findOne({_id: currentData._id});
             data.type = 'update';
         }
 
@@ -111,14 +111,14 @@ formTmpl.helpers({
 showTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
-        this.subscribe('moneyTransfer.customerById', currentData._id);
+        this.subscribe('moneyTransfer.promotionById', currentData._id);
     });
 });
 
 showTmpl.helpers({
     data () {
         let currentData = Template.currentData();
-        return Customer.findOne(currentData._id);
+        return Promotion.findOne(currentData._id);
     }
 });
 
@@ -126,20 +126,8 @@ showTmpl.helpers({
 let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
-            alertify.customer().close();
+            alertify.promotion().close();
         }
-        Meteor.call('getSenderDoc', result, function (err, result) {
-            if (result) {
-                if(Session.get('quickAddCustomerFlag') == 'sender'){
-                    result.flag = 'sender';
-                    Session.set('senderId', result);
-                }else{
-                    result.flag = 'receiver';
-                    Session.set('senderId', result);
-                }
-            }
-        });
-        //
         displaySuccess();
     },
     onError (formType, error) {
@@ -147,4 +135,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks(['MoneyTransfer_customerForm'], hooksObject);
+AutoForm.addHooks(['MoneyTransfer_promotionForm'], hooksObject);

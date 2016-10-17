@@ -32,6 +32,16 @@ tabularOpts.columns = [
         }
     },
     {data: "customerId", title: "Customer"},
+    {
+        data: "transactionExchangeRef", title: 'Transaction Exchange Ref'
+        , render: function (val, type, doc) {
+        if (val != undefined) {
+            return "<span class='label label-primary'>" + val + "</span>"
+        } else {
+            return "<span class='label label-default'>Normal</span>"
+        }
+    }
+    }
 
 ];
 tabularOpts.extraFields = ['items'];

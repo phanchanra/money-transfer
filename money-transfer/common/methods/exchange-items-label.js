@@ -15,9 +15,9 @@ Meteor.methods({
             if (baseCurrency && convertTo) {
                 if (baseCurrency == 'KHR') {
                     if (convertTo == 'USD') {
-                        exchangeCurrencyRate = new BigNumber(1).div(new BigNumber(sellingRate));
+                        exchangeCurrencyRate = sellingRate;
                     } else if (convertTo == 'THB') {
-                        exchangeCurrencyRate = new BigNumber(1).div(new BigNumber(sellingRate));
+                        exchangeCurrencyRate = sellingRate;
                     }
                 } else if (baseCurrency == 'USD') {
                     if (convertTo == 'KHR') {
@@ -25,11 +25,11 @@ Meteor.methods({
                     } else if (convertTo == 'THB') {
                         exchangeCurrencyRate = sellingRate;
                     }
-                } else  {
+                } else if (baseCurrency == 'THB') {
                     if (convertTo == 'KHR') {
                         exchangeCurrencyRate = sellingRate;
                     } else if (convertTo == 'USD') {
-                        exchangeCurrencyRate = new BigNumber(1).div(new BigNumber(sellingRate));
+                        exchangeCurrencyRate = sellingRate;
                     }
                 }
                 return exchangeCurrencyRate;
