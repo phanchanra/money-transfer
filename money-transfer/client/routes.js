@@ -141,7 +141,19 @@ MoneyTransferRoutes.route('/customer-expired-date', {
         parent: 'moneyTransfer.home'
     }
 });
-
+// Promotion
+import '../imports/pages/promotion';
+MoneyTransferRoutes.route('/promotion', {
+    name: 'moneyTransfer.promotion',
+    title: 'Promotion',
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_promotion');
+    },
+    breadcrumb: {
+        title: 'Promotion',
+        parent: 'moneyTransfer.home'
+    }
+});
 /*****************
  * Exchange
  ****************/

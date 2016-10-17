@@ -12,25 +12,32 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Product} from '../collections/product';
+import {Promotion} from '../collections/promotion';
 
 // Page
-Meteor.isClient && require('../../imports/pages/product.html');
+Meteor.isClient && require('../../imports/pages/promotion.html');
 
-tabularOpts.name = 'moneyTransfer.product';
-tabularOpts.collection = Product;
+tabularOpts.name = 'moneyTransfer.promotion';
+tabularOpts.collection = Promotion;
 tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_productAction},
+    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.MoneyTransfer_promotionAction},
     {data: "_id", title: "ID"},
     {data: "name", title: "Name"},
     {
-        data: "registerDate",
-        title: "Reg Date",
+        data: "startDate",
+        title: "Start Date",
         render: function (val, type, doc) {
             return moment(val).format('DD/MM/YYYY');
         }
     },
-    {data: "status", title: "Status"},
+    {
+        data: "expiredDate",
+        title: "Expired Date",
+        render: function (val, type, doc) {
+            return moment(val).format('DD/MM/YYYY');
+        }
+    },
     {data: "type", title: "Type"},
+    {data: "amount", title: "Amount"},
 ];
-export const ProductTabular = new Tabular.Table(tabularOpts);
+export const PromotionTabular = new Tabular.Table(tabularOpts);

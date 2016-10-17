@@ -1,13 +1,4 @@
-.posts{
-    margin: 20px auto;
-    width: 60%;
-    font-family: 'Source Sans', 'Helvetica', sans-serif;
-}
-.post{
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
-}
+
 h3, p{
     margin:0px;
     font-size:13px;

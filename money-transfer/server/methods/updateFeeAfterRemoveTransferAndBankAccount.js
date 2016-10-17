@@ -9,7 +9,7 @@ Meteor.methods({
             _id: {$ne: doc._id}
         }, {sort: {_id: -1}});
         let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId}, {sort: {_id: -1}});
-        Meteor.defer(function () {
+        // Meteor.defer(function () {
             if (doc.type == 'IN' || doc.type == 'OUT') {
                 if (transferOnTransfer.lastBalance == '' || transferOnTransfer.lastBalance == null || transferOnTransfer.lastBalance == "undefined") {
                     Fee.direct.update(
@@ -66,6 +66,6 @@ Meteor.methods({
                     );
                 }
             }
-        });
+        // });
     }
 });

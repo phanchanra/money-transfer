@@ -235,7 +235,7 @@ function calculateExchangeRate(baseCurrency, convertTo, amount, buying) {
         convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
     } else {
         if (convertTo == 'KHR') {
-            convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed();
+            convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
         } else {
             convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
         }

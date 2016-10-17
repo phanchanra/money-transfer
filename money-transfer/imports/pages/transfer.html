@@ -44,7 +44,20 @@
         <div class="box-body">
             {{#autoForm collection=collection id="MoneyTransfer_transferForm" doc=form.doc type=form.type}}
                 <!--general-->
+                <div class="row">
+                    <div class="col-md-12">
 
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#">
+
+                                    {{> afQuickField name='transferType' label=false}}
+
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <!--partnership-->
                 <div class="row">
                     <div class="col-md-6">
@@ -55,10 +68,10 @@
                                     {{> afQuickField name='type'}}
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='transferDate'}}
+                                    {{> afQuickField name='dateTimeNote'}}
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='refCode'}}
+                                    {{> afQuickField name='transferDate'}}
                                 </div>
                             </div>
                         </fieldset>
@@ -68,12 +81,20 @@
                         <fieldset>
                             <legend>Sender</legend>
                             <div class="row">
-                                <div class="col-md-6">
-                                    {{> afQuickField name='senderId'}}
+                                <div class="col-md-4">
+                                    {{> afQuickField name='refCode'}}
                                 </div>
-                                <div class="col-md-6">
-                                    {{> afQuickField name='senderTelephone' value=senderPhone}}
-
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Sender<span style="color: red;">*</span> <a
+                                                class="sender" style="cursor: pointer">[Add
+                                            New]</a></label>
+                                        {{> afFieldInput name='senderId' value=senderId required=required}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Sender Phone<span style="color: red;">*</span></label>
+                                    {{> afFieldInput name='senderTelephone' value=senderPhone}}
                                 </div>
                             </div>
                         </fieldset>
@@ -100,11 +121,31 @@
                         <fieldset>
                             <legend>Receiver</legend>
                             <div class="row">
-                                <div class="col-md-6">
-                                    {{> afQuickField name='receiverId'}}
+                                <div class="col-md-4">
+                                    <div class="hide-show" style="position: absolute; top: -3px; width: 89%; display: none;">
+                                        <label>
+                                            <a class="btn btn-primary btn-xs"><i
+                                                    class="fa fa-spinner fa-spin"></i> <b>{{promotionLabel}}
+                                                </b></a>
+                                        </label>
+                                        <br>
+                                            {{> afQuickField type="hidden" name='promotionAmount' value=promotion}}
+                                            {{> afQuickField name='promotionId' label=false}}
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    {{> afQuickField name='receiverTelephone' value=receiverPhone}}
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Receiver<span style="color: red;">*</span> <a
+                                                class="receiver"
+                                                style="cursor: pointer">[Add
+                                            New]</a></label>
+                                        {{> afFieldInput name='receiverId' value=receiverId}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Receiver Phone<span
+                                            style="color: red;">*</span></label>
+                                    {{> afFieldInput name='receiverTelephone' value=receiverPhone}}
                                 </div>
                             </div>
                         </fieldset>
@@ -118,15 +159,17 @@
                         <div class="col-md-6">
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     {{> afQuickField name='amount' value=amount}}
                                 </div>
-                                <div class="col-md-6">
-
+                                <div class="col-md-5">
                                     {{> afQuickField name='customerFee' readonly=true value=customerFee}}
                                 </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Deduct Fee</label><br>
+                                    {{> afQuickField name='deductFee'}}
+                                </div>
                             </div>
-                            <!--</fieldset>-->
                         </div>
                         <div class="col-md-6">
                             <!--<fieldset>-->
@@ -154,11 +197,64 @@
                         </div>
                     </div>
                 </fieldset>
+                <!--Exchange-->
+                <fieldset>
+                    <legend>Exchange</legend>
+                    <div class="row exchange-block" id="up-down-slide">
+                        <div class="convert-block">
+                            <div class="col-md-2">
+                                <h4><span class="label label-primary"><i
+                                        class="fa fa-money"></i> Exchange Rate :{{exchangeTransferLabelFirst}}</span>
+                                </h4>
+                                {{> afQuickField name='sellingFirst' value=exchangeTransferFormFirst label=false }}
+                            </div>
+                            <div class="col-md-2">
+                                <h4><span class="label label-primary"><i class="fa fa-money"></i> Exchange Amount</span>
+                                </h4>
+
+                                {{> afQuickField name='baseAmountFirst' value=baseAmountFirst label=false}}
+
+                                {{> afQuickField name='convertToFirst' value=exchangeTransferLabelFirst type='hidden'}}
+                            </div>
+                            <div class="col-md-2">
+                                <h4><span class="label label-primary"><i
+                                        class="fa fa-money"></i> Convert Amount :{{exchangeTransferLabelFirst}}</span>
+                                </h4>
+                                {{> afQuickField name='toAmountFirst' value=toAmountFirst label=false readonly=true }}
+                            </div>
+                        </div>
+                        <div class="convert-block">
+                            <div class="col-md-2">
+                                <h4><span class="label label-primary"><i
+                                        class="fa fa-money"></i> Exchange Rate :{{exchangeTransferLabelSecond}}</span>
+                                </h4>
+
+                                {{> afQuickField name='sellingSecond' value=exchangeTransferFormSecond label=false}}
+
+                            </div>
+                            <div class="col-md-2">
+                                <h4><span class="label label-primary"><i class="fa fa-money"></i> Exchange Amount</span>
+                                </h4>
+
+                                {{> afQuickField name='baseAmountSecond' value=baseAmountSecond label=false}}
+
+                                {{> afQuickField name='convertToSecond' value=exchangeTransferLabelSecond type='hidden'}}
+                            </div>
+                            <div class="col-md-2">
+                                <h4><span class="label label-primary"><i
+                                        class="fa fa-money"></i> Convert Amount :{{exchangeTransferLabelSecond}}</span>
+                                </h4>
+                                {{> afQuickField name='toAmountSecond' value=toAmountSecond label=false readonly=true }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <!--End exchange-->
                 <div class="form-footer">
                     <button type="submit" class="btn btn-primary save"><i
                             class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
-                    <button type="submit" class="btn btn-primary js-print save-print"><i class="fa fa-print"></i>&nbsp;Submit &
-                        Print
+                    <button type="submit" class="btn btn-primary js-print save-print"><i class="fa fa-print"></i>&nbsp;
+                        Submit & Print
                     </button>
                     <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}
                     </button>
@@ -223,80 +319,81 @@
 <!--Show-->
 <template name="MoneyTransfer_transferProductShow">
     <div class="box-body">
-    {{#if Template.subscriptionsReady}}
-        <dl class="dl-horizontal">
-            <fieldset>
-                <legend>Product</legend>
-                <dt>ID</dt>
-                <dd>{{_id}}</dd>
-                <dt>Product </dt>
-                <dd>{{name}}</dd>
-                <dt>Date</dt>
-                <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
-                <dt>Status</dt>
-                <dd>{{status}}</dd>
-                <dt>Address</dt>
-                <dd>{{address}}</dd>
-            </fieldset>
-        </dl>
+        {{#if Template.subscriptionsReady}}
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>Product</legend>
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Product</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Date</dt>
+                    <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+                    <dt>Status</dt>
+                    <dd>{{status}}</dd>
+                    <dt>Address</dt>
+                    <dd>{{address}}</dd>
+                </fieldset>
+            </dl>
 
-    {{else}}
-        {{> loading}}
-    {{/if}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
     </div>
 </template>
 <template name="MoneyTransfer_transferSenderShow">
     <div class="box-body">
-    {{#if Template.subscriptionsReady}}
-        <dl class="dl-horizontal">
-            <fieldset>
-                <legend>Sender</legend>
-                <dt>ID</dt>
-                <dd>{{_id}}</dd>
-                <dt>Name </dt>
-                <dd>{{name}}</dd>
-                <dt>Gender </dt>
-                <dd>{{gender}}</dd>
-                <dt>Date</dt>
-                <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
-                <dt>Notification</dt>
-                <dd>{{notificationDay}}</dd>
-                <dt>Telephone</dt>
-                <dd>{{telephone}}</dd>
-                <dt>Address</dt>
-                <dd>{{address}}</dd>
-            </fieldset>
-        </dl>
+        {{#if Template.subscriptionsReady}}
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>Sender</legend>
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Name</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Gender</dt>
+                    <dd>{{gender}}</dd>
+                    <dt>Date</dt>
+                    <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
+                    <dt>Notification</dt>
+                    <dd>{{notificationDay}}</dd>
+                    <dt>Telephone</dt>
+                    <dd>{{telephone}}</dd>
+                    <dt>Address</dt>
+                    <dd>{{address}}</dd>
+                </fieldset>
+            </dl>
 
-    {{else}}
-        {{> loading}}
-    {{/if}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
     </div>
-</template><template name="MoneyTransfer_transferReceiverShow">
+</template>
+<template name="MoneyTransfer_transferReceiverShow">
     <div class="box-body">
-    {{#if Template.subscriptionsReady}}
-        <dl class="dl-horizontal">
-            <fieldset>
-                <legend>Receiver</legend>
-                <dt>ID</dt>
-                <dd>{{_id}}</dd>
-                <dt>Name </dt>
-                <dd>{{name}}</dd>
-                <dt>Gender </dt>
-                <dd>{{gender}}</dd>
-                <dt>Date</dt>
-                <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
-                <dt>Notification</dt>
-                <dd>{{notificationDay}}</dd>
-                <dt>Telephone</dt>
-                <dd>{{telephone}}</dd>
-                <dt>Address</dt>
-                <dd>{{address}}</dd>
-            </fieldset>
-        </dl>
+        {{#if Template.subscriptionsReady}}
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>Receiver</legend>
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Name</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Gender</dt>
+                    <dd>{{gender}}</dd>
+                    <dt>Date</dt>
+                    <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
+                    <dt>Notification</dt>
+                    <dd>{{notificationDay}}</dd>
+                    <dt>Telephone</dt>
+                    <dd>{{telephone}}</dd>
+                    <dt>Address</dt>
+                    <dd>{{address}}</dd>
+                </fieldset>
+            </dl>
 
-    {{else}}
-        {{> loading}}
-    {{/if}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
     </div>
 </template>

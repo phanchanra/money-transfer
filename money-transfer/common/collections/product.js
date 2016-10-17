@@ -45,6 +45,20 @@ Product.generalSchema = new SimpleSchema({
             }
         }
     },
+    type: {
+        type: String,
+        label: 'Type',
+        defaultValue: "thai",
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return [
+                    {label: "Thailand", value: "thai"},
+                    {label: "Khmer", value: "khmer"}
+                ];
+            }
+        }
+    },
     memo: {
         type: String,
         label: 'Memo',

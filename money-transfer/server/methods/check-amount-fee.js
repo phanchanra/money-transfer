@@ -1,6 +1,9 @@
+import BigNumber from 'bignumber.js';
+BigNumber.config({ERRORS: false});
+
 import {Fee} from '../../common/collections/fee';
 Meteor.methods({
-    getFee: function (productId, currencyId, amount) {
+    getFee(productId, currencyId, amount) {
         if (productId && currencyId && amount) {
             let fees = Fee.findOne({productId: productId, currencyId: currencyId});
             var tmpFee = [];
@@ -13,7 +16,7 @@ Meteor.methods({
                         ownerFee: obj.ownerFee,
                         agentFee: obj.agentFee,
                         totalFee: obj.customerFee,
-                        totalAmount: amount + obj.customerFee
+                        totalAmount: new BigNumber(amount).add(new BigNumber(obj.customerFee)).toFixed(2)
                     });
                 }
             });

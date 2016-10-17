@@ -44,12 +44,6 @@ Provider.generalSchema = new SimpleSchema({
     telephone: {
         type: String
     },
-
-    email: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Email,
-        optional: true
-    },
     address: {
         type: String,
         optional:true

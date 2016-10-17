@@ -252,6 +252,7 @@ newTmpl.events({
         let convertTo = instance.$('[name="convertTo"]').val();
         let baseAmount = math.round(parseFloat(instance.$('[name="baseAmount"]').val()), 2);
         let toAmount = math.round(parseFloat(instance.$('[name="toAmount"]').val()), 2);
+        let selling = instance.$('[name="selling"]').val();
         clearFrom();
         Session.set("baseCurrencySymbol", false);
         Session.set("convertToSymbol", false);
@@ -267,6 +268,7 @@ newTmpl.events({
         } else {
             itemsCollection.insert({
                 baseCurrency: baseCurrency,
+                selling: selling,
                 convertTo: convertTo,
                 baseAmount: baseAmount,
                 toAmount: toAmount

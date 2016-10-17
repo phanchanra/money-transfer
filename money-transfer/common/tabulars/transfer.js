@@ -58,5 +58,5 @@ tabularOpts.columns = [
     {data: "balanceAmount", title: "Bal Amount"}
 
 ];
-tabularOpts.extraFields=['feeDoc'];
+tabularOpts.extraFields=['feeDoc', 'items'];
 export const TransferTabular = new Tabular.Table(tabularOpts);

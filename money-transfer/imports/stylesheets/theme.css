@@ -5,6 +5,7 @@ hr.style18 {
     border-width: 1px 0 0 0;
     border-radius: 20px;
 }
+
 hr.style18:before {
     display: block;
     content: "";
@@ -15,6 +16,39 @@ hr.style18:before {
     border-radius: 20px;
 }
 
-.borrow-invoice{
+.borrow-invoice {
     padding-bottom: 10px;
 }
+
+<!--
+-->
+/*promotion*/
+<!--
+-->
+.form-group .pro{
+    display: none;
+}
+
+.form-group .pro + .btn-group > label span {
+    width: 30px;
+}
+
+.form-group .pro + .btn-group > label span:first-child {
+    display: none;
+}
+
+.form-group .pro + .btn-group > label span:last-child {
+    display: inline-block;
+}
+
+.form-group .pro:checked + .btn-group > label span:first-child {
+    display: inline-block;
+}
+
+.form-group .pro:checked + .btn-group > label span:last-child {
+    display: none;
+}
+/*
+
+*/
+
