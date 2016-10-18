@@ -55,6 +55,7 @@ Transfer.generalSchema = new SimpleSchema({
     dateNote: {
         type: Date,
         label: "Date Note",
+        optional: true,
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
