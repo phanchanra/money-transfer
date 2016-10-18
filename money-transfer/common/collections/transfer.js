@@ -108,7 +108,7 @@ Transfer.generalSchema = new SimpleSchema({
         },
         custom: function () {
             let transferType = this.field('transferType');
-            if ((transferType.value == 'khmer')||(transferType.value == 'thai')) {
+            if (transferType.value == 'khmer') {
                 if (!this.value) {
                     return 'required';
                 }
@@ -127,7 +127,7 @@ Transfer.generalSchema = new SimpleSchema({
         },
         custom: function () {
             let transferType = this.field('transferType');
-            if (transferType.value == 'khmer' || transferType.value == 'thai') {
+            if (transferType.value == 'khmer') {
                 if (!this.value) {
                     return 'required';
                 }
@@ -153,7 +153,7 @@ Transfer.generalSchema = new SimpleSchema({
         },
         custom: function () {
             let transferType = this.field('transferType');
-            if (transferType.value == 'khmer' || transferType.value == 'thai') {
+            if (transferType.value == 'khmer') {
                 if (!this.value) {
                     return 'required';
                 }
@@ -172,7 +172,7 @@ Transfer.generalSchema = new SimpleSchema({
         },
         custom: function () {
             let transferType = this.field('transferType');
-            if (transferType.value == 'khmer' || transferType.value == 'thai') {
+            if (transferType.value == 'khmer') {
                 if (!this.value) {
                     return 'required';
                 }
