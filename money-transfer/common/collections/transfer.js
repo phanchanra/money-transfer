@@ -52,17 +52,27 @@ Transfer.generalSchema = new SimpleSchema({
             }
         }
     },
-    dateTimeNote: {
+    dateNote: {
         type: Date,
-        label: "Time",
+        label: "Date Note",
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
                 type: 'bootstrap-datetimepicker',
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY HH:mm:ss',
+                    format: 'DD/MM/YYYY',
                     showTodayButton: true
                 }
+            }
+        }
+    },
+    timeNote: {
+        type: String,
+        label:"Time Note",
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: "time"
             }
         }
     },

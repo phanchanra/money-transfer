@@ -19,11 +19,15 @@ Meteor.methods({
         doc.product = Product.findOne(doc.productId);
         //console.log(doc);
         doc.title.invoiceId = doc._id;
-        doc.title.dateTimeNote = doc.dateTimeNote;
+        //doc.title.dateTimeNote = doc.dateTimeNote;
         if (doc.transferType == 'khmer') {
             doc.title.transferTypeIn = 'ខ្មែរ';
+            doc.title.dateNote = '';
+            doc.title.timeNote = '';
         } else {
             doc.title.transferTypeIn = 'ថៃ';
+            doc.title.dateNote = doc.dateNote;
+            doc.title.timeNote = doc.timeNote;
         }
         return doc;
     },

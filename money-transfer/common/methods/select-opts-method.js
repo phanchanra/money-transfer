@@ -135,7 +135,7 @@ SelectOptsMethod.promotion = new ValidatedMethod({
             let list = [], selector = {};
             let searchText = options.searchText;
             let values = options.values;
-
+            let currentDate=moment().toDate();
             if (searchText) {
                 selector = {
                     $or: [
@@ -145,7 +145,11 @@ SelectOptsMethod.promotion = new ValidatedMethod({
                     //status: "E"
                 };
             } else if (values.length) {
-                selector = {_id: {$in: values}};
+                selector = {_id: {$in: values},startDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+                    expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}};
+            }else{
+                selector = {tartDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+                    expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}};
             }
 
 
