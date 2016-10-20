@@ -98,6 +98,12 @@ export const transferDetailReport = new ValidatedMethod({
                         discountFee:1,
                         totalFee:1,
                         agentFee:1,
+                        convertToFirst:1,
+                        baseAmountFirst:1,
+                        toAmountFirst:1,
+                        convertToSecond:1,
+                        baseAmountSecond:1,
+                        toAmountSecond:1,
                         totalAmount:1,
                         sumProduct: {
                             $sum: {
@@ -135,7 +141,7 @@ export const transferDetailReport = new ValidatedMethod({
                 data.content = transfers[0].data;
                 data.footer.total = transfers[0].total;
             }
-            console.log(data);
+            //console.log(data);
             return data
         }
     }

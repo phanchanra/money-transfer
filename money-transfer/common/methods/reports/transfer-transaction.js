@@ -99,6 +99,10 @@ export const transferTransactionReport = new ValidatedMethod({
                         totalFee: {$sum: '$totalFee'},
                         agentFee: {$sum: '$agentFee'},
                         totalAmount: {$sum: '$totalAmount'},
+                        baseAmountFirst: {$sum: '$baseAmountFirst'},
+                        baseAmountSecond: {$sum: '$baseAmountSecond'},
+                        toAmountFirst: {$sum: '$toAmountFirst'},
+                        toAmountSecond: {$sum: '$toAmountSecond'},
                         totalUSD: {
                             $sum: {
                                 $cond: {
@@ -119,6 +123,77 @@ export const transferTransactionReport = new ValidatedMethod({
                                 }
                             }
                         },
+                        //
+                        //convert money
+                        totalBaseAmountFirstUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$currencyId", "THB"]},
+                                    then: {$divide: ["$baseAmountFirst", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$currencyId', 'KHR']
+                                            },
+                                            then: {$divide: ['$baseAmountFirst', exchange.rates.KHR]},
+                                            else: "$baseAmountFirst"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        totalBaseAmountSecondUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$currencyId", "THB"]},
+                                    then: {$divide: ["$baseAmountSecond", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$currencyId', 'KHR']
+                                            },
+                                            then: {$divide: ['$baseAmountSecond', exchange.rates.KHR]},
+                                            else: "$baseAmountSecond"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        totalToAmountFirstUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$convertToFirst", "THB"]},
+                                    then: {$divide: ["$toAmountFirst", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$convertToFirst', 'KHR']
+                                            },
+                                            then: {$divide: ['$toAmountFirst', exchange.rates.KHR]},
+                                            else: "$toAmountFirst"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        totalToAmountSecondUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$convertToSecond", "THB"]},
+                                    then: {$divide: ["$toAmountSecond", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$convertToSecond', 'KHR']
+                                            },
+                                            then: {$divide: ['$toAmountSecond', exchange.rates.KHR]},
+                                            else: "$toAmountSecond"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        //
                         customerFeeUSD: {
                             $sum: {
                                 $cond: {
@@ -214,10 +289,14 @@ export const transferTransactionReport = new ValidatedMethod({
                         },
                         total: {$sum: '$totalUSD'},
                         customerFee: {$sum: '$customerFeeUSD'},
-                        // discountFee: {$sum: '$discountFeeSum'},
+
                         agentFee: {$sum: '$agentFeeUSD'},
                         totalFee: {$sum: '$totalFeeUSD'},
-                        totalAmount: {$sum: '$totalAmountUSD'}
+                        totalAmount: {$sum: '$totalAmountUSD'},
+                        totalBaseAmountFirst: {$sum: '$totalBaseAmountFirstUSD'},
+                        totalBaseAmountSecond: {$sum: '$totalBaseAmountSecondUSD'},
+                        totalToAmountFirst: {$sum: '$totalToAmountFirstUSD'},
+                        totalToAmountSecond: {$sum: '$totalToAmountSecondUSD'},
                     }
                 }
             ]);
@@ -228,6 +307,12 @@ export const transferTransactionReport = new ValidatedMethod({
                 // data.footer.discountFee = transfers[0].discountFee;
                 data.footer.agentFee = transfers[0].agentFee;
                 data.footer.totalFee = transfers[0].totalFee;
+                //
+                data.footer.totalBaseAmountFirst = transfers[0].totalBaseAmountFirst;
+                data.footer.totalBaseAmountSecond = transfers[0].totalBaseAmountSecond;
+                data.footer.totalToAmountFirst = transfers[0].totalToAmountFirst;
+                data.footer.totalToAmountSecond = transfers[0].totalToAmountSecond;
+
                 data.footer.totalAmount = transfers[0].totalAmount;
             }
             return data

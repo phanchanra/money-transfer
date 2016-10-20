@@ -29,7 +29,7 @@ import '../../../core/client/components/form-footer.js';
 import {Transfer} from '../../common/collections/transfer';
 import {Fee} from '../../common/collections/fee';
 let tmpCollection = new Mongo.Collection(null);
-let exchangeItemCollection = new Mongo.Collection(null);
+//let exchangeItemCollection = new Mongo.Collection(null);
 // Tabular
 import {TransferTabular} from '../../common/tabulars/transfer';
 //function
@@ -243,14 +243,15 @@ formTmpl.onRendered(function () {
     Meteor.call('promotionLabel', transferDate, function (error, result) {
         if (result) {
             state.set('promotionLabel', 'Promotion');
-            $('.hide-show').slideDown(300);
+            //$('.hide-show').slideDown(300);
 
         } else {
             state.set('promotionLabel', "None Promotion");
-            $('.hide-show').slideUp(300);
+            //$('.hide-show').slideUp(300);
 
         }
     });
+    $('.hide-show').slideDown(300);
 
 
 });
@@ -266,26 +267,26 @@ formTmpl.helpers({
         if (currentData) {
             data.type = 'update';
             data.doc = Transfer.findOne({_id: currentData._id});
-            tmpExchangeTransfer = [];
-            data.doc.items.forEach(function (obj) {
-                tmpExchangeTransfer.push({
-                    convertTo: obj.convertTo,
-                    selling: obj.selling
-                });
-                if (obj != undefined) {
-                    //state.set("exchangeTransfer", obj.convertTo);
-                    if (obj._id == "001") {
-                        state.set('baseAmountFirst', obj.baseAmount);
-                        state.set('toAmountFirst', obj.toAmount);
-
-                    } else if (obj._id == "002") {
-                        state.set('baseAmountSecond', obj.baseAmount);
-                        state.set('toAmountSecond', obj.toAmount);
-                    }
-                }
-            });
+            // tmpExchangeTransfer = [];
+            // data.doc.items.forEach(function (obj) {
+            //     tmpExchangeTransfer.push({
+            //         convertTo: obj.convertTo,
+            //         selling: obj.selling
+            //     });
+            //     if (obj != undefined) {
+            //         //state.set("exchangeTransfer", obj.convertTo);
+            //         if (obj._id == "001") {
+            //             state.set('baseAmountFirst', obj.baseAmount);
+            //             state.set('toAmountFirst', obj.toAmount);
+            //
+            //         } else if (obj._id == "002") {
+            //             state.set('baseAmountSecond', obj.baseAmount);
+            //             state.set('toAmountSecond', obj.toAmount);
+            //         }
+            //     }
+            // });
             state.set('promotion', data.doc.promotionAmount);
-            state.set("exchangeTransfer", tmpExchangeTransfer);
+            //state.set("exchangeTransfer", tmpExchangeTransfer);
 
             //
 
@@ -349,6 +350,7 @@ formTmpl.helpers({
         let instance = Template.instance();
         return instance.amount.get();
     },
+    /////////////
     exchangeTransferLabelFirst(){
         if (Session.get('currencyId')) {
             try {
@@ -362,7 +364,7 @@ formTmpl.helpers({
             } catch (e) {
             }
         }
-        return '';
+        //return '';
 
 
     },
@@ -379,7 +381,7 @@ formTmpl.helpers({
             } catch (e) {
             }
         }
-        return '';
+        //return '';
     },
     exchangeTransferFormFirst(){
         if (Session.get('currencyId')) {
@@ -393,7 +395,7 @@ formTmpl.helpers({
             } catch (e) {
             }
         }
-        return '';
+        //return '';
 
 
     },
@@ -410,20 +412,29 @@ formTmpl.helpers({
 
             }
         }
-        return '';
+        //return '';
     },
-    baseAmountFirst(){
-        return state.get('baseAmountFirst');
-    },
-    baseAmountSecond(){
-        return state.get('baseAmountSecond');
-    },
+    // baseAmountFirst(){
+    //     return state.get('baseAmountFirst');
+    // },
+    // baseAmountSecond(){
+    //     return state.get('baseAmountSecond');
+    // },
     toAmountFirst(){
-        return state.get('toAmountFirst');
+        let toAmountFirst = state.get('toAmountFirst');
+        if (toAmountFirst) {
+            return toAmountFirst;
+        }
+
     },
     toAmountSecond(){
-        return state.get('toAmountSecond');
+        let toAmountSecond = state.get('toAmountSecond');
+        if (toAmountSecond) {
+            return toAmountSecond;
+        }
+
     },
+    //////////////////////
     // isExist(){
     //     if (Session.get('amountCheck')) {
     //         return true;
@@ -494,13 +505,13 @@ formTmpl.events({
             instance.$('[name="discountFee"]').prop('readonly', false);
             Meteor.call('promotionLabel', transferDate, function (error, result) {
                 if (result) {
-                    //state.set('promotionLabel', 'Promotion');
-                    $('.hide-show').slideDown(300);
+                    state.set('promotionLabel', 'Promotion');
+                    //$('.hide-show').slideDown(300);
 
                 }
                 //else {
-                //state.set('promotionLabel', "None Promotion");
-                //$('.hide-show').slideUp(300);
+                state.set('promotionLabel', "None Promotion");
+                $('.hide-show').slideDown(300);
 
                 //}
             });
@@ -669,7 +680,9 @@ formTmpl.events({
                         if (result) {
                             tmpCollection.remove({});
                             tmpCollection.insert(result);
-                            let totalAmountPri = new BigNumber(amount).minus(new BigNumber(result.customerFee)).add(new BigNumber(result.customerFee)).toFixed(2);
+                            let totalAmountPri = new BigNumber(amount).minus(new BigNumber(result.customerFee)).toFixed(2);
+                            //let totalAmountPri = new BigNumber(amount).minus(new BigNumber(result.customerFee)).add(new BigNumber(result.customerFee)).toFixed(2);
+                            //let totalAmountPri=new BigNumber(amount).minus(new BigNumber(result.customerFee).times(new BigNumber(new BigNumber(2))));
                             let totalAmount = new BigNumber(totalAmountPri).minus(new BigNumber(totalExchangeAmount)).toFixed(2);
                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
                             instance.$('.save').prop('disabled', false);
@@ -735,29 +748,29 @@ formTmpl.events({
                 //instance.toAmountFirst.set(res);
                 tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
 
-                if (exchangeItemCollection.findOne({_id: "001"}) != undefined) {
-                    exchangeItemCollection.update(
-                        {_id: "001"},
-                        {
-                            $set: {
-                                baseCurrency: currencyId,
-                                selling: sellingFirst,
-                                convertTo: convertToFirst,
-                                baseAmount: baseAmountFirst,
-                                toAmount: res
-                            }
-                        }
-                    );
-                } else {
-                    exchangeItemCollection.insert({
-                        _id: '001',
-                        baseCurrency: currencyId,
-                        selling: sellingFirst,
-                        convertTo: convertToFirst,
-                        baseAmount: baseAmountFirst,
-                        toAmount: res
-                    });
-                }
+                // if (exchangeItemCollection.findOne({_id: "001"}) != undefined) {
+                //     exchangeItemCollection.update(
+                //         {_id: "001"},
+                //         {
+                //             $set: {
+                //                 baseCurrency: currencyId,
+                //                 selling: sellingFirst,
+                //                 convertTo: convertToFirst,
+                //                 baseAmount: baseAmountFirst,
+                //                 toAmount: res
+                //             }
+                //         }
+                //     );
+                // } else {
+                //     exchangeItemCollection.insert({
+                //         _id: '001',
+                //         baseCurrency: currencyId,
+                //         selling: sellingFirst,
+                //         convertTo: convertToFirst,
+                //         baseAmount: baseAmountFirst,
+                //         toAmount: res
+                //     });
+                // }
             });
         }
 
@@ -789,29 +802,29 @@ formTmpl.events({
                 state.set('toAmountSecond', res);
                 tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
 
-                if (exchangeItemCollection.findOne({_id: "002"}) != undefined) {
-                    exchangeItemCollection.update(
-                        {_id: "002"},
-                        {
-                            $set: {
-                                baseCurrency: currencyId,
-                                selling: sellingSecond,
-                                convertTo: convertToSecond,
-                                baseAmount: baseAmountSecond,
-                                toAmount: res
-                            }
-                        }
-                    );
-                } else {
-                    exchangeItemCollection.insert({
-                        _id: "002",
-                        baseCurrency: currencyId,
-                        selling: sellingSecond,
-                        convertTo: convertToSecond,
-                        baseAmount: baseAmountSecond,
-                        toAmount: res
-                    });
-                }
+                // if (exchangeItemCollection.findOne({_id: "002"}) != undefined) {
+                //     exchangeItemCollection.update(
+                //         {_id: "002"},
+                //         {
+                //             $set: {
+                //                 baseCurrency: currencyId,
+                //                 selling: sellingSecond,
+                //                 convertTo: convertToSecond,
+                //                 baseAmount: baseAmountSecond,
+                //                 toAmount: res
+                //             }
+                //         }
+                //     );
+                // } else {
+                //     exchangeItemCollection.insert({
+                //         _id: "002",
+                //         baseCurrency: currencyId,
+                //         selling: sellingSecond,
+                //         convertTo: convertToSecond,
+                //         baseAmount: baseAmountSecond,
+                //         toAmount: res
+                //     });
+                // }
             });
         }
     },
@@ -862,22 +875,30 @@ let hooksObject = {
     before: {
         insert(doc){
             doc.feeDoc = tmpCollection.findOne();
-            //let items = [];
-            //let data = exchangeItemCollection.find().fetch();
+            // let items = {};
+            // let data = exchangeItemCollection.find().fetch();
             // data.forEach(function (obj) {
             //     //if (obj != undefined) {
-            //         //delete obj._id;
-            //         items.push(obj);
+            //     //delete obj._id;
+            //
+            //     _id = obj._id,
+            //         baseCurrency = obj.baseCurrency,
+            //         selling = obj.sellingSecond,
+            //         convertTo = obj.convertToSecond,
+            //         baseAmount = obj.baseAmountSecond,
+            //         toAmount = obj.toAmount
+            //
             //     //}
             // });
-            doc.items = exchangeItemCollection.find().fetch();
+            // doc.items = items;
+            //doc.items = exchangeItemCollection.find().fetch();
             return doc;
         },
         // ,
         update(doc){
             //console.log(doc);
             doc.$set.feeDoc = tmpCollection.findOne();
-            doc.$set.items = exchangeItemCollection.find().fetch();
+            //doc.$set.items = exchangeItemCollection.find().fetch();
             return doc;
         }
     },
@@ -889,20 +910,20 @@ let hooksObject = {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
 
                 });
-                // tmpCollection.remove({});
+                 tmpCollection.remove({});
                 // exchangeItemCollection.remove({});
             }
         } else {
-            console.log(result);
             if (Session.get("savePrint")) {
                 Meteor.call('invoice', result, function (err, doc) {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
                 });
-
-
             }
             // else {
-            //     tmpCollection.remove({});
+                tmpCollection.remove({});
+                state.set('toAmountFirst', 0);
+                state.set('toAmountSecond', 0);
+                state.set("exchangeTransfer", 0);
             //     exchangeItemCollection.remove({});
             // }
         }

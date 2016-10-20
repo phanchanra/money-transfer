@@ -183,7 +183,9 @@ Meteor.methods({
             //         }
             //     )
             // }
-            Meteor.call('updateCustomerExpireDay', {doc});
+            if (doc.senderId != '' || doc.senderId != undefined) {
+                Meteor.call('updateCustomerExpireDay', {doc});
+            }
         } else if (doc.type == "OUT") {
             if (previousTransferUpdate) {
                 //update Transfer
@@ -344,7 +346,9 @@ Meteor.methods({
             //         }
             //     )
             // }
-            Meteor.call('updateCustomerExpireDay', {doc});
+            if (doc.senderId != '' || doc.senderId != undefined) {
+                Meteor.call('updateCustomerExpireDay', {doc});
+            }
         }
         //});
     }
