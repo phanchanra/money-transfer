@@ -69,6 +69,12 @@
                                     <th>Dis%</th>
                                     <th>Total Fee</th>
                                     <th>Agent Fee</th>
+                                    <th>Ex F</th>
+                                    <th>Con F</th>
+                                    <th>To AF</th>
+                                    <th>Ex S</th>
+                                    <th>Con S</th>
+                                    <th>To AS</th>
                                     <th>Total Amount</th>
                                 </tr>
                                 </thead>
@@ -87,12 +93,18 @@
                                         <td align="center">{{discountFee}}</td>
                                         <td align="right">{{numFormat totalFee "0,0.00"}}</td>
                                         <td align="right">{{numFormat agentFee "0,0.00"}}</td>
+                                        <td align="right">{{numFormat baseAmountFirst "0,0.00"}}</td>
+                                        <td align="right">{{convertToFirst}}</td>
+                                        <td align="right">{{numFormat toAmountFirst "0,0.00"}}</td>
+                                        <td align="right">{{numFormat baseAmountSecond "0,0.00"}}</td>
+                                        <td align="right">{{convertToSecond}}</td>
+                                        <td align="right">{{numFormat toAmountSecond "0,0.00"}}</td>
                                         <td align="right">{{numFormat totalAmount "0,0.00"}}</td>
                                     </tr>
 
                                 {{/each}}
                                 <tr>
-                                    <td colspan="11" style="text-align: right;">Grand Total:</td>
+                                    <td colspan="17" style="text-align: right;">Grand Total:</td>
 
                                     <td align="right" style="background-color: lightgrey;">{{numFormat footer.total "0,0.00"}}</td>
                                 </tr>

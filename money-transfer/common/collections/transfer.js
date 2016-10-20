@@ -69,7 +69,7 @@ Transfer.generalSchema = new SimpleSchema({
     },
     timeNote: {
         type: String,
-        label:"Time Note",
+        label: "Time Note",
         optional: true,
         autoform: {
             afFieldInput: {
@@ -337,38 +337,87 @@ Transfer.accountSchema = new SimpleSchema({
         optional: true,
         blackbox: true
     },
-    'items': {
-        type: [Object],
-        optional: true,
-    },
-    'items.$._id': {
-        type: String,
-        optional: true
-    },
-    'items.$.baseCurrency': {
-        type: String,
-        optional: true
-    },
-    'items.$.selling': {
-        type: String,
-        optional: true
-    },
-    'items.$.convertTo': {
-        type: String,
-        optional: true
-    },
-    'items.$.baseAmount': {
+    //
+    sellingFirst: {
         type: Number,
         decimal: true,
-        optional: true,
-        defaultValue: 0
+        defaultValue: 0,
+        optional: true
     },
-    'items.$.toAmount': {
+    baseAmountFirst: {
         type: Number,
         decimal: true,
-        optional: true,
-        defaultValue: 0
+        defaultValue: 0,
+        optional: true
+    },
+    convertToFirst: {
+        type: String,
+        optional: true
+    },
+    toAmountFirst: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    //
+    sellingSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    baseAmountSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    convertToSecond: {
+        type: String,
+        optional: true
+    },
+    toAmountSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
     }
+    // //
+    // 'items': {
+    //     type: Object,
+    //     optional: true,
+    // },
+    // 'items._id': {
+    //     type: String,
+    //     optional: true
+    // },
+    // 'items.baseCurrency': {
+    //     type: String,
+    //     optional: true
+    // },
+    // 'items.selling': {
+    //     type: Number,
+    //     decimal:true,
+    //     defaultValue:0,
+    //     optional: true
+    // },
+    // 'items.convertTo': {
+    //     type: String,
+    //     optional: true
+    // },
+    // 'items.baseAmount': {
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // 'items.toAmount': {
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true,
+    // }
 });
 
 Transfer.attachSchema([

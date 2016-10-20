@@ -29,6 +29,11 @@ Meteor.methods({
             doc.title.dateNote = doc.dateNote;
             doc.title.timeNote = doc.timeNote;
         }
+        if (doc.type == 'IN') {
+            doc.title.transferReveive = "ទទួល";
+        } else {
+            doc.title.transferReveive = "ផ្ទេរ";
+        }
         return doc;
     },
     getSenderDoc(tmpId){

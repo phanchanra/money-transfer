@@ -87,7 +87,12 @@ export const transferSummaryReport = new ValidatedMethod({
                     }
                 },
                 {$unwind: {path: '$productDoc'}},
-
+                // {
+                //     $project: {
+                //         convertToFirst: 1,
+                //         convertToSecond: 1
+                //     },
+                // },
                 {
                     $group: {
                         _id: {
@@ -99,9 +104,83 @@ export const transferSummaryReport = new ValidatedMethod({
                         customerFee: {$sum: '$customerFee'},
                         discountFee: {$sum: '$discountFee'},
                         totalFee: {$sum: '$totalFee'},
+                        baseAmountFirst: {$sum: '$baseAmountFirst'},
+                        baseAmountSecond: {$sum: '$baseAmountSecond'},
+                        toAmountFirst: {$sum: '$toAmountFirst'},
+                        toAmountSecond: {$sum: '$toAmountSecond'},
                         totalAmount: {$sum: '$totalAmount'},
                         productDoc: {$last: "$productDoc"},
+                        convertToFirst:{$last:"$convertToFirst"},
+                        convertToSecond:{$last:"$convertToSecond"},
                         //convert money
+                        totalBaseAmountFirstUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$currencyId", "THB"]},
+                                    then: {$divide: ["$baseAmountFirst", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$currencyId', 'KHR']
+                                            },
+                                            then: {$divide: ['$baseAmountFirst', exchange.rates.KHR]},
+                                            else: "$baseAmountFirst"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        totalBaseAmountSecondUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$currencyId", "THB"]},
+                                    then: {$divide: ["$baseAmountSecond", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$currencyId', 'KHR']
+                                            },
+                                            then: {$divide: ['$baseAmountSecond', exchange.rates.KHR]},
+                                            else: "$baseAmountSecond"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        totalToAmountFirstUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$convertToFirst", "THB"]},
+                                    then: {$divide: ["$toAmountFirst", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$convertToFirst', 'KHR']
+                                            },
+                                            then: {$divide: ['$toAmountFirst', exchange.rates.KHR]},
+                                            else: "$toAmountFirst"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        totalToAmountSecondUSD: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$convertToSecond", "THB"]},
+                                    then: {$divide: ["$toAmountSecond", exchange.rates.THB]},
+                                    else: {
+                                        $cond: {
+                                            if: {
+                                                $eq: ['$convertToSecond', 'KHR']
+                                            },
+                                            then: {$divide: ['$toAmountSecond', exchange.rates.KHR]},
+                                            else: "$toAmountSecond"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         totalAmountUSD: {
                             $sum: {
                                 $cond: {//condition sum by currency and product
@@ -194,6 +273,12 @@ export const transferSummaryReport = new ValidatedMethod({
                                 customerFee: '$customerFee',
                                 discountFee: '$discountFee',
                                 totalFee: '$totalFee',
+                                baseAmountFirst: '$baseAmountFirst',
+                                baseAmountSecond: '$baseAmountSecond',
+                                convertToFirst: '$convertToFirst',
+                                convertToSecond: '$convertToSecond',
+                                toAmountFirst: '$toAmountFirst',
+                                toAmountSecond: '$toAmountSecond',
                                 totalAmount: '$totalAmount'
                             }
                         },
@@ -201,6 +286,10 @@ export const transferSummaryReport = new ValidatedMethod({
                         totalCustomerFee: {$sum: '$totalCustomerFeeUSD'},
                         totalDiscountFee: {$sum: '$totalDiscountFee'},
                         totalTotalFee: {$sum: '$totalTotalFeeUSD'},
+                        totalBaseAmountFirst: {$sum: '$totalBaseAmountFirstUSD'},
+                        totalBaseAmountSecond: {$sum: '$totalBaseAmountSecondUSD'},
+                        totalToAmountFirst: {$sum: '$totalToAmountFirstUSD'},
+                        totalToAmountSecond: {$sum: '$totalToAmountSecondUSD'},
                         totalTotalAmount: {$sum: '$totalTotalAmountUSD'}
                     }
                 },
@@ -212,6 +301,10 @@ export const transferSummaryReport = new ValidatedMethod({
                         totalCustomerFee: {$sum: "$totalCustomerFee"},
                         totalDiscountFee: {$sum: "$totalDiscountFee"},
                         totalTotalFee: {$sum: '$totalTotalFee'},
+                        totalBaseAmountFirst: {$sum: '$totalBaseAmountFirst'},
+                        totalBaseAmountSecond: {$sum: '$totalBaseAmountSecond'},
+                        totalToAmountFirst: {$sum: '$totalToAmountFirst'},
+                        totalToAmountSecond: {$sum: '$totalToAmountSecond'},
                         totalTotalAmount: {$sum: '$totalTotalAmount'}
                     }
                 }
@@ -223,6 +316,10 @@ export const transferSummaryReport = new ValidatedMethod({
                 data.footer.totalCustomerFee = transfers[0].totalCustomerFee;
                 data.footer.totalDiscountFee = transfers[0].totalDiscountFee;
                 data.footer.totalTotalFee = transfers[0].totalTotalFee;
+                data.footer.totalBaseAmountFirst = transfers[0].totalBaseAmountFirst;
+                data.footer.totalBaseAmountSecond = transfers[0].totalBaseAmountSecond;
+                data.footer.totalToAmountFirst = transfers[0].totalToAmountFirst;
+                data.footer.totalToAmountSecond = transfers[0].totalToAmountSecond;
                 data.footer.totalTotalAmount = transfers[0].totalTotalAmount;
             }
             console.log(data);

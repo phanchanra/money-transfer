@@ -68,6 +68,12 @@
                                     <th>Cus Fee</th>
                                     <th>Dis%</th>
                                     <th>Total Fee</th>
+                                    <th>Ex F</th>
+                                    <th>Con F</th>
+                                    <th>To AF</th>
+                                    <th>Ex S</th>
+                                    <th>Con S</th>
+                                    <th>To AS</th>
                                     <th>Total Amount</th>
                                 </tr>
                                 </thead>
@@ -91,6 +97,24 @@
                                             {{numFormat totalTotalFee "0,0.00"}}
                                         </td>
                                         <td align="right">
+                                            {{numFormat totalBaseAmountFirst "0,0.00"}}
+                                        </td>
+                                        <td align="right">
+
+                                        </td>
+                                        <td align="right">
+                                            {{numFormat totalToAmountFirst "0,0.00"}}
+                                        </td>
+                                        <td align="right">
+                                            {{numFormat totalBaseAmountSecond "0,0.00"}}
+                                        </td>
+                                        <td align="right">
+
+                                        </td>
+                                        <td align="right">
+                                            {{numFormat totalToAmountSecond "0,0.00"}}
+                                        </td>
+                                        <td align="right">
                                             {{numFormat totalTotalAmount "0,0.00"}}
                                         </td>
                                     </tr>
@@ -102,6 +126,12 @@
                                             <td align="right">{{numFormat obj.customerFee "0,0.00"}}</td>
                                             <td align="right">{{obj.discountFee}}</td>
                                             <td align="right">{{numFormat obj.totalFee "0,0.00"}}</td>
+                                            <td align="right">{{numFormat obj.baseAmountFirst "0,0.00"}}</td>
+                                            <td align="right">{{obj.convertToFirst}}</td>
+                                            <td align="right">{{obj.toAmountFirst}}</td>
+                                            <td align="right">{{numFormat obj.baseAmountSecond "0,0.00"}}</td>
+                                            <td align="right">{{obj.convertToSecond}}</td>
+                                            <td align="right">{{numFormat obj.toAmountSecond "0,0.00"}}</td>
                                             <td align="right">{{numFormat obj.totalAmount "0,0.00"}}</td>
 
                                         </tr>
@@ -121,6 +151,24 @@
                                     </td>
                                     <td align="right" style="background-color: lightgrey;">
                                         {{numFormat footer.totalTotalFee "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalBaseAmountFirst "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        <!--{{numFormat footer.totalBaseAmountFirst "0,0.00"}}-->
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalToAmountFirst "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalBaseAmountSecond "0,0.00"}}
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        <!--{{numFormat footer.totalBaseAmountSecond "0,0.00"}}-->
+                                    </td>
+                                    <td align="right" style="background-color: lightgrey;">
+                                        {{numFormat footer.totalToAmountSecond "0,0.00"}}
                                     </td>
                                     <td align="right" style="background-color: lightgrey;">
                                         {{numFormat footer.totalTotalAmount "0,0.00"}}
