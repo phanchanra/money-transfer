@@ -234,12 +234,43 @@ formTmpl.onCreated(function () {
 });
 // Form
 formTmpl.onRendered(function () {
+    jQuery(function () {
+        jQuery("#timeNote").validate({
+            expression: "if (VAL) return true; else return false;",
+            message: "TimeNote is required"
+        });
+        jQuery("#dateNote").validate({
+            expression: "if (VAL) return true; else return false;",
+            message: "DateNote is required"
+        });
+        jQuery("#senderId").validate({
+            expression: "if (VAL) return true; else return false;",
+            message: "Please make a selection"
+        });
+        jQuery("#senderTelephone").validate({
+            expression: "if (VAL) return true; else return false;",
+            message: "DateNote is required"
+        });
+        jQuery("#receiverId").validate({
+            expression: "if (VAL) return true; else return false;",
+            message: "Please make a selection"
+        });
+        jQuery("#receiverTelephone").validate({
+            expression: "if (VAL) return true; else return false;",
+            message: "DateNote is required"
+        });
+
+    });
+
+
+    //
     $('[name="amount"]').prop("readonly", true);
     $('[name="sellingFirst"]').prop("readonly", true);
     $('[name="sellingSecond"]').prop("readonly", true);
     $('[name="baseAmountFirst"]').prop("readonly", true);
     $('[name="baseAmountSecond"]').prop("readonly", true);
     let transferDate = $('[name="transferDate"]').val();
+    Session.set('transferType', $('[name="transferType"]').val());
     Meteor.call('promotionLabel', transferDate, function (error, result) {
         if (result) {
             state.set('promotionLabel', 'Promotion');
@@ -248,6 +279,7 @@ formTmpl.onRendered(function () {
         } else {
             state.set('promotionLabel', "None Promotion");
             //$('.hide-show').slideUp(300);
+            state.set('promotion', 0);
 
         }
     });
@@ -285,7 +317,7 @@ formTmpl.helpers({
             //         }
             //     }
             // });
-            state.set('promotion', data.doc.promotionAmount);
+            //state.set('promotion', data.doc.promotionAmount);
             //state.set("exchangeTransfer", tmpExchangeTransfer);
 
             //
@@ -302,8 +334,6 @@ formTmpl.helpers({
         return data;
     },
     currencyList(){
-        //let instance = Template.instance();
-        //let currencies = instance.currencyList.get();
         let currencies = state.get('currencyList');
         if (currencies) {
             return currencies.map(function (c) {
@@ -436,11 +466,11 @@ formTmpl.helpers({
     },
     //////////////////////
     // isExist(){
-    //     if (Session.get('amountCheck')) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    //     let transferType = Session.get('transferType');
+    //     console.log(transferType);
+    //     return transferType == 'thai';
+    //
+    // },
     // toAmountFirst(){
     //     let instance = Template.instance();
     //     return instance.toAmountFirst.get();
@@ -467,6 +497,9 @@ invoice.events({
     }
 });
 formTmpl.events({
+    // 'submit form': (event) => {
+    //     event.preventDefault();
+    // },
     'change [name="promotionId"]'(e, instance){
         let promotionId = $(e.currentTarget).val();
         let transferDate = instance.$('[name="transferDate"]').val();
@@ -520,9 +553,22 @@ formTmpl.events({
         }
 
     },
+    'click [name="type"]'(e, instance){
+        let type = $("input:radio[name=type]:checked").val();
+        let amount = $('[name="amount"]').val();
+        let totalFee = $('[name="totalFee"]').val();
+        let totalAmount = new BigNumber(amount).add(new BigNumber(totalFee)).toFixed(2);
+        //Session.set('myType', type);
+        if (type == "IN") {
+            tmpCollection.update({}, {$set: {totalAmount: amount}});
+        } else if (type == "OUT") {
+            tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+        }
+    },
     'change [name="senderId"]'(e, instance){
         let senderId = $(e.currentTarget).val();
         Session.set('senderId', {senderId});
+
     },
     'change [name="receiverId"]'(e, instance){
         let receiverId = $(e.currentTarget).val();
@@ -595,6 +641,9 @@ formTmpl.events({
         let currencyId = instance.$('[name="currencyId"]').val();
         //selling rate 1
         let baseAmountFirst = instance.$('[name="baseAmountFirst"]').val();
+        //let type = instance.$("[name='type']").val();
+        let type = $("input:radio[name=type]:checked").val();
+        let customerFee = instance.$("[name='customerFee']").val();
         //selling rate 2
         let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
         let totalExchangeAmount = new BigNumber(baseAmountFirst).add(new BigNumber(baseAmountSecond)).toFixed(2);
@@ -610,13 +659,14 @@ formTmpl.events({
                     tmpCollection.insert(result);
                     let totalAmountPri = calculateTotalAmount(amount, result.customerFee);
                     let totalAmount = new BigNumber(totalAmountPri).minus(new BigNumber(totalExchangeAmount)).toFixed(2);
-
+                    //let typeIn = new BigNumber(amount).minus(new BigNumber(customerFee)).toFixed(2);
                     Session.set("totalAmount", totalAmount);
-                    //Session.set("totalAmount", result.customerFee);
-                    //state.set("toAmountFirst", totalAmount);
-                    //state.set("toAmountSecond", totalAmount);
 
-                    tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+                    if (type == "IN") {
+                        tmpCollection.update({}, {$set: {totalAmount: amount}});
+                    } else if (type == "OUT") {
+                        tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+                    }
                     instance.$('.save').prop('disabled', false);
                     instance.$('.save-print').prop('disabled', false);
                     instance.$('[name="baseAmountFirst"]').val(0);
@@ -910,7 +960,7 @@ let hooksObject = {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
 
                 });
-                 tmpCollection.remove({});
+                tmpCollection.remove({});
                 // exchangeItemCollection.remove({});
             }
         } else {
@@ -920,10 +970,10 @@ let hooksObject = {
                 });
             }
             // else {
-                tmpCollection.remove({});
-                state.set('toAmountFirst', 0);
-                state.set('toAmountSecond', 0);
-                state.set("exchangeTransfer", 0);
+            tmpCollection.remove({});
+            state.set('toAmountFirst', 0);
+            state.set('toAmountSecond', 0);
+            state.set("exchangeTransfer", 0);
             //     exchangeItemCollection.remove({});
             // }
         }

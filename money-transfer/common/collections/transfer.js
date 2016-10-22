@@ -94,6 +94,7 @@ Transfer.generalSchema = new SimpleSchema({
         type: String,
         label: 'Sender',
         optional: true,
+        // defaultValue:'0',
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -107,14 +108,15 @@ Transfer.generalSchema = new SimpleSchema({
                 }
             }
         },
-        custom: function () {
-            let transferType = this.field('transferType');
-            if (transferType.value == 'khmer') {
-                if (!this.value) {
-                    return 'required';
-                }
-            }
-        }
+        // custom: function () {
+        //     //let transferType = this.field('transferType');
+        //     if (!this.field('transferType').value == 'thai' && !this.value) {
+        //         //if (!this.value) {
+        //         //return 'required';
+        //         return "required";
+        //         //}
+        //     }
+        // }
     },
     senderTelephone: {
         type: String,
@@ -126,14 +128,14 @@ Transfer.generalSchema = new SimpleSchema({
                 return inputmaskOptions.phone();
             }
         },
-        custom: function () {
-            let transferType = this.field('transferType');
-            if (transferType.value == 'khmer') {
-                if (!this.value) {
-                    return 'required';
-                }
-            }
-        }
+        // custom: function () {
+        //     let transferType = this.field('transferType');
+        //     if (transferType.value == 'thai') {
+        //         if (!this.value) {
+        //             return 'requiredSenderPhone';
+        //         }
+        //     }
+        // }
     },
     receiverId: {
         type: String,
@@ -152,14 +154,14 @@ Transfer.generalSchema = new SimpleSchema({
                 }
             }
         },
-        custom: function () {
-            let transferType = this.field('transferType');
-            if (transferType.value == 'khmer') {
-                if (!this.value) {
-                    return 'required';
-                }
-            }
-        }
+        // custom: function () {
+        //     let transferType = this.field('transferType');
+        //     if (transferType.value == 'khmer') {
+        //         if (!this.value) {
+        //             return 'required';
+        //         }
+        //     }
+        // }
     },
     receiverTelephone: {
         type: String,
@@ -171,14 +173,14 @@ Transfer.generalSchema = new SimpleSchema({
                 return inputmaskOptions.phone();
             }
         },
-        custom: function () {
-            let transferType = this.field('transferType');
-            if (transferType.value == 'khmer') {
-                if (!this.value) {
-                    return 'required';
-                }
-            }
-        }
+        // custom: function () {
+        //     let transferType = this.field('transferType');
+        //     if (transferType.value == 'khmer') {
+        //         if (!this.value) {
+        //             return 'required';
+        //         }
+        //     }
+        // }
     },
     memo: {
         type: String,
@@ -425,3 +427,13 @@ Transfer.attachSchema([
     Transfer.accountSchema,
 ]);
 
+// SimpleSchema.messages({
+//     // 'regEx firstName': "[label] can have alphabets only",
+//     // 'regEx lastName': "[label] can have alphabets only",
+//     required: 'Sender is required',
+//     requiredSenderPhone:"Sender Phone"
+//     // duplicateEmail: 'Email already in use',
+//     // notUnique: 'Please use another email, this is already in use',
+//     // 'regEx tel': 'Invalid phone number',
+//     // 'regEx password': "Password must be 8-20 characters long and contain a lowercase alphabet, an uppercase alphabet, a digit and a special character",
+// });

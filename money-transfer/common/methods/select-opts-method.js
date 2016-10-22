@@ -39,6 +39,7 @@ SelectOptsMethod.customer = new ValidatedMethod({
             }
 
             let data = Customer.find(selector, {limit: 10});
+            // list.push({label: '--Select One--', value: '0'});
             data.forEach(function (value) {
                 let label = value.name + ' : ' + value.telephone;
                 list.push({label: label, value: value._id});
@@ -135,7 +136,7 @@ SelectOptsMethod.promotion = new ValidatedMethod({
             let list = [], selector = {};
             let searchText = options.searchText;
             let values = options.values;
-            let currentDate=moment().toDate();
+            let currentDate = moment().toDate();
             if (searchText) {
                 selector = {
                     $or: [
@@ -145,11 +146,15 @@ SelectOptsMethod.promotion = new ValidatedMethod({
                     //status: "E"
                 };
             } else if (values.length) {
-                selector = {_id: {$in: values},startDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
-                    expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}};
-            }else{
-                selector = {tartDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
-                    expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}};
+                selector = {
+                    _id: {$in: values}, startDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+                    expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}
+                };
+            } else {
+                selector = {
+                    tartDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+                    expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}
+                };
             }
 
 

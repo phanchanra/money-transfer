@@ -51,7 +51,7 @@
                             <li class="active">
                                 <a href="#">
 
-                                    {{> afQuickField name='transferType' label=false}}
+                                    {{> afQuickField name='transferType' id='transferType' label=false}}
 
                                 </a>
                             </li>
@@ -68,10 +68,16 @@
                                     {{> afQuickField name='type'}}
                                 </div>
                                 <div class="col-md-3">
-                                    {{> afQuickField name='dateNote'}}
+                                    <label class="control-label">Date Note<span style="color: red;">*</span> </label>
+                                    {{> afFieldInput name='dateNote' id='dateNote'}}
                                 </div>
                                 <div class="col-md-3">
-                                    {{> afQuickField name='timeNote'}}
+                                    <label class="control-label">Time Note<span style="color: red;">*</span>
+                                    </label>
+                                        <!--{{#if isExist}}-->
+                                    {{> afFieldInput name='timeNote' id='timeNote'}}
+                                    <!--{{> afFieldInput name='ex' value="thai" type='hidden'}}-->
+                                        <!--{{/if}}-->
                                 </div>
                                 <div class="col-md-3">
                                     {{> afQuickField name='transferDate'}}
@@ -92,12 +98,12 @@
                                         <label class="control-label">Sender<span style="color: red;">*</span> <a
                                                 class="sender" style="cursor: pointer">[Add
                                             New]</a></label>
-                                        {{> afFieldInput name='senderId' value=senderId required=required}}
+                                        {{> afFieldInput name='senderId' id='senderId' value=senderId}}
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">Sender Phone<span style="color: red;">*</span></label>
-                                    {{> afFieldInput name='senderTelephone' value=senderPhone}}
+                                    {{> afFieldInput name='senderTelephone' id='senderTelephone' value=senderPhone}}
                                 </div>
                             </div>
                         </fieldset>
@@ -125,15 +131,16 @@
                             <legend>Receiver</legend>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="hide-show" style="position: absolute; top: -3px; width: 89%; display: none;">
+                                    <div class="hide-show"
+                                         style="position: absolute; top: -3px; width: 89%; display: none;">
                                         <label>
                                             <a class="btn btn-primary btn-xs"><i
                                                     class="fa fa-spinner fa-spin"></i> <b>{{promotionLabel}}
-                                                </b></a>
+                                            </b></a>
                                         </label>
                                         <br>
-                                            {{> afQuickField type="hidden" name='promotionAmount' value=promotion}}
-                                            {{> afQuickField name='promotionId' label=false}}
+                                        {{> afQuickField type='hidden' name='promotionAmount' value=promotion}}
+                                        {{> afQuickField name='promotionId' label=false}}
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -142,13 +149,13 @@
                                                 class="receiver"
                                                 style="cursor: pointer">[Add
                                             New]</a></label>
-                                        {{> afFieldInput name='receiverId' value=receiverId}}
+                                        {{> afFieldInput name='receiverId' id='receiverId' value=receiverId}}
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">Receiver Phone<span
                                             style="color: red;">*</span></label>
-                                    {{> afFieldInput name='receiverTelephone' value=receiverPhone}}
+                                    {{> afFieldInput name='receiverTelephone' id='receiverTelephone' value=receiverPhone}}
                                 </div>
                             </div>
                         </fieldset>
@@ -257,7 +264,7 @@
                 </fieldset>
                 <!--End exchange-->
                 <div class="form-footer">
-                    <button type="submit" class="btn btn-primary save"><i
+                    <button type="submit" name="save" class="btn btn-primary save" id="save"><i
                             class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
                     <button type="submit" class="btn btn-primary js-print save-print"><i class="fa fa-print"></i>&nbsp;
                         Submit & Print
