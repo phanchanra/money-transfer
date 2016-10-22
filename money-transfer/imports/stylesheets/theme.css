@@ -25,30 +25,61 @@ hr.style18:before {
 /*promotion*/
 <!--
 -->
-.form-group .pro{
-    display: none;
-}
+/*.form-group .pro{*/
+    /*display: none;*/
+/*}*/
 
-.form-group .pro + .btn-group > label span {
-    width: 30px;
-}
+/*.form-group .pro + .btn-group > label span {*/
+    /*width: 30px;*/
+/*}*/
 
-.form-group .pro + .btn-group > label span:first-child {
-    display: none;
-}
+/*.form-group .pro + .btn-group > label span:first-child {*/
+    /*display: none;*/
+/*}*/
 
-.form-group .pro + .btn-group > label span:last-child {
-    display: inline-block;
-}
+/*.form-group .pro + .btn-group > label span:last-child {*/
+    /*display: inline-block;*/
+/*}*/
 
-.form-group .pro:checked + .btn-group > label span:first-child {
-    display: inline-block;
-}
+/*.form-group .pro:checked + .btn-group > label span:first-child {*/
+    /*display: inline-block;*/
+/*}*/
 
-.form-group .pro:checked + .btn-group > label span:last-child {
-    display: none;
-}
+/*.form-group .pro:checked + .btn-group > label span:last-child {*/
+    /*display: none;*/
+/*}*/
 /*
 
 */
+input, select {
+    border: 1px solid #888;
+    padding: 3px 4px;
+    color: #222;
+    margin: 0px 5px 0px 0px;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+}
+
+input:focus, select:focus {
+    outline: none;
+}
+
+.InputGroup {
+    display: inline-block;
+    padding: 3px 4px;
+    border: 1px solid #FFF;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+}
+
+.ErrorField {
+}
+
+span.ValidationErrors {
+    display: inline-block;
+    font-size: 14px;
+    color: #D00;
+    padding-left: 10px;
+    /*font-style: italic;*/
+}
 

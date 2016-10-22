@@ -183,7 +183,7 @@ Meteor.methods({
             //         }
             //     )
             // }
-            if (doc.senderId != '' || doc.senderId != undefined) {
+            if (doc.senderId) {
                 Meteor.call('updateCustomerExpireDay', {doc});
             }
         } else if (doc.type == "OUT") {
@@ -346,7 +346,7 @@ Meteor.methods({
             //         }
             //     )
             // }
-            if (doc.senderId != '' || doc.senderId != undefined) {
+            if (doc.senderId) {
                 Meteor.call('updateCustomerExpireDay', {doc});
             }
         }

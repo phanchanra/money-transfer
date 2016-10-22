@@ -66,8 +66,8 @@ Transfer.after.insert(function (userId, doc) {
 });
 //
 Transfer.before.update(function (userId, doc, fieldNames, modifier, options) {
-    modifier.$set = modifier.$set || {};
-    modifier.$set.items = doc.items;
+    //modifier.$set = modifier.$set || {};
+   // modifier.$set.items = doc.items;
     // if (modifier && modifier.$set && modifier.$set.doc && modifier.$set.doc.items) {
     //     let items = modifier.$set.doc.items;
     //     if (items !== doc.items) {
