@@ -152,7 +152,7 @@ SelectOptsMethod.promotion = new ValidatedMethod({
                 };
             } else {
                 selector = {
-                    tartDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+                    startDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
                     expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}
                 };
             }

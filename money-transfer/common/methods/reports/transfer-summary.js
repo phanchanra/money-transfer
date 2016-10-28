@@ -322,7 +322,7 @@ export const transferSummaryReport = new ValidatedMethod({
                 data.footer.totalToAmountSecond = transfers[0].totalToAmountSecond;
                 data.footer.totalTotalAmount = transfers[0].totalTotalAmount;
             }
-            console.log(data);
+            //console.log(data);
             return data
         }
     }

@@ -42,8 +42,7 @@ export const transferTransactionReport = new ValidatedMethod({
             data.header = params;
 
             /****** Content *****/
-            let
-                content = [];
+            let content = [];
             let selector = {};
             selector.transferDate = {
                 $gte: fDate,

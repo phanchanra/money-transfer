@@ -54,6 +54,7 @@ tabularOpts.columns = [
     {data: "discountFee", title: "Dis Fee"},
     {data: "totalFee", title: "Total Fee"},
     {data: "agentFee", title: "Agent Fee"},
+    {data: "exchangeId", title: "ExchangeId"},
     {data: "totalAmount", title: "Total Amount"},
     {data: "balanceAmount", title: "Bal Amount"}
 

@@ -43,6 +43,16 @@ Fee.generalSchema = new SimpleSchema({
         },
 
     },
+    status: {
+        type: Boolean,
+        label: "Status",
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: "boolean-checkbox"
+            }
+        }
+    },
 
     'os': {
         type: Object,
@@ -50,12 +60,12 @@ Fee.generalSchema = new SimpleSchema({
     },
     'os.date': {
         type: Date,
-        optional:true
+        optional: true
     },
     'os.balanceAmount': {
         type: Number,
         decimal: true,
-        optional:true
+        optional: true
     },
     'os.customerFee': {
         type: Number,
@@ -93,7 +103,7 @@ Fee.serviceSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 let symbol = currencySymbol.get();
-                return inputmaskOptions.currency({prefix: `${symbol} `});
+                return inputmaskOptions.currency({prefix: `${symbol} `, digits: 3});
             }
         }
     },
@@ -105,7 +115,7 @@ Fee.serviceSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 let symbol = currencySymbol.get();
-                return inputmaskOptions.currency({prefix: `${symbol} `});
+                return inputmaskOptions.currency({prefix: `${symbol} `, digits: 3});
             }
         }
     },
@@ -118,7 +128,7 @@ Fee.serviceSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 let symbol = currencySymbol.get();
-                return inputmaskOptions.currency({prefix: `${symbol} `});
+                return inputmaskOptions.currency({prefix: `${symbol} `, digits: 3});
             }
         }
     },
@@ -131,7 +141,7 @@ Fee.serviceSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 let symbol = currencySymbol.get();
-                return inputmaskOptions.currency({prefix: `${symbol} `});
+                return inputmaskOptions.currency({prefix: `${symbol} `, digits: 3});
             }
         }
     },
@@ -144,7 +154,20 @@ Fee.serviceSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 let symbol = currencySymbol.get();
-                return inputmaskOptions.currency({prefix: `${symbol} `});
+                return inputmaskOptions.currency({prefix: `${symbol} `, digits: 3});
+            }
+        }
+    },
+    'service.$.agentFeeOut': {
+        type: Number,
+        label: 'Agent Fee Out',
+        decimal: true,
+        optional:true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                let symbol = currencySymbol.get();
+                return inputmaskOptions.currency({prefix: `${symbol} `, digits: 3});
             }
         }
     }
