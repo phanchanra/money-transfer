@@ -36,20 +36,20 @@ Customer.generalSchema = new SimpleSchema({
         type: Number,
         label: "Notification Day",
     },
-    dob: {
-        type: Date,
-        label: 'Date of birth',
-        defaultValue: moment().toDate(),
-        autoform: {
-            afFieldInput: {
-                type: "bootstrap-datetimepicker",
-                dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
-                    showTodayButton: true
-                }
-            }
-        }
-    },
+    // dob: {
+    //     type: Date,
+    //     label: 'Date of birth',
+    //     defaultValue: moment().toDate(),
+    //     autoform: {
+    //         afFieldInput: {
+    //             type: "bootstrap-datetimepicker",
+    //             dateTimePickerOptions: {
+    //                 format: 'DD/MM/YYYY',
+    //                 showTodayButton: true
+    //             }
+    //         }
+    //     }
+    // },
     address: {
         type: String,
         label: 'Address',

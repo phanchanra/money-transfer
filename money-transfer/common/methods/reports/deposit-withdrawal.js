@@ -137,7 +137,7 @@ export const depositWithdrawalReport = new ValidatedMethod({
                 data.content = transfers[0].data;
                 data.footer.totalAmount = transfers[0].totalAmount;
             }
-            console.log(data);
+            //console.log(data);
             return data
         }
     }

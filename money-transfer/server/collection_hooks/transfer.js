@@ -14,38 +14,59 @@ Transfer.before.insert(function (userId, doc) {
     doc._id = idGenerator.genWithPrefix(Transfer, prefix, 12);
     moneyTransferState.set(tmpId, doc);
     let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId});
-    if (doc.type == "IN") {
-        //check when discount only agentfee
-        let agentFee = doc.totalFee - doc.feeDoc.ownerFee;
-        lastBalance.date = new Date();
-        lastBalance.balanceAmount = fee.os.balanceAmount + doc.amount;
-        lastBalance.customerFee = fee.os.customerFee == null ? doc.customerFee : fee.os.customerFee + doc.customerFee;
-        lastBalance.ownerFee = fee.os.ownerFee == null ? doc.feeDoc.ownerFee : fee.os.ownerFee + doc.feeDoc.ownerFee;
-        lastBalance.agentFee = fee.os.agentFee == null ? doc.feeDoc.agentFee : fee.os.agentFee + agentFee;
-        lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + doc.amount) + agentFee;
-        // lastBalance.agentFee = fee.os.agentFee == null ? doc.feeDoc.agentFee : fee.os.agentFee + doc.feeDoc.agentFee;
-        // lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + doc.amount) + doc.feeDoc.agentFee;
-        //doc.balanceAmount = (fee.os.balanceAmountFee + doc.amount) + doc.feeDoc.agentFee;
-        doc.balanceAmount = (fee.os.balanceAmountFee + doc.amount) + agentFee;
-        doc.agentFee = agentFee;//add field for Increment or Decrement
-        doc.lastBalance = lastBalance;
-    } else if (doc.type == "OUT") {
-        //check when discount only agentfee
-        let agentFee = doc.totalFee - doc.feeDoc.ownerFee;
-        lastBalance.date = new Date();
-        lastBalance.balanceAmount = fee.os.balanceAmount - doc.amount;
-        lastBalance.customerFee = fee.os.customerFee == null ? doc.customerFee : fee.os.customerFee + doc.customerFee;
-        lastBalance.ownerFee = fee.os.ownerFee == null ? doc.feeDoc.ownerFee : fee.os.ownerFee + doc.feeDoc.ownerFee;
-        lastBalance.agentFee = fee.os.agentFee == null ? doc.feeDoc.agentFee : fee.os.agentFee + agentFee;
-        lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + agentFee) - doc.amount;
-        // lastBalance.agentFee = fee.os.agentFee == null ? doc.feeDoc.agentFee : fee.os.agentFee + doc.feeDoc.agentFee;
-        // lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
-
-        //doc.balanceAmount = (fee.os.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
-        doc.balanceAmount = (fee.os.balanceAmountFee + agentFee) - doc.amount;
-        doc.agentFee = agentFee;//add field for Increment or Decrement
-        doc.lastBalance = lastBalance;
+    if (doc.transferType == 'khmer') {
+        if (doc.type == "IN") {
+            //check when discount only agentfee
+            lastBalance.date = new Date();
+            lastBalance.balanceAmount = fee.os.balanceAmount + doc.totalAmount;
+            lastBalance.customerFee = fee.os.customerFee == null ? doc.customerFee : fee.os.customerFee + doc.customerFee;
+            lastBalance.ownerFee = fee.os.ownerFee == null ? doc.feeDoc.ownerFee : fee.os.ownerFee + doc.feeDoc.ownerFee;
+            lastBalance.agentFee = fee.os.agentFee == null ? doc.feeDoc.agentFee : fee.os.agentFee + doc.feeDoc.agentFee;
+            lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + doc.totalAmount) + doc.feeDoc.agentFee;
+            doc.balanceAmount = (fee.os.balanceAmountFee + doc.totalAmount) + doc.feeDoc.agentFee;
+            doc.agentFee = doc.feeDoc.agentFee;//add field for Increment or Decrement
+            doc.lastBalance = lastBalance;
+        } else if (doc.type == "OUT") {
+            //check when discount only agentfee
+            lastBalance.date = new Date();
+            lastBalance.balanceAmount = fee.os.balanceAmount - doc.amount;
+            lastBalance.customerFee = fee.os.customerFee == null ? doc.customerFee : fee.os.customerFee + doc.customerFee;
+            lastBalance.ownerFee = fee.os.ownerFee == null ? doc.feeDoc.ownerFee : fee.os.ownerFee + doc.feeDoc.ownerFee;
+            lastBalance.agentFee = fee.os.agentFee == null ? doc.feeDoc.agentFee : fee.os.agentFee + doc.feeDoc.agentFee;
+            lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
+            doc.balanceAmount = (fee.os.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
+            doc.agentFee = doc.totalFee;//add field for Increment or Decrement
+            doc.lastBalance = lastBalance;
+        }
+    } else {
+        if (doc.type == "IN") {
+            //check when discount only agentfee
+            let agentFee = doc.totalFee - doc.feeDoc.ownerFee;
+            let principleSubFee = doc.amount - doc.totalFee;
+            lastBalance.date = new Date();
+            lastBalance.balanceAmount = fee.os.balanceAmount + principleSubFee;
+            lastBalance.customerFee = fee.os.customerFee == null ? doc.customerFee : fee.os.customerFee + doc.customerFee;
+            lastBalance.ownerFee = fee.os.ownerFee == null ? doc.feeDoc.ownerFee : fee.os.ownerFee + doc.feeDoc.ownerFee;
+            lastBalance.agentFee = fee.os.agentFee == null ? doc.totalFee : fee.os.agentFee + doc.totalFee;
+            lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + principleSubFee) + doc.totalFee;
+            //doc.amount=principleSubFee;
+            doc.balanceAmount = (fee.os.balanceAmountFee + principleSubFee) + doc.totalFee;
+            doc.agentFee = agentFee;//add field for Increment or Decrement
+            doc.lastBalance = lastBalance;
+        } else if (doc.type == "OUT") {
+            //check when discount only agentfee
+            lastBalance.date = new Date();
+            lastBalance.balanceAmount = fee.os.balanceAmount - doc.amount;
+            lastBalance.customerFee = fee.os.customerFee == null ? doc.customerFee : fee.os.customerFee + doc.customerFee;
+            lastBalance.ownerFee = fee.os.ownerFee == null ? doc.feeDoc.ownerFee : fee.os.ownerFee + doc.feeDoc.ownerFee;
+            lastBalance.agentFee = fee.os.agentFee == null ? doc.totalFee : fee.os.agentFee + doc.totalFee;
+            lastBalance.balanceAmountFee = (fee.os.balanceAmountFee + doc.totalFee) - doc.amount;
+            doc.balanceAmount = (fee.os.balanceAmountFee + doc.totalFee) - doc.amount;
+            doc.agentFee = doc.totalFee;//add field for Increment or Decrement
+            doc.lastBalance = lastBalance;
+        }
     }
+
 });
 Transfer.after.insert(function (userId, doc) {
     Meteor.defer(function () {
@@ -67,7 +88,7 @@ Transfer.after.insert(function (userId, doc) {
 //
 Transfer.before.update(function (userId, doc, fieldNames, modifier, options) {
     //modifier.$set = modifier.$set || {};
-   // modifier.$set.items = doc.items;
+    // modifier.$set.items = doc.items;
     // if (modifier && modifier.$set && modifier.$set.doc && modifier.$set.doc.items) {
     //     let items = modifier.$set.doc.items;
     //     if (items !== doc.items) {

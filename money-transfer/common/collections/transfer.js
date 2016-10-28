@@ -284,10 +284,10 @@ Transfer.accountSchema = new SimpleSchema({
             }
         }
     },
-    deductFee: {
-        type: Boolean,
-        optional: true
-    },
+    // deductFee: {
+    //     type: Boolean,
+    //     optional: true
+    // },
     discountFee: {
         type: Number,
         label: 'Discount fee',
@@ -340,6 +340,10 @@ Transfer.accountSchema = new SimpleSchema({
         blackbox: true
     },
     //
+    exchangeId:{
+        type:String,
+        optional:true
+    },
     sellingFirst: {
         type: Number,
         decimal: true,

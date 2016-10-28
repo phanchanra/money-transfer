@@ -13,10 +13,14 @@ Meteor.methods({
             });
             if (promotions.type == 'percent') {
                 //amount = totalFee * (1 - promotions.amount / 100);
-                amount = new BigNumber(customerFee).times(new  BigNumber(promotions.amount).div(new BigNumber(100))).toFixed(2);
+                amount = new BigNumber(customerFee).times(new BigNumber(promotions.amount).div(new BigNumber(100))).toFixed(2);
+                console.log(amount);
+
                 return amount;
             } else {
-                amount =new BigNumber(promotions.amount).toFixed(2);
+                amount = new BigNumber(promotions.amount).toFixed(2);
+                console.log(amount);
+
                 return amount
             }
         } else {

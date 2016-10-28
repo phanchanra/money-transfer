@@ -115,12 +115,14 @@
                         <fieldset>
                             <legend>Product & Currency</legend>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     {{> afQuickField name='productId'}}
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     {{> afQuickField name='currencyId' options=currencyList }}
-
+                                </div>
+                                <div class="col-md-4">
+                                    {{> afQuickField name='amount' value=amount}}
                                 </div>
                             </div>
                         </fieldset>
@@ -135,11 +137,13 @@
                                          style="position: absolute; top: -3px; width: 89%; display: none;">
                                         <label>
                                             <a class="btn btn-primary btn-xs"><i
-                                                    class="fa fa-spinner fa-spin"></i> <b>{{promotionLabel}}
-                                            </b></a>
+                                                    class="fa fa-spinner fa-spin"></i>
+                                                <b>{{promotionLabel}} {{promotionAmount}}
+
+                                                </b></a>
                                         </label>
                                         <br>
-                                        {{> afQuickField type='hidden' name='promotionAmount' value=promotion}}
+                                        {{> afQuickField type='hidden' name='promotionAmount' value=promotionAmount}}
                                         {{> afQuickField name='promotionId' label=false}}
                                     </div>
                                 </div>
@@ -169,23 +173,11 @@
                         <div class="col-md-6">
 
                             <div class="row">
-                                <div class="col-md-5">
-                                    {{> afQuickField name='amount' value=amount}}
-                                </div>
-                                <div class="col-md-5">
+
+                                <div class="col-md-6">
                                     {{> afQuickField name='customerFee' readonly=true value=customerFee}}
                                 </div>
-                                <div class="col-md-2">
-                                    <label class="control-label">Deduct Fee</label><br>
-                                    {{> afQuickField name='deductFee'}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <!--<fieldset>-->
-                            <!--<legend>Amount & Fee</legend>-->
-                            <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Discount Fee</label>
                                         <div class="input-group">
@@ -195,11 +187,35 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4">
+                                <!--<div class="col-md-6">-->
+                                <!--{{> afQuickField name='amount' value=amount}}-->
+                                <!--</div>-->
+                                <!--<div class="col-md-2">-->
+                                <!--<label class="control-label">Deduct Fee</label><br>-->
+                                <!--{{> afQuickField name='deductFee'}}-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!--<fieldset>-->
+                            <!--<legend>Amount & Fee</legend>-->
+                            <div class="row">
+                                <!--<div class="col-md-4">-->
+                                <!--<div class="form-group">-->
+                                <!--<label class="control-label">Discount Fee</label>-->
+                                <!--<div class="input-group">-->
+                                <!--{{> afFieldInput name='discountFee'}}-->
+                                <!--<span class="input-group-addon">%</span>-->
+                                <!--</div>-->
+                                <!--</div>-->
+
+                                <!--</div>-->
+                                <div class="col-md-6">
                                     {{> afQuickField name='totalFee' readonly=true value=afterDisAmountFee}}
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     {{> afQuickField name='totalAmount' readonly=true value=totalAmount}}
+                                    {{> afQuickField type="hidden" name='exchangeId' value=exchangeId}}
                                     {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                                 </div>
                             </div>
@@ -266,7 +282,7 @@
                 <div class="form-footer">
                     <button type="submit" name="save" class="btn btn-primary save" id="save"><i
                             class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
-                    <button type="submit" class="btn btn-primary js-print save-print"><i class="fa fa-print"></i>&nbsp;
+                    <button type="submit" class="btn btn-primary js-print save-print" id="save-print"><i class="fa fa-print"></i>&nbsp;
                         Submit & Print
                     </button>
                     <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}

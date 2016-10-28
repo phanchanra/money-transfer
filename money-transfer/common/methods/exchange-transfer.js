@@ -12,12 +12,12 @@ Meteor.methods({
         if (exchangeRate) {
             exchangeRate.convertCurrency.forEach(function (obj) {
                 tmpExchangeTransfer.push({
-                    _id: obj._id,
                     convertTo: obj.convertTo,
                     selling: obj.selling
                 });
             });
-            return tmpExchangeTransfer;
+            //console.log({exchange: exchangeRate._id, exchangeTransfer:tmpExchangeTransfer});
+            return {exchangeId: exchangeRate._id, exchangeTransfer:tmpExchangeTransfer};
         } else {
             return false;
         }

@@ -43,6 +43,7 @@
                             <legend>General</legend>
                             {{> afQuickField name='productId'}}
                             {{> afQuickField name='currencyId'}}
+                            {{> afQuickField name='status'}}
                         </fieldset>
                     </div>
                     <div class="col-md-9">
@@ -141,14 +142,17 @@
                 <div class="col-sm-3">
                     From Amount
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     To Amount
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     Customer Fee
                 </div>
                 <div class="col-sm-2">
                     Agent Fee
+                </div>
+                <div class="col-sm-2">
+                    Agent Out Fee
                 </div>
                 <div class="col-sm-1">
                     Action
@@ -200,10 +204,10 @@
     <div class="col-sm-3">
         {{> afQuickField name=current.fromAmount template="bootstrap3" label=false class="input-sm from-amount" Placeholder="From amount"}}
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         {{> afQuickField name=current.toAmount template="bootstrap3" label=false class="input-sm to-amount" Placeholder="To amount"}}
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         {{> afQuickField name=current.customerFee template="bootstrap3" label=false class="input-sm customer-fee" Placeholder="Customer fee"}}
     </div>
     <div class="col-sm-2">
@@ -211,5 +215,8 @@
         <span style="display: none;">
         {{> afQuickField name=current.ownerFee value=ownerFee template="bootstrap3" label=false class="input-sm owner-fee" Placeholder="Owner fee"}}
         </span>
+    </div>
+    <div class="col-sm-2">
+        {{> afQuickField name=current.agentFeeOut template="bootstrap3" label=false class="input-sm agent-fee-out" Placeholder="Agent Out fee"}}
     </div>
 </template>

@@ -37,7 +37,9 @@ Meteor.methods({
                         }
                     );
                 }
-                Meteor.call('updateCustomerExpireDayAfterRemove', {doc});
+                if(doc.senderId){
+                    Meteor.call('updateCustomerExpireDayAfterRemove', {doc});
+                }
             } else {
                 //Bank Account
                 if (transferOnTransfer) {

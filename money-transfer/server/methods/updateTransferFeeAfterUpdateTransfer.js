@@ -29,327 +29,357 @@ Meteor.methods({
                 }
             }
         );
+        if (doc.transferType == 'khmer') {
+            if (doc.type == "IN") {
+                if (previousTransferUpdate) {
+                    let balanceAmountFee = 0;
+                    let customerFee = 0;
+                    let ownerFee = 0;
+                    let agentFee = 0;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    //let printAmount = doc.amount - doc.totalFee;
+                    // let printAmount = doc.amount - doc.totalFee;
+                    let balanceAmount = previousTransferUpdate.balanceAmount + doc.amount;
 
-        if (doc.type == "IN") {
-            //check undefined
-            if (previousTransferUpdate) {
-                let balanceAmountFee = 0;
-                let ownerFee = 0;
-                let agentFee = 0;
+                    if (previousTransferUpdate.lastBalance) {
+                        balanceAmountFee = previousTransferUpdate.lastBalance.balanceAmountFee + (doc.amount + agentFeeAfterDis);
+                        ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
+                        agentFee = previousTransferUpdate.lastBalance.agentFee + agentFeeAfterDis;
+                        customerFee = previousTransferUpdate.lastBalance.customerFee + doc.customerFee;
 
-                let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-                let balanceAmount = previousTransferUpdate.balanceAmount + doc.amount;
-                let customerFee = previousTransferUpdate.customerFee + doc.customerFee;
-
-                if (previousTransferUpdate.lastBalance) {
-                    balanceAmountFee = previousTransferUpdate.lastBalance.balanceAmountFee + (doc.amount + agentFeeAfterDis);
-                    // balanceAmountFee = previousTransferUpdate.lastBalance.balanceAmountFee + (doc.amount + doc.feeDoc.agentFee);
-                    ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
-                    agentFee = previousTransferUpdate.lastBalance.agentFee + agentFeeAfterDis;
-                    // agentFee = previousTransferUpdate.lastBalance.agentFee + doc.feeDoc.agentFee;
+                    } else {
+                        balanceAmountFee = previousTransferUpdate.balanceAmount + (doc.amount + agentFeeAfterDis);
+                        ownerFee = doc.feeDoc.ownerFee;
+                        agentFee = agentFeeAfterDis;
+                        customerFee = doc.feeDoc.customerFee;
+                    }
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFee;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id, {
+                            $set: setObjTransfer
+                        }
+                    );
+                    //for update balance Fee
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = customerFee;
+                    setObjFee['os.ownerFee'] = ownerFee;
+                    setObjFee['os.agentFee'] = agentFee;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
                 } else {
-                    balanceAmountFee = previousTransferUpdate.balanceAmount + (doc.amount + agentFeeAfterDis);
-                    // balanceAmountFee = previousTransferUpdate.balanceAmount + (doc.amount + doc.feeDoc.agentFee);
-                    ownerFee = doc.feeDoc.ownerFee;
-                    agentFee = agentFeeAfterDis;
-                    // agentFee = doc.feeDoc.agentFee;
+                    // let printAmount = doc.amount - doc.totalFee;
+                    let balanceAmount = transferUpdate.balanceAmount + doc.amount;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    let balanceAmountFee = doc.amount + agentFeeAfterDis;
+                    // let balanceAmountFee = balanceAmount + doc.feeDoc.agentFee;
+                    //update transfer
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = doc.feeDoc.customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFeeAfterDis;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id, {
+                            $set: setObjTransfer
+                        }
+                    );
+                    //update balance fee
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = doc.feeDoc.customerFee;
+                    setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjFee['os.agentFee'] = agentFeeAfterDis;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
                 }
 
-                setObjTransfer.agentFee = agentFeeAfterDis;
-                setObjTransfer.balanceAmount = balanceAmountFee;
-                setObjTransfer['lastBalance.date'] = new Date();
-                setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-                setObjTransfer['lastBalance.customerFee'] = customerFee;
-                setObjTransfer['lastBalance.ownerFee'] = ownerFee;
-                setObjTransfer['lastBalance.agentFee'] = agentFee;
-                setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-                Transfer.direct.update(
-                    transferUpdate._id, {
-                        $set: setObjTransfer
+                if (doc.senderId) {
+                    Meteor.call('updateCustomerExpireDay', {doc});
+                }
+            } else if (doc.type == "OUT") {
+                if (previousTransferUpdate) {
+                    //update Transfer
+                    let balanceAmountFee = 0;
+                    let ownerFee = 0;
+                    let agentFee = 0;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    let balanceAmount = previousTransferUpdate.balanceAmount - doc.amount;
+                    let customerFee = 0;
+                    if (previousTransferUpdate.lastBalance) {
+                        customerFee = previousTransferUpdate.customerFee + doc.feeDoc.customerFee;
+                        ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
+                        agentFee = previousTransferUpdate.lastBalance.agentFee + doc.feeDoc.agentFee;
+                        balanceAmountFee = (previousTransferUpdate.lastBalance.balanceAmountFee + agentFeeAfterDis) - doc.amount;
+                    } else {
+                        customerFee = doc.feeDoc.customerFee;
+                        ownerFee = doc.feeDoc.ownerFee;
+                        agentFee = doc.feeDoc.agentFee;
+                        balanceAmountFee = (previousTransferUpdate.balanceAmount + agentFee) - doc.amount;
                     }
-                );
-                //for update balance Fee
-                setObjFee['os.date'] = new Date();
-                setObjFee['os.balanceAmount'] = balanceAmount;
-                setObjFee['os.customerFee'] = customerFee;
-                setObjFee['os.ownerFee'] = ownerFee;
-                setObjFee['os.agentFee'] = agentFee;
-                setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-                Fee.direct.update(
-                    feeUpdate._id,
-                    {
-                        $set: setObjFee
-                    }
-                )
-            } else {
-                let balanceAmount = transferUpdate.balanceAmount + doc.amount;
-                let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-                let balanceAmountFee = balanceAmount + agentFeeAfterDis;
-                // let balanceAmountFee = balanceAmount + doc.feeDoc.agentFee;
-                //update transfer
-                setObjTransfer.agentFee = agentFeeAfterDis;
-                setObjTransfer.balanceAmount = balanceAmountFee;
-                setObjTransfer['lastBalance.date'] = new Date();
-                setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-                setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
-                setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-                setObjTransfer['lastBalance.agentFee'] = agentFeeAfterDis;
-                // setObjTransfer['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-                setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-                Transfer.direct.update(
-                    transferUpdate._id, {
-                        $set: setObjTransfer
-                    }
-                );
-                //update balance fee
-                setObjFee['os.date'] = new Date();
-                setObjFee['os.balanceAmount'] = balanceAmount;
-                setObjFee['os.customerFee'] = doc.customerFee;
-                setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
-                setObjFee['os.agentFee'] = agentFeeAfterDis;
-                // setObjFee['os.agentFee'] = doc.feeDoc.agentFee;
-                setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-                Fee.direct.update(
-                    feeUpdate._id,
-                    {
-                        $set: setObjFee
-                    }
-                )
-            }
-            // if (transferUpdate.lastBalance == '' || transferUpdate.lastBalance == null || transferUpdate.lastBalance == undefined) {
-            //     let balanceAmount = transferUpdate.balanceAmount + doc.amount;
-            //     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-            //     let balanceAmountFee = balanceAmount + doc.feeDoc.agentFee;
-            //     //update transfer
-            //     setObjTransfer.agentFee = agentFeeAfterDis;
-            //     setObjTransfer.balanceAmount = balanceAmountFee;
-            //     setObjTransfer['lastBalance.date'] = new Date();
-            //     setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-            //     setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
-            //     setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-            //     setObjTransfer['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-            //     setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-            //     Transfer.direct.update(
-            //         doc._id, {
-            //             $set: setObjTransfer
-            //         }
-            //     );
-            //     //update balance fee
-            //     setObjFee['os.date'] = new Date();
-            //     setObjFee['os.balanceAmount'] = balanceAmount;
-            //     setObjFee['os.customerFee'] = doc.customerFee;
-            //     setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
-            //     setObjFee['os.agentFee'] = doc.feeDoc.agentFee;
-            //     setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-            //     Fee.direct.update(
-            //         feeUpdate._id,
-            //         {
-            //             $set: setObjFee
-            //         }
-            //     )
-            // } else {
-            //     //for update Transfer
-            //     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-            //     let balanceAmount = transferUpdate.balanceAmount + doc.amount;
-            //     let balanceAmountFee = transferUpdate.lastBalance.balanceAmountFee + (doc.amount + doc.feeDoc.agentFee);
-            //     let customerFee = transferUpdate.customerFee + doc.customerFee;
-            //     let ownerFee = transferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
-            //     let agentFee = transferUpdate.lastBalance.agentFee + doc.feeDoc.agentFee;
-            //
-            //     setObjTransfer.agentFee = agentFeeAfterDis;
-            //     setObjTransfer.balanceAmount = balanceAmountFee;
-            //     setObjTransfer['lastBalance.date'] = new Date();
-            //     setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-            //     setObjTransfer['lastBalance.customerFee'] = customerFee;
-            //     setObjTransfer['lastBalance.ownerFee'] = ownerFee;
-            //     setObjTransfer['lastBalance.agentFee'] = agentFee;
-            //     setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-            //     Transfer.direct.update(
-            //         doc._id, {
-            //             $set: setObjTransfer
-            //         }
-            //     );
-            //     //for update balance Fee
-            //     setObjFee['os.date'] = new Date();
-            //     setObjFee['os.balanceAmount'] = balanceAmount;
-            //     setObjFee['os.customerFee'] = customerFee;
-            //     setObjFee['os.ownerFee'] = ownerFee;
-            //     setObjFee['os.agentFee'] = agentFee;
-            //     setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-            //     Fee.direct.update(
-            //         feeUpdate._id,
-            //         {
-            //             $set: setObjFee
-            //         }
-            //     )
-            // }
-            if (doc.senderId) {
-                Meteor.call('updateCustomerExpireDay', {doc});
-            }
-        } else if (doc.type == "OUT") {
-            if (previousTransferUpdate) {
-                //update Transfer
-                let balanceAmountFee = 0;
-                let ownerFee = 0;
-                let agentFee = 0;
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFee;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id,
+                        {
+                            $set: setObjTransfer
 
-                let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-                let balanceAmount = previousTransferUpdate.balanceAmount - doc.amount;
-                let customerFee = previousTransferUpdate.customerFee + doc.customerFee;
-                if (previousTransferUpdate.lastBalance) {
-                    ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
-                    agentFee = previousTransferUpdate.lastBalance.agentFee + agentFeeAfterDis;
-                    // agentFee = previousTransferUpdate.lastBalance.agentFee + doc.feeDoc.agentFee;
-                    balanceAmountFee = (previousTransferUpdate.lastBalance.balanceAmountFee + agentFeeAfterDis) - doc.amount;
-                    // balanceAmountFee = (previousTransferUpdate.lastBalance.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
-
+                        }
+                    );
+                    //update fee balance
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = customerFee;
+                    setObjFee['os.ownerFee'] = ownerFee;
+                    setObjFee['os.agentFee'] = agentFee;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
                 } else {
-                    ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
-                    agentFee = previousTransferUpdate.lastBalance.agentFee + agentFeeAfterDis;
-                    // agentFee = previousTransferUpdate.lastBalance.agentFee + doc.feeDoc.agentFee;
-                    balanceAmountFee = (previousTransferUpdate.lastBalance.balanceAmountFee + agentFeeAfterDis) - doc.amount;
-                    // balanceAmountFee = (previousTransferUpdate.lastBalance.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
+                    let balanceAmount = transferUpdate.balanceAmount - doc.amount;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    let balanceAmountFee = (balanceAmount + agentFeeAfterDis);
+                    // let balanceAmountFee = (balanceAmount + doc.feeDoc.agentFee);
+                    //update transfer
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFeeAfterDis;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id, {
+                            $set: setObjTransfer
+                        }
+                    );
+                    //for update balance Fee
+                    //let balanceAmount = balanceAmount;
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = doc.customerFee;
+                    setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjFee['os.agentFee'] = agentFeeAfterDis;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
                 }
 
-                setObjTransfer.agentFee = agentFeeAfterDis;
-                setObjTransfer.balanceAmount = balanceAmountFee;
-                setObjTransfer['lastBalance.date'] = new Date();
-                setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-                setObjTransfer['lastBalance.customerFee'] = customerFee;
-                setObjTransfer['lastBalance.ownerFee'] = ownerFee;
-                setObjTransfer['lastBalance.agentFee'] = agentFee;
-                setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-                Transfer.direct.update(
-                    transferUpdate._id,
-                    {
-                        $set: setObjTransfer
-
-                    }
-                );
-                //update fee balance
-                setObjFee['os.date'] = new Date();
-                setObjFee['os.balanceAmount'] = balanceAmount;
-                setObjFee['os.customerFee'] = customerFee;
-                setObjFee['os.ownerFee'] = ownerFee;
-                setObjFee['os.agentFee'] = agentFee;
-                setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-                Fee.direct.update(
-                    feeUpdate._id,
-                    {
-                        $set: setObjFee
-                    }
-                )
-            } else {
-                let balanceAmount = transferUpdate.balanceAmount - doc.amount;
-                let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-                let balanceAmountFee = (balanceAmount + agentFeeAfterDis);
-                // let balanceAmountFee = (balanceAmount + doc.feeDoc.agentFee);
-                //update transfer
-                setObjTransfer.agentFee = agentFeeAfterDis;
-                setObjTransfer.balanceAmount = balanceAmountFee;
-                setObjTransfer['lastBalance.date'] = new Date();
-                setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-                setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
-                setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-                setObjTransfer['lastBalance.agentFee'] = agentFeeAfterDis;
-                // setObjTransfer['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-                setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-                Transfer.direct.update(
-                    transferUpdate._id, {
-                        $set: setObjTransfer
-                    }
-                );
-                //for update balance Fee
-                //let balanceAmount = balanceAmount;
-                setObjFee['os.date'] = new Date();
-                setObjFee['os.balanceAmount'] = balanceAmount;
-                setObjFee['os.customerFee'] = doc.customerFee;
-                setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
-                setObjFee['os.agentFee'] = agentFeeAfterDis;
-                // setObjFee['os.agentFee'] = doc.feeDoc.agentFee;
-                setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-                Fee.direct.update(
-                    feeUpdate._id,
-                    {
-                        $set: setObjFee
-                    }
-                )
+                if (doc.senderId) {
+                    Meteor.call('updateCustomerExpireDay', {doc});
+                }
             }
-            // //check undefined
-            // if (transferUpdate.lastBalance == '' || transferUpdate.lastBalance == null || transferUpdate.lastBalance == "undefined") {
-            //     let balanceAmount = transferUpdate.balanceAmount - doc.amount;
-            //     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-            //     let balanceAmountFee = (balanceAmount + doc.feeDoc.agentFee);
-            //     //update transfer
-            //     setObjTransfer.agentFee = agentFeeAfterDis;
-            //     setObjTransfer.balanceAmount = balanceAmountFee;
-            //     setObjTransfer['lastBalance.date'] = new Date();
-            //     setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-            //     setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
-            //     setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
-            //     setObjTransfer['lastBalance.agentFee'] = doc.feeDoc.agentFee;
-            //     setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-            //     Transfer.direct.update(
-            //         doc._id, {
-            //             $set: setObjTransfer
-            //         }
-            //     );
-            //     //for update balance Fee
-            //     //let balanceAmount = balanceAmount;
-            //     setObjFee['os.date'] = new Date();
-            //     setObjFee['os.balanceAmount'] = balanceAmount;
-            //     setObjFee['os.customerFee'] = doc.customerFee;
-            //     setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
-            //     setObjFee['os.agentFee'] = doc.feeDoc.agentFee;
-            //     setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-            //     Fee.direct.update(
-            //         feeUpdate._id,
-            //         {
-            //             $set: setObjFee
-            //         }
-            //     )
-            // } else {
-            //     //update Transfer
-            //     let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
-            //     let balanceAmount = transferUpdate.balanceAmount - doc.amount;
-            //     let customerFee = transferUpdate.customerFee + doc.customerFee;
-            //     let ownerFee = transferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
-            //     let agentFee = transferUpdate.lastBalance.agentFee + doc.feeDoc.agentFee;
-            //     let balanceAmountFee = (transferUpdate.lastBalance.balanceAmountFee + doc.feeDoc.agentFee) - doc.amount;
-            //
-            //     setObjTransfer.agentFee = agentFeeAfterDis;
-            //     setObjTransfer.balanceAmount = balanceAmountFee;
-            //     setObjTransfer['lastBalance.date'] = new Date();
-            //     setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
-            //     setObjTransfer['lastBalance.customerFee'] = customerFee;
-            //     setObjTransfer['lastBalance.ownerFee'] = ownerFee;
-            //     setObjTransfer['lastBalance.agentFee'] = agentFee;
-            //     setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
-            //     Transfer.direct.update(
-            //         doc._id,
-            //         {
-            //             $set: setObjTransfer
-            //
-            //         }
-            //     );
-            //     //update fee balance
-            //     setObjFee['os.date'] = new Date();
-            //     setObjFee['os.balanceAmount'] = balanceAmount;
-            //     setObjFee['os.customerFee'] = customerFee;
-            //     setObjFee['os.ownerFee'] = ownerFee;
-            //     setObjFee['os.agentFee'] = agentFee;
-            //     setObjFee['os.balanceAmountFee'] = balanceAmountFee;
-            //     Fee.direct.update(
-            //         feeUpdate._id,
-            //         {
-            //             $set: setObjFee
-            //         }
-            //     )
-            // }
-            if (doc.senderId) {
-                Meteor.call('updateCustomerExpireDay', {doc});
+
+        } else {//thai
+            if (doc.type == "IN") {
+                if (previousTransferUpdate) {
+                    let balanceAmountFee = 0;
+                    let ownerFee = 0;
+                    let agentFee = 0;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    let printAmount = doc.amount - doc.totalFee;
+                    let balanceAmount = previousTransferUpdate.balanceAmount + printAmount;
+                    let customerFee = 0;
+
+                    if (previousTransferUpdate.lastBalance) {
+                        balanceAmountFee = previousTransferUpdate.lastBalance.balanceAmountFee + (printAmount + agentFeeAfterDis);
+                        customerFee = previousTransferUpdate.customerFee + doc.feeDoc.customerFee;
+                        ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
+                        agentFee = previousTransferUpdate.lastBalance.agentFee + agentFeeAfterDis;
+                    } else {
+                        balanceAmountFee = previousTransferUpdate.balanceAmount + (printAmount + agentFeeAfterDis);
+                        ownerFee = doc.feeDoc.ownerFee;
+                        agentFee = agentFeeAfterDis;
+                        customerFee = doc.feeDoc.customerFee;
+                    }
+
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFee;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id, {
+                            $set: setObjTransfer
+                        }
+                    );
+                    //for update balance Fee
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = customerFee;
+                    setObjFee['os.ownerFee'] = ownerFee;
+                    setObjFee['os.agentFee'] = agentFee;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
+                } else {
+                    let printAmount = doc.amount - doc.totalFee;
+                    let balanceAmount = transferUpdate.balanceAmount + printAmount;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    let balanceAmountFee = balanceAmount + agentFeeAfterDis;
+                    // let balanceAmountFee = balanceAmount + doc.feeDoc.agentFee;
+                    //update transfer
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFeeAfterDis;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id, {
+                            $set: setObjTransfer
+                        }
+                    );
+                    //update balance fee
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = doc.customerFee;
+                    setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjFee['os.agentFee'] = agentFeeAfterDis;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
+                }
+
+                if (doc.senderId) {
+                    Meteor.call('updateCustomerExpireDay', {doc});
+                }
+            } else if (doc.type == "OUT") {
+                if (previousTransferUpdate) {
+                    //update Transfer
+                    let balanceAmountFee = 0;
+                    let ownerFee = 0;
+                    let agentFee = 0;
+                    let balanceAmount = 0;
+                    let customerFee = 0;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    if (previousTransferUpdate.lastBalance) {
+                        balanceAmount = previousTransferUpdate.balanceAmount - doc.amount;
+                        customerFee = previousTransferUpdate.customerFee + doc.feeDoc.customerFee;
+                        ownerFee = previousTransferUpdate.lastBalance.ownerFee + doc.feeDoc.ownerFee;
+                        agentFee = previousTransferUpdate.lastBalance.agentFee + agentFeeAfterDis;
+                        balanceAmountFee = (previousTransferUpdate.lastBalance.balanceAmountFee + agentFeeAfterDis) - doc.amount;
+                    } else {
+                        customerFee = doc.feeDoc.customerFee;
+                        ownerFee = doc.feeDoc.ownerFee;
+                        agentFee = agentFeeAfterDis;
+                        balanceAmountFee = (previousTransferUpdate.balanceAmount + agentFeeAfterDis) - doc.amount;
+                    }
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFee;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id,
+                        {
+                            $set: setObjTransfer
+
+                        }
+                    );
+                    //update fee balance
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = customerFee;
+                    setObjFee['os.ownerFee'] = ownerFee;
+                    setObjFee['os.agentFee'] = agentFee;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
+                } else {
+                    let balanceAmount = transferUpdate.balanceAmount - doc.amount;
+                    let agentFeeAfterDis = doc.totalFee - doc.feeDoc.ownerFee;
+                    let balanceAmountFee = (balanceAmount + agentFeeAfterDis);
+                    // let balanceAmountFee = (balanceAmount + doc.feeDoc.agentFee);
+                    //update transfer
+                    setObjTransfer.agentFee = agentFeeAfterDis;
+                    setObjTransfer.balanceAmount = balanceAmountFee;
+                    setObjTransfer['lastBalance.date'] = new Date();
+                    setObjTransfer['lastBalance.balanceAmount'] = balanceAmount;
+                    setObjTransfer['lastBalance.customerFee'] = doc.customerFee;
+                    setObjTransfer['lastBalance.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjTransfer['lastBalance.agentFee'] = agentFeeAfterDis;
+                    setObjTransfer['lastBalance.balanceAmountFee'] = balanceAmountFee;
+                    Transfer.direct.update(
+                        transferUpdate._id, {
+                            $set: setObjTransfer
+                        }
+                    );
+                    //for update balance Fee
+                    //let balanceAmount = balanceAmount;
+                    setObjFee['os.date'] = new Date();
+                    setObjFee['os.balanceAmount'] = balanceAmount;
+                    setObjFee['os.customerFee'] = doc.customerFee;
+                    setObjFee['os.ownerFee'] = doc.feeDoc.ownerFee;
+                    setObjFee['os.agentFee'] = agentFeeAfterDis;
+                    setObjFee['os.balanceAmountFee'] = balanceAmountFee;
+                    Fee.direct.update(
+                        feeUpdate._id,
+                        {
+                            $set: setObjFee
+                        }
+                    )
+                }
+
+                if (doc.senderId) {
+                    Meteor.call('updateCustomerExpireDay', {doc});
+                }
             }
         }
-        //});
     }
 });
