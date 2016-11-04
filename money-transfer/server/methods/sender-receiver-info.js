@@ -4,7 +4,7 @@ Meteor.methods({
     getCustomerInfo:function (customerId) {
         let customer=Customer.findOne(customerId);
         if(customer){
-            return customer.telephone;
+            return customer;
         }else{
             return '';
         }

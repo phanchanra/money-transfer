@@ -50,6 +50,27 @@ Customer.generalSchema = new SimpleSchema({
     //         }
     //     }
     // },
+    telephone: {
+        type: String,
+        label: 'Telephone',
+        optional: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.phone();
+            }
+        }
+    },
+    bankName: {
+        type: String,
+        label: 'Bank Name',
+        optional: true
+    },
+    bankNumber: {
+        type: String,
+        label: 'Bank Number',
+        optional: true
+    },
     address: {
         type: String,
         label: 'Address',
@@ -57,16 +78,6 @@ Customer.generalSchema = new SimpleSchema({
         autoform: {
             afFieldInput: {
                 rows: 3
-            }
-        }
-    },
-    telephone: {
-        type: String,
-        label: 'Telephone',
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.phone();
             }
         }
     },

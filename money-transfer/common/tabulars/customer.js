@@ -32,8 +32,10 @@ tabularOpts.columns = [
             return moment(val).format('DD/MM/YYYY');
         }
     },
-    {data: "address", title: "Address"},
     {data: "telephone", title: "Telephone"},
+    {data: "bankName", title: "Bank Name"},
+    {data: "bankNumber", title: "Bank Number"},
+    {data: "address", title: "Address"},
     {data: "email", title: "E-mail"},
 ];
 export const CustomerTabular = new Tabular.Table(tabularOpts);

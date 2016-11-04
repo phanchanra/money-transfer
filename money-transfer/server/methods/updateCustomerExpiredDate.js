@@ -8,9 +8,9 @@ Meteor.methods({
             {
                 $set: {
                     expiredDate: expired,
-                    lastInvoice: doc._id
+                    lastInvoice: doc._id,
                 }
             }
         );
-    }
+    },
 });

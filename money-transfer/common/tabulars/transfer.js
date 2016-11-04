@@ -59,5 +59,5 @@ tabularOpts.columns = [
     {data: "balanceAmount", title: "Bal Amount"}
 
 ];
-tabularOpts.extraFields=['feeDoc', 'sellingFirst', 'baseAmountFirst','convertToFirst', 'toAmountFirst', 'sellingSecond','baseAmountSecond', 'convertToSecond', 'toAmountSecond'];
+tabularOpts.extraFields=['feeDoc','transferType', 'type', 'sellingFirst', 'baseAmountFirst','convertToFirst', 'toAmountFirst', 'sellingSecond','baseAmountSecond', 'convertToSecond', 'toAmountSecond'];
 export const TransferTabular = new Tabular.Table(tabularOpts);

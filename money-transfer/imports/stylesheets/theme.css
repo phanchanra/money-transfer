@@ -83,3 +83,7 @@ span.ValidationErrors {
     /*font-style: italic;*/
 }
 
+/*Customer Validate Transfer*/
+.custom-validate{
+    color: red;
+}

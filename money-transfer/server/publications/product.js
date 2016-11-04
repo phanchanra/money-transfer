@@ -18,3 +18,11 @@ Meteor.publish('moneyTransfer.productById', function moneyTransferProductById(pr
 
     return Product.find({_id: productId});
 });
+Meteor.publish('moneyTransfer.product', function () {
+    this.unblock();
+    Meteor._sleepForMs(200);
+    if (this.userId) {
+        return Product.find();
+    }
+    return this.ready();
+});

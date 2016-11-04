@@ -286,7 +286,10 @@ Meteor.methods({
                         {
                             $set: setObjFee
                         }
-                    )
+                    );
+                    if(doc.receiverId){
+                        Meteor.call('updateCustomerBankAccount', {doc});
+                    }
                 }
 
                 if (doc.senderId) {

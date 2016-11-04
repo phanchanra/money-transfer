@@ -15,7 +15,7 @@ if (Meteor.isClient) {
     });
 }
 export const Transfer = new Mongo.Collection('moneyTransfer_transfer');
-
+import {Product} from '../../common/collections/product';
 Transfer.generalSchema = new SimpleSchema({
     transferType: {
         type: String,
@@ -49,6 +49,15 @@ Transfer.generalSchema = new SimpleSchema({
 
                     }
                 }
+            },
+            defaultValue: function () {
+                if (Meteor.isClient) {
+                    if (Session.get("type")) {
+                        return 'CD';
+                    } else {
+                        return 'IN';
+                    }
+                }
             }
         }
     },
@@ -56,7 +65,7 @@ Transfer.generalSchema = new SimpleSchema({
         type: Date,
         label: "Date Note",
         optional: true,
-        defaultValue: moment().toDate(),
+        // defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
                 type: 'bootstrap-datetimepicker',
@@ -154,14 +163,6 @@ Transfer.generalSchema = new SimpleSchema({
                 }
             }
         },
-        // custom: function () {
-        //     let transferType = this.field('transferType');
-        //     if (transferType.value == 'khmer') {
-        //         if (!this.value) {
-        //             return 'required';
-        //         }
-        //     }
-        // }
     },
     receiverTelephone: {
         type: String,
@@ -173,14 +174,16 @@ Transfer.generalSchema = new SimpleSchema({
                 return inputmaskOptions.phone();
             }
         },
-        // custom: function () {
-        //     let transferType = this.field('transferType');
-        //     if (transferType.value == 'khmer') {
-        //         if (!this.value) {
-        //             return 'required';
-        //         }
-        //     }
-        // }
+    },
+    bankName: {
+        type: String,
+        label: 'Bank Name',
+        optional: true
+    },
+    bankNumber: {
+        type: String,
+        label: 'Bank Number',
+        optional: true
     },
     memo: {
         type: String,
@@ -199,17 +202,30 @@ Transfer.accountSchema = new SimpleSchema({
         type: String,
         label: 'Product',
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'moneyTransfer.selectOptsMethod.product'
-            },
-            optionsMethodParams: function () {
+            type: 'select2',
+            options: function () {
                 if (Meteor.isClient) {
-                    let type = AutoForm.getFieldValue('transferType') || 'thai';
-                    return {type};
+                    Meteor.subscribe('moneyTransfer.product');
+                    let list = [];
+                    let transferType = AutoForm.getFieldValue('transferType') || 'thai';
+                    list.push({label: "Select One", value: ''});
+                    Product.find({type: transferType})
+                        .forEach(function (obj) {
+                            list.push({label: obj._id + "-" + obj.name, value: obj._id});
+                        });
+                    return list;
                 }
-            }
+            },
+            // afFieldInput: {
+            //     uniPlaceholder: 'Please search... (limit 10)',
+            //     optionsMethod: 'moneyTransfer.selectOptsMethod.product'
+            // },
+            // optionsMethodParams: function () {
+            //     if (Meteor.isClient) {
+            //         let type = AutoForm.getFieldValue('transferType') || 'thai';
+            //         return {type};
+            //     }
+            // }
         }
     },
     currencyId: {
@@ -231,11 +247,28 @@ Transfer.accountSchema = new SimpleSchema({
         type: String,
         optional: true,
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsMethod: 'moneyTransfer.selectOptsMethod.promotion'
-            }
+            type: 'select2',
+            // options: function () {
+            //     return SelectOpts.promotion();
+            //     //let currentDate = currentDate.get();
+            //     if (Meteor.isClient) {
+            //         let currentDate = Session.get('transferDate');
+            //         let list = [];
+            //         list.push({label: "Select One", value: ' '});
+            //         Promotion.find({
+            //             startDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+            //             expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}
+            //         })
+            //             .forEach(function (obj) {
+            //                 list.push({label: obj._id + "-" + obj.name + "-" + obj.type, value: obj._id});
+            //             });
+            //         return list;
+            //     }
+            //}
+            // afFieldInput: {
+            //     uniPlaceholder: 'Please search... (limit 10)',
+            //     optionsMethod: 'moneyTransfer.selectOptsMethod.promotion'
+            // }
         }
     },
     promotionAmount: {
@@ -340,9 +373,9 @@ Transfer.accountSchema = new SimpleSchema({
         blackbox: true
     },
     //
-    exchangeId:{
-        type:String,
-        optional:true
+    exchangeId: {
+        type: String,
+        optional: true
     },
     sellingFirst: {
         type: Number,

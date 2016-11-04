@@ -5,7 +5,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {Branch} from '../../../core/common/collections/branch.js';
 import {Currency} from '../../../core/common/collections/currency';
 import {Product} from '../../common/collections/product';
-
+import {Promotion} from '../../common/collections/promotion';
 export const SelectOpts = {
     branch: function (selectOne = true) {
         let list = [];
@@ -57,11 +57,27 @@ export const SelectOpts = {
         return list;
     },
     product: function (selectOne = true) {
+        Meteor.subscribe('moneyTransfer.product');
         let list = [];
+        list.push({label: "Select One", value: ''});
         if (selectOne) {
             Product.find()
                 .forEach(function (obj) {
                     list.push({label: obj._id + "-" + obj.name, value: obj._id});
+                });
+        }
+        return list;
+    },
+    promotion: function (selectOne = true) {
+        let list = [];
+        list.push({label: "Select One", value: ''});
+        if (selectOne) {
+            Promotion.find({
+                // startDate: {$lt: moment(currentDate, "DD/MM/YYYY").add(1, 'days').toDate()},
+                // expiredDate: {$gte: moment(currentDate, "DD/MM/YYYY").toDate()}
+            })
+                .forEach(function (obj) {
+                    list.push({label: obj._id + "-" + obj.name + "-" + obj.type, value: obj._id});
                 });
         }
         return list;

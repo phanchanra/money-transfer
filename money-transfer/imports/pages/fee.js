@@ -213,17 +213,22 @@ formTmpl.events({
             if (result) {
                 if (feeId != result) {
                     instance.$('[name="save"]').prop('disabled', true);
-                     displayError("Product and currency are already exist!");
-                    //swal("Please check", "Product and currency are already exist!");
+                    displayError("Product and currency are already exist!");
                 } else {
                     instance.$('[name="save"]').prop('disabled', false);
                 }
             } else {
                 instance.$('[name="save"]').prop('disabled', false);
             }
-
         });
-
+    },
+    'click [name="status"]'(e, instance){
+        let status = $(e.currentTarget).is(':checked');
+        if (status == true) {
+            $('.show-hide').slideToggle("fast");
+        }else{
+            $('.show-hide').slideToggle("fast");
+        }
     }
 });
 

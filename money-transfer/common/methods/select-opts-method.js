@@ -160,7 +160,7 @@ SelectOptsMethod.promotion = new ValidatedMethod({
 
             let data = Promotion.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.name;
+                let label = value._id + ' : ' + value.name + ' : ' + value.type;
                 list.push({label: label, value: value._id});
             });
 

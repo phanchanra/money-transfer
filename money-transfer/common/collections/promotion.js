@@ -23,7 +23,7 @@ Promotion.generalSchema = new SimpleSchema({
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'DD/MM/YYYY HH:mm:ss',
                     showTodayButton: true
                 }
             }
@@ -37,7 +37,7 @@ Promotion.generalSchema = new SimpleSchema({
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'DD/MM/YYYY HH:mm:ss',
                     showTodayButton: true
                 }
             }

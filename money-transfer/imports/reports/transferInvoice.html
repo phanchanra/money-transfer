@@ -35,7 +35,9 @@
                         <div class="row">
                             <div class="col-xs-4">ថ្ងៃខែឆ្នាំ :​ {{moFormat transferDate "DD/MM/YYYY"}}</div>
                             <div class="col-xs-4">ម៉ោងបានផ្ញើរ : {{moFormat transferDate "H:mm:ss a"}}</div>
-                            <div class="col-xs-4">លេខបញ្ជីរធនាគារ : {{refCode}}</div>
+                            {{#with title}}
+                                <div class="col-xs-4">លេខបញ្ជីរធនាគារ : {{refCode}}</div>
+                            {{/with}}
                         </div>
                         <div class="row">
                             <div class="col-xs-6">ឈ្មេាះអ្នកផ្ញើរ : {{sender._id}}-{{sender.name}}</div>
@@ -55,14 +57,16 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>
-                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ :{{numFormat baseAmountFirst "0,0.00"}} {{currencyId}}</div>
+                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ
+                                :{{numFormat baseAmountFirst "0,0.00"}} {{currencyId}}</div>
                             <div class="col-xs-4"> ប្តូរបាន
                                 :{{numFormat toAmountFirst "0,0.00"}} {{convertToFirst}}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic"></span></div>
-                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ :{{numFormat baseAmountSecond "0,0.00"}} {{currencyId}}</div>
+                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ
+                                :{{numFormat baseAmountSecond "0,0.00"}} {{currencyId}}</div>
                             <div class="col-xs-4"> ប្តូរបាន
                                 :{{numFormat toAmountSecond "0,0.00"}} {{convertToSecond}}</div>
                         </div>
@@ -118,7 +122,7 @@
                                     <tr>
                                         <td><h4 style="font-family: 'Khmer OS Muol'"><b>{{khName}}</b></h4></td>
                                         <td><h5 style="font-family: 'Khmer OS Muol'">
-                                            <b>វិក្កយបត្រ {{transferReveive}}ប្រាក់ ខ្មែរ~ថៃ</b></h5></td>
+                                            <b>វិក្កយបត្រ {{transferReveive}}ប្រាក់ ខ្មែរ~{{transferTypeIn}}</b></h5></td>
                                     </tr>
                                     <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
                                         <td>{{khAddress}}</td>
@@ -140,7 +144,9 @@
                         <div class="row">
                             <div class="col-xs-4">ថ្ងៃខែឆ្នាំ :​ {{moFormat transferDate "DD/MM/YYYY"}}</div>
                             <div class="col-xs-4">ម៉ោងបានផ្ញើរ : {{moFormat transferDate "H:mm:ss a"}}</div>
-                            <div class="col-xs-4">លេខបញ្ជីរធនាគារ : {{refCode}}</div>
+                            {{#with title}}
+                                <div class="col-xs-4">លេខបញ្ជីរធនាគារ : {{refCode}}</div>
+                            {{/with}}
                         </div>
                         <div class="row">
                             <div class="col-xs-6">ឈ្មេាះអ្នកផ្ញើរ : {{sender._id}}-{{sender.name}}</div>
@@ -160,14 +166,16 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>
-                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ :{{numFormat baseAmountFirst "0,0.00"}} {{currencyId}}</div>
+                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ
+                                :{{numFormat baseAmountFirst "0,0.00"}} {{currencyId}}</div>
                             <div class="col-xs-4"> ប្តូរបាន
                                 :{{numFormat toAmountFirst "0,0.00"}} {{convertToFirst}}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic"></span></div>
-                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ :{{numFormat baseAmountSecond "0,0.00"}} {{currencyId}}</div>
+                            <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ
+                                :{{numFormat baseAmountSecond "0,0.00"}} {{currencyId}}</div>
                             <div class="col-xs-4"> ប្តូរបាន
                                 :{{numFormat toAmountSecond "0,0.00"}} {{convertToSecond}}</div>
                         </div>

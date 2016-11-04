@@ -66,16 +66,20 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     {{> afQuickField name='type'}}
+                                    <span class="custom-validate">{{typeValidate}}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Date Note<span style="color: red;">*</span> </label>
                                     {{> afFieldInput name='dateNote' id='dateNote'}}
+                                    <span class="custom-validate">{{dateNote}}</span>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="control-label">Time Note<span style="color: red;">*</span>
                                     </label>
-                                        <!--{{#if isExist}}-->
+
                                     {{> afFieldInput name='timeNote' id='timeNote'}}
+                                    <span class="custom-validate">{{timeNote}}</span>
+                                        <!--{{#if isExist}}-->
                                     <!--{{> afFieldInput name='ex' value="thai" type='hidden'}}-->
                                         <!--{{/if}}-->
                                 </div>
@@ -92,18 +96,21 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     {{> afQuickField name='refCode'}}
+                                    <span class="custom-validate">{{refCode}}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Sender<span style="color: red;">*</span> <a
                                                 class="sender" style="cursor: pointer">[Add
                                             New]</a></label>
-                                        {{> afFieldInput name='senderId' id='senderId' value=senderId}}
+                                        {{> afFieldInput name='senderId' id='senderId' value=senderId class='form-control'}}
+                                        <span class="custom-validate">{{senderIdValidate}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">Sender Phone<span style="color: red;">*</span></label>
                                     {{> afFieldInput name='senderTelephone' id='senderTelephone' value=senderPhone}}
+                                    <span class="custom-validate">{{senderValidatePhone}}</span>
                                 </div>
                             </div>
                         </fieldset>
@@ -117,35 +124,36 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     {{> afQuickField name='productId'}}
+                                    <span class="custom-validate">{{productIdValidate}}</span>
                                 </div>
                                 <div class="col-md-4">
                                     {{> afQuickField name='currencyId' options=currencyList }}
+                                    <span class="custom-validate">{{currencyIdValidate}}</span>
                                 </div>
                                 <div class="col-md-4">
-                                    {{> afQuickField name='amount' value=amount}}
+                                    {{> afQuickField name='amount' value=amount readonly=true}}
+                                    <span class="custom-validate">{{amountValidate}}</span>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
-
                     <div class="col-md-6">
                         <fieldset>
                             <legend>Receiver</legend>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="hide-show"
-                                         style="position: absolute; top: -3px; width: 89%; display: none;">
-                                        <label>
-                                            <a class="btn btn-primary btn-xs"><i
-                                                    class="fa fa-spinner fa-spin"></i>
-                                                <b>{{promotionLabel}} {{promotionAmount}}
-
-                                                </b></a>
-                                        </label>
-                                        <br>
+                                    <!--<div class="hide-show" style="position: absolute; top: -3px; display: none;">-->
+                                    <span class="promotion-hide-show">
+                                    <label>
+                                        <a class="btn btn-primary btn-xs"><i
+                                                class="fa fa-spinner fa-spin"></i>
+                                            <b>Promotion{{promotionAmount}}
+                                            </b></a>
+                                    </label>
                                         {{> afQuickField type='hidden' name='promotionAmount' value=promotionAmount}}
-                                        {{> afQuickField name='promotionId' label=false}}
-                                    </div>
+                                        {{> afQuickField name='promotionId' label=false options=promotionList}}
+                                    </span>
+                                    <!--</div>-->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -154,18 +162,20 @@
                                                 style="cursor: pointer">[Add
                                             New]</a></label>
                                         {{> afFieldInput name='receiverId' id='receiverId' value=receiverId}}
+                                        <span class="custom-validate">{{receiverIdValidate}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">Receiver Phone<span
                                             style="color: red;">*</span></label>
                                     {{> afFieldInput name='receiverTelephone' id='receiverTelephone' value=receiverPhone}}
+                                    <span class="custom-validate">{{receiverValidatePhone}}</span>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
                 </div>
-                <!--sender and receiver-->
+
                 <fieldset>
                     <legend>Amount & Fee</legend>
                     <div class="row">
@@ -174,10 +184,10 @@
 
                             <div class="row">
 
-                                <div class="col-md-6">
-                                    {{> afQuickField name='customerFee' readonly=true value=customerFee}}
+                                <div class="col-md-4">
+                                    {{> afQuickField name='customerFee' value=customerFee}}
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Discount Fee</label>
                                         <div class="input-group">
@@ -187,42 +197,34 @@
                                     </div>
 
                                 </div>
-                                <!--<div class="col-md-6">-->
-                                <!--{{> afQuickField name='amount' value=amount}}-->
-                                <!--</div>-->
-                                <!--<div class="col-md-2">-->
-                                <!--<label class="control-label">Deduct Fee</label><br>-->
-                                <!--{{> afQuickField name='deductFee'}}-->
-                                <!--</div>-->
+                                <div class="col-md-4">
+                                    {{> afQuickField name='totalFee' readonly=true value=afterDisAmountFee}}
+
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <!--<fieldset>-->
-                            <!--<legend>Amount & Fee</legend>-->
                             <div class="row">
-                                <!--<div class="col-md-4">-->
-                                <!--<div class="form-group">-->
-                                <!--<label class="control-label">Discount Fee</label>-->
-                                <!--<div class="input-group">-->
-                                <!--{{> afFieldInput name='discountFee'}}-->
-                                <!--<span class="input-group-addon">%</span>-->
-                                <!--</div>-->
-                                <!--</div>-->
-
-                                <!--</div>-->
-                                <div class="col-md-6">
-                                    {{> afQuickField name='totalFee' readonly=true value=afterDisAmountFee}}
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     {{> afQuickField name='totalAmount' readonly=true value=totalAmount}}
                                     {{> afQuickField type="hidden" name='exchangeId' value=exchangeId}}
                                     {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                                 </div>
+                                <div class="show-hide-bank" style="display: none;">
+                                    <div class="col-md-4">
+                                        {{> afQuickField name='bankName' value=bankName}}
+                                        <span class="custom-validate">{{bankNameValidate}}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{> afQuickField name='bankNumber' value=bankNumber}}
+                                        <span class="custom-validate">{{bankNumberValidate}}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <!--</fieldset>-->
                         </div>
                     </div>
                 </fieldset>
+
                 <!--Exchange-->
                 <fieldset>
                     <legend>Exchange</legend>
@@ -282,7 +284,8 @@
                 <div class="form-footer">
                     <button type="submit" name="save" class="btn btn-primary save" id="save"><i
                             class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}</button>
-                    <button type="submit" class="btn btn-primary js-print save-print" id="save-print"><i class="fa fa-print"></i>&nbsp;
+                    <button type="submit" class="btn btn-primary js-print save-print" id="save-print"><i
+                            class="fa fa-print"></i>&nbsp;
                         Submit & Print
                     </button>
                     <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}

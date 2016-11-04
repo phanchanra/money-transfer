@@ -27,6 +27,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Collection
 import {Transfer} from '../../common/collections/transfer';
+import {Promotion} from '../../common/collections/promotion';
 import {Fee} from '../../common/collections/fee';
 let tmpCollection = new Mongo.Collection(null);
 //let exchangeItemCollection = new Mongo.Collection(null);
@@ -50,6 +51,7 @@ let indexTmpl = Template.MoneyTransfer_transfer,
     customerForm = Template.MoneyTransfer_customerForm;
 
 // Index
+Session.setDefault('transferDate', moment().toDate());
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('transfer', {size: 'lg'});
@@ -81,6 +83,11 @@ let state = new ReactiveObj({
     promotionId: '',
     customerFee: 0,
     exchangeId: '',
+    senderPhone: '',
+    receiverPhone: '',
+    bankName: '',
+    bankNumber: '',
+    //transferDate: ''
 });
 invoice.helpers({
     userName(){
@@ -89,11 +96,10 @@ invoice.helpers({
 });
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.transfer(fa('plus', 'Transfer'), renderTemplate(formTmpl));
+        alertify.transfer(fa('plus', 'Transfer'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        Session.set("transferId", this._id);
-        //
+        debugger;
         let currencySymbol = this.currencyId;
         Session.set('currencyId', this.currencyId);
         if (currencySymbol == 'USD') {
@@ -110,17 +116,25 @@ indexTmpl.events({
         Meteor.call("getCurrency", this.productId, function (error, result) {
             if (result) {
                 state.set('currencyList', result);
-                // instance.$('[name="amount"]').prop("readonly", true);
+                instance.$('[name="amount"]').prop("readonly", true);
             } else {
-                // instance.$('[name="amount"]').prop("readonly", true);
+                instance.$('[name="amount"]').prop("readonly", true);
             }
         });
         //
+        Session.set("transferId", this._id);
+        Session.set('transferType', this.transferType);
+        Session.set('typeInOut', this.type);
         state.set("promotionId", this.promotionId);
-        state.set('transferDate', this.transferDate);
-        state.set('customerFee', this.customerFee);
-        //
+        Session.set('transferDate', this.transferDate);
+        Session.set('productId', this.productId);
+        //state.set('customerFee', this.customerFee);
+        state.set('bankName', this.bankName);
+        state.set('bankNumber', this.bankNumber);
+        state.set('senderPhone', this.senderTelephone);
+        state.set('receiverPhone', this.receiverTelephone);
 
+        //
         let totalFee = this.totalFee;
         let totalAmount = this.totalAmount;
         let feeDocAmount = this.feeDoc.fromAmount;
@@ -128,6 +142,7 @@ indexTmpl.events({
         let feeDocCustomerFee = this.feeDoc.customerFee;
         let feeDocOwnerFee = this.feeDoc.ownerFee;
         let feeDocAgentFee = this.feeDoc.agentFee;
+
         Meteor.call('lastTransferIdRemoveEdit', {
             _id: this._id,
             productId: this.productId,
@@ -176,7 +191,7 @@ indexTmpl.events({
     'click .js-invoice' (event, instance) {
         let queryParams = this._id;
         Meteor.call('invoice', queryParams, function (err, doc) {
-            alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
+            alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc)).maximize();
             // renderTemplate(invoice, doc);
             // let mode = 'iframe'; // popup
             // let close = mode == "popup";
@@ -204,34 +219,36 @@ indexTmpl.events({
 });
 
 formTmpl.onCreated(function () {
-    this.senderPhone = new ReactiveVar();
-    this.receiverPhone = new ReactiveVar();
     this.currencyList = new ReactiveVar();
     this.amount = new ReactiveVar();
-    //this.toAmountFirst = new ReactiveVar();
-    //this.toAmountSecond = new ReactiveVar();
     this.autorun(()=> {
         let currentData = Template.currentData();
         let senderDoc = Session.get('senderId');
         let receiverDoc = Session.get('receiverId');
+        Meteor.subscribe("moneyTransfer.promotionById", {date: Session.get('transferDate')});
+        //console.log(Promotion.find().fetch());
         if (currentData) {
             this.subscribe('moneyTransfer.transferById', currentData._id);
         }
         if (senderDoc) {
             if (senderDoc.telephone && senderDoc.flag == 'sender') {
-                this.senderPhone.set(senderDoc.telephone);
+                state.set('senderPhone', senderDoc.telephone);
             } else if (senderDoc.telephone && senderDoc.flag == 'receiver') {
-                this.receiverPhone.set(senderDoc.telephone);
+                state.set('receiverPhone', senderDoc.telephone);
+                state.set('bankName', senderDoc.bankName);
+                state.set('bankNumber', senderDoc.bankNumber);
+
             } else {
                 Meteor.call("getCustomerInfo", senderDoc.senderId, (error, result) => {
-                    this.senderPhone.set(result);
+                    state.set('senderPhone', result.telephone);
                 });
             }
         }
-        //
         if (receiverDoc) {
             Meteor.call("getCustomerInfo", receiverDoc.receiverId, (err, res) => {
-                this.receiverPhone.set(res);
+                state.set('receiverPhone', res.telephone);
+                state.set('bankName', res.bankName);
+                state.set('bankNumber', res.bankNumber);
             });
         }
 
@@ -240,61 +257,17 @@ formTmpl.onCreated(function () {
 });
 // Form
 formTmpl.onRendered(function () {
-    // jQuery(function () {
-    //     jQuery("#timeNote").validate({
-    //         expression: "if (VAL) return true; else return false;",
-    //         message: "TimeNote is required"
-    //     });
-    //     jQuery("#dateNote").validate({
-    //         expression: "if (VAL) return true; else return false;",
-    //         message: "DateNote is required"
-    //     });
-    //     jQuery("#senderId").validate({
-    //         expression: "if (VAL) return true; else return false;",
-    //         message: "Please make a selection"
-    //     });
-    //     jQuery("#senderTelephone").validate({
-    //         expression: "if (VAL) return true; else return false;",
-    //         message: "DateNote is required"
-    //     });
-    //     jQuery("#receiverId").validate({
-    //         expression: "if (VAL) return true; else return false;",
-    //         message: "Please make a selection"
-    //     });
-    //     jQuery("#receiverTelephone").validate({
-    //         expression: "if (VAL) return true; else return false;",
-    //         message: "DateNote is required"
-    //     });
-    //
-    // });
-
-
-    //
-    $('[name="amount"]').prop("readonly", true);
-    $('[name="sellingFirst"]').prop("readonly", true);
-    $('[name="sellingSecond"]').prop("readonly", true);
-    $('[name="baseAmountFirst"]').prop("readonly", true);
-    $('[name="baseAmountSecond"]').prop("readonly", true);
-    let transferDate = $('[name="transferDate"]').val();
-
-    Session.set('transferType', $('[name="transferType"]').val());
-    Meteor.call('promotionLabel', transferDate, function (error, result) {
-        if (result) {
-            state.set('promotionLabel', 'Promotion');
-            //$('.hide-show').slideDown(300);
-
-        } else {
-            state.set('promotionLabel', "None Promotion");
-            //$('.hide-show').slideUp(300);
-            state.set('promotion', 0);
-
-        }
+    let transferDate = $('[name="transferDate"]');
+    transferDate.on("dp.change", function (e) {
+        Session.set('transferDate', moment(e.date).toDate());
     });
+    if (Session.get('currencyId')) {
+        $('[name="amount"]').prop("readonly", true);
+    }
+    //Session.set('transferType', $('[name="transferType"]').val());
+
     $('.hide-show').slideDown(300);
-
-
 });
-
 formTmpl.helpers({
     collection(){
         return Transfer;
@@ -306,38 +279,33 @@ formTmpl.helpers({
         if (currentData) {
             data.type = 'update';
             data.doc = Transfer.findOne({_id: currentData._id});
-            // tmpExchangeTransfer = [];
-            // data.doc.items.forEach(function (obj) {
-            //     tmpExchangeTransfer.push({
-            //         convertTo: obj.convertTo,
-            //         selling: obj.selling
-            //     });
-            //     if (obj != undefined) {
-            //         //state.set("exchangeTransfer", obj.convertTo);
-            //         if (obj._id == "001") {
-            //             state.set('baseAmountFirst', obj.baseAmount);
-            //             state.set('toAmountFirst', obj.toAmount);
-            //
-            //         } else if (obj._id == "002") {
-            //             state.set('baseAmountSecond', obj.baseAmount);
-            //             state.set('toAmountSecond', obj.toAmount);
-            //         }
-            //     }
-            // });
-            //state.set('promotion', data.doc.promotionAmount);
-            //state.set("exchangeTransfer", tmpExchangeTransfer);
-
-            //
-
-            Meteor.call('promotionLabel', state.get('transferDate'), function (error, result) {
+            //when update
+            if(Session.get('transferType')=='thai'){
+                $('[name="customerFee"]').prop("readonly", false);
+            }else{
+                $('[name="customerFee"]').prop("readonly", true);
+                $('.promotion-hide-show').hide('fast');
+                //$('[name="amount"]').prop("readonly", true);
+            }
+            if (Session.get('transferType') == 'thai' && Session.get('typeInOut') == 'OUT') {
+                $(".show-hide-bank").show('fast');
+            }
+            Meteor.call("getCurrency", Session.get('productId'), function (error, result) {
                 if (result) {
-                    state.set('promotionLabel', 'Promotion');
+                    state.set('currencyList', result);
+                    $('[name="amount"]').prop("readonly", false);
                 } else {
-                    state.set('promotionLabel', "None Promotion");
+                    $('[name="amount"]').prop("readonly", true);
                 }
             });
+            // Meteor.call('promotionLabel', Session.get('transferDate'), function (error, result) {
+            //     if (result) {
+            //         state.set('promotionLabel', 'Promotion');
+            //     } else {
+            //         state.set('promotionLabel', "None Promotion");
+            //     }
+            // });
         }
-
         return data;
     },
     currencyList(){
@@ -351,13 +319,16 @@ formTmpl.helpers({
         }
     },
     senderPhone(){
-        let instance = Template.instance();
-        return instance.senderPhone.get();
+        return state.get('senderPhone');
     },
     receiverPhone(){
-        let instance = Template.instance();
-        //console.log(instance.receiverPhone.get());
-        return instance.receiverPhone.get();
+        return state.get('receiverPhone');
+    },
+    bankName(){
+        return state.get('bankName');
+    },
+    bankNumber(){
+        return state.get('bankNumber');
     },
     customerFee(){
         let collection = tmpCollection.findOne();
@@ -387,12 +358,9 @@ formTmpl.helpers({
         let instance = Template.instance();
         return instance.amount.get();
     },
-    /////////////
     exchangeTransferLabelFirst(){
         if (Session.get('currencyId')) {
             try {
-                //let exchangeTransfer = Session.get("exchangeTransfer");
-
                 let exchangeTransfer = state.get("exchangeTransfer");
                 let exchangeLabelFirst = exchangeTransfer ? exchangeTransfer[0] : undefined;
                 if (exchangeLabelFirst) {
@@ -402,28 +370,22 @@ formTmpl.helpers({
             }
         }
         //return '';
-
-
     },
     exchangeTransferLabelSecond(){
         if (Session.get('currencyId')) {
             try {
-                //let exchangeTransfer = Session.get("exchangeTransfer");
                 let exchangeTransfer = state.get("exchangeTransfer");
                 let exchangeLabelSecond = exchangeTransfer ? exchangeTransfer[1] : undefined;
-                //console.log(exchangeLabelFirst);
                 if (exchangeLabelSecond) {
                     return exchangeLabelSecond.convertTo;
                 }
             } catch (e) {
             }
         }
-        //return '';
     },
     exchangeTransferFormFirst(){
         if (Session.get('currencyId')) {
             try {
-                //let exchangeTransferFirst = Session.get("exchangeTransfer");
                 let exchangeTransferFirst = state.get("exchangeTransfer");
                 let exchangeFormFirst = exchangeTransferFirst ? exchangeTransferFirst[0] : undefined;
                 if (exchangeFormFirst) {
@@ -432,14 +394,10 @@ formTmpl.helpers({
             } catch (e) {
             }
         }
-        //return '';
-
-
     },
     exchangeTransferFormSecond(){
         if (Session.get('currencyId')) {
             try {
-                //let exchangeTransferSecond = Session.get("exchangeTransfer");
                 let exchangeTransferSecond = state.get("exchangeTransfer");
                 let exchangeFormSecond = exchangeTransferSecond ? exchangeTransferSecond[1] : undefined;
                 if (exchangeFormSecond) {
@@ -449,14 +407,7 @@ formTmpl.helpers({
 
             }
         }
-        //return '';
     },
-    // baseAmountFirst(){
-    //     return state.get('baseAmountFirst');
-    // },
-    // baseAmountSecond(){
-    //     return state.get('baseAmountSecond');
-    // },
     exchangeId(){
         let exchangeId = state.get('exchangeId');
         if (exchangeId) {
@@ -468,26 +419,13 @@ formTmpl.helpers({
         if (toAmountFirst) {
             return toAmountFirst;
         }
-
     },
     toAmountSecond(){
         let toAmountSecond = state.get('toAmountSecond');
         if (toAmountSecond) {
             return toAmountSecond;
         }
-
     },
-    //////////////////////
-    // isExist(){
-    //     let transferType = Session.get('transferType');
-    //     console.log(transferType);
-    //     return transferType == 'thai';
-    //
-    // },
-    // toAmountFirst(){
-    //     let instance = Template.instance();
-    //     return instance.toAmountFirst.get();
-    // },
     promotionLabel(){
         return state.get('promotionLabel');
     },
@@ -495,14 +433,129 @@ formTmpl.helpers({
         return state.get('promotionAmount');
     },
     promotion(){
-        // console.log(state.get('promotion'));
         return state.get('promotion');
+    },
+    promotionList(){
+        let arr = [{label: '(Select One)', value: ''}];
+        let promotions = Promotion.find({});
+        promotions.forEach(function (promotion) {
+            arr.push({label: `${promotion._id} | ${promotion.name}(${promotion.type})`, value: promotion._id});
+        });
+        return arr;
+    },
+    refCode(){
+        let refCode = Session.get('refCode');
+        if (refCode != '') {
+            return refCode;
+        } else {
+            return '';
+        }
+    },
+    typeValidate(){
+        let typeValidate = Session.get('typeValidate');
+        if (typeValidate) {
+            return typeValidate;
+        }
+        return '';
+    },
+    dateNote(){
+        let dateNote = Session.get('dateNote');
+        if (dateNote) {
+            return dateNote;
+        }
+        return '';
+    },
+    timeNote(){
+        let timeNote = Session.get('timeNote');
+        if (timeNote) {
+            return timeNote;
+        }
+        return '';
+    },
+    senderIdValidate(){
+        let senderIdValidate = Session.get('senderIdValidate');
+        if (senderIdValidate) {
+            return senderIdValidate;
+        }
+        return '';
+    },
+    senderValidatePhone(){
+        let senderValidatePhone = Session.get('senderValidatePhone');
+        if (senderValidatePhone) {
+            return senderValidatePhone;
+        }
+    },
+    receiverIdValidate(){
+        let receiverIdValidate = Session.get('receiverIdValidate');
+        if (receiverIdValidate) {
+            return receiverIdValidate;
+        }
+        return '';
+    },
+    receiverValidatePhone(){
+        let receiverValidatePhone = Session.get('receiverValidatePhone');
+        if (receiverValidatePhone) {
+            return receiverValidatePhone;
+        }
+        return '';
+    },
+    //
+    productIdValidate(){
+        let productIdValidate = Session.get('productIdValidate');
+        if (productIdValidate) {
+            return productIdValidate;
+        }
+        return '';
+    },
+    currencyIdValidate(){
+        let currencyIdValidate = Session.get('currencyIdValidate');
+        if (currencyIdValidate) {
+            return currencyIdValidate;
+        }
+        return '';
+    },
+    amountValidate(){
+        let amountValidate = Session.get('amountValidate');
+        if (amountValidate) {
+            return amountValidate;
+        }
+        return '';
+    },
+    bankNameValidate(){
+        let bankNameValidate = Session.get('bankNameValidate');
+        if (bankNameValidate) {
+            return bankNameValidate;
+        }
+    },
+    bankNumberValidate(){
+        let bankNumberValidate = Session.get('bankNumberValidate');
+        if (bankNumberValidate) {
+            return bankNumberValidate;
+        }
     }
-
 });
 formTmpl.onDestroyed(function () {
     Session.set('senderId', undefined);
     Session.set('receiverId', undefined);
+    state.set('bankName', undefined);
+    state.set('bankNumber', undefined);
+    state.set('senderPhone', undefined);
+    state.set('receiverPhone', undefined);
+    Session.set('typeValidate', null);
+    Session.set('refCode', null);
+    Session.set('dateNote', null);
+    Session.set('timeNote', null);
+    Session.set('senderIdValidate', null);
+    Session.set('senderValidatePhone', null);
+    Session.set('receiverIdValidate', null);
+    Session.set('receiverValidatePhone', null);
+    Session.set('productIdValidate', null);
+    Session.set('currencyIdValidate', null);
+    Session.set('amountValidate', null);
+    Session.set('bankNameValidate', null);
+    Session.set('bankNumberValidate', null);
+    Session.set("savePrint", false);
+    tmpCollection.remove({});
 });
 invoice.events({
     'click #print' (e, instance) {
@@ -516,8 +569,20 @@ invoice.events({
 formTmpl.events({
     'click .form-control'(e){
         $(e.currentTarget).css('border-color', '');
+        if ($('[name="type"]:checked').length > 0) {
+            Session.set('typeValidate', null);
+        }
+        Session.set('dateNote', null);
+        Session.set('timeNote', null);
+        Session.set('refCode', null);
+        Session.set('senderValidatePhone', null);
+        Session.set('receiverValidatePhone', null);
+        Session.set('amountValidate', '');
+        Session.set('bankNameValidate', null);
+        Session.set('bankNumberValidate', null);
     },
     'click #save'(e, instance){
+        debugger;
         let type = $('input:radio[name=type]:checked').val();
         let transferType = $('input:radio[name=transferType]:checked').val();
         let dateNote = instance.$('[name="dateNote"]').val();
@@ -527,80 +592,75 @@ formTmpl.events({
         let senderTelephone = instance.$('[name="senderTelephone"]').val();
         let receiverId = instance.$('[name="receiverId"]').val();
         let receiverTelephone = instance.$('[name="receiverTelephone"]').val();
+        let productId = instance.$('[name="productId"]').val();
+        let currencyId = instance.$('[name="currencyId"]').val();
+        let amount = instance.$('[name="amount"]').val();
+        let bankName = instance.$('[name="bankName"]').val();
+        let bankNumber = instance.$('[name="bankNumber"]').val();
         if (transferType == 'khmer') {
-            $('[name="timeNote"]').css('border-color', '');
-            $('[name="dateNote"]').css('border-color', '');
-            if (refCode == '') {
-                alertify.error('Please input refCode.');
-                $('[name="refCode"]').css('border-color', 'red');
-                return false;
-            }
             if (type == 'OUT') {
-                if (senderId == '') {
-                    alertify.error('Please input Sender.');
-                    $('[name="senderId"]').css('border-color', 'red');
+                if (senderId == '' || senderTelephone == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '') {
+                    Session.set('refCode', 'This field is required!');
+                    Session.set('typeValidate', 'This field is required!');
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('senderIdValidate', 'This field is required!');
+                    Session.set('senderValidatePhone', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    Session.set('receiverValidatePhone', 'This field is required!');
                     return false;
                 }
-                if (senderTelephone == '') {
-                    alertify.error('Please input Sender Phone.');
-                    $('[name="senderTelephone"]').css('border-color', 'red');
-                    return false;
-                }
-                if (receiverId == '') {
-                    alertify.error('Please input receiver.');
-                    $('[name="receiverId"]').css('border-color', 'red');
-                    return false;
-                }
-                if (receiverTelephone == '') {
-                    alertify.error('Please input receiver phone.');
-                    $('[name="receiverTelephone"]').css('border-color', 'red');
-                    return false;
-                }
-            }else{
-                if (receiverId == '') {
-                    alertify.error('Please input receiver.');
-                    $('[name="receiverId"]').css('border-color', 'red');
-                    return false;
-                }
-                if (receiverTelephone == '') {
-                    alertify.error('Please input receiver phone.');
-                    $('[name="receiverTelephone"]').css('border-color', 'red');
+            } else {
+                if (refCode == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '') {
+                    Session.set('typeValidate', 'This field is required!');
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('refCode', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    Session.set('receiverValidatePhone', 'This field is required!');
                     return false;
                 }
             }
         } else {
-            if (dateNote == '') {
-                alertify.error('Please input Date Note.');
-                $('[name="dateNote"]').css('border-color', 'red');
-                return false;
+            if (type == 'IN') {
+                if (type == '' || dateNote == '' || timeNote == '' || senderId == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '') {
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('typeValidate', 'This field is required!');
+                    Session.set('dateNote', 'This field is required!');
+                    Session.set('timeNote', 'This field is required!');
+                    Session.set('senderIdValidate', 'This field is required!');
+                    Session.set('senderValidatePhone', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    Session.set('receiverValidatePhone', 'This field is required!');
+
+                    return false;
+                }
+            } else {
+                if (type == '' || dateNote == '' || timeNote == '' || senderId == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '' || bankName == '' || bankNumber == '') {
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('typeValidate', 'This field is required!');
+                    Session.set('dateNote', 'This field is required!');
+                    //Session.set('timeNote', 'This field is required!');
+                    //Session.set('senderIdValidate', 'This field is required!');
+                    //Session.set('senderValidatePhone', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    //Session.set('receiverValidatePhone', 'This field is required!');
+                    Session.set('bankNameValidate', 'This field is required!');
+                    Session.set('bankNumberValidate', 'This field is required!');
+                    return false;
+                }
             }
-            if (timeNote == '') {
-                alertify.error('Please input Time Note.');
-                $('[name="timeNote"]').css('border-color', 'red');
-                return false;
-            }
-            if (senderId == '') {
-                alertify.error('Please input Sender.');
-                $('[name="senderId"]').css('border-color', 'red');
-                return false;
-            }
-            if (senderTelephone == '') {
-                alertify.error('Please input Sender Phone.');
-                $('[name="senderTelephone"]').css('border-color', 'red');
-                return false;
-            }
-            if (receiverId == '') {
-                alertify.error('Please input receiver.');
-                $('[name="receiverId"]').css('border-color', 'red');
-                return false;
-            }
-            if (receiverTelephone == '') {
-                alertify.error('Please input receiver phone.');
-                $('[name="receiverTelephone"]').css('border-color', 'red');
-                return false;
-            }
+
         }
-    },'click #save-print'(e, instance){
+    },
+    'click #save-print'(e, instance){
+        Session.set("savePrint", true);
         let type = $('input:radio[name=type]:checked').val();
         let transferType = $('input:radio[name=transferType]:checked').val();
         let dateNote = instance.$('[name="dateNote"]').val();
@@ -610,92 +670,98 @@ formTmpl.events({
         let senderTelephone = instance.$('[name="senderTelephone"]').val();
         let receiverId = instance.$('[name="receiverId"]').val();
         let receiverTelephone = instance.$('[name="receiverTelephone"]').val();
+        let productId = instance.$('[name="productId"]').val();
+        let currencyId = instance.$('[name="currencyId"]').val();
+        let amount = instance.$('[name="amount"]').val();
         if (transferType == 'khmer') {
-            $('[name="timeNote"]').css('border-color', '');
-            $('[name="dateNote"]').css('border-color', '');
-            if (refCode == '') {
-                alertify.error('Please input refCode.');
-                $('[name="refCode"]').css('border-color', 'red');
-                return false;
-            }
             if (type == 'OUT') {
-                if (senderId == '') {
-                    alertify.error('Please input Sender.');
-                    $('[name="senderId"]').css('border-color', 'red');
+                if (senderId == '' || senderTelephone == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '') {
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('senderIdValidate', 'This field is required!');
+                    Session.set('senderValidatePhone', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    Session.set('receiverValidatePhone', 'This field is required!');
                     return false;
                 }
-                if (senderTelephone == '') {
-                    alertify.error('Please input Sender Phone.');
-                    $('[name="senderTelephone"]').css('border-color', 'red');
-                    return false;
-                }
-                if (receiverId == '') {
-                    alertify.error('Please input receiver.');
-                    $('[name="receiverId"]').css('border-color', 'red');
-                    return false;
-                }
-                if (receiverTelephone == '') {
-                    alertify.error('Please input receiver phone.');
-                    $('[name="receiverTelephone"]').css('border-color', 'red');
-                    return false;
-                }
-            }else{
-                if (receiverId == '') {
-                    alertify.error('Please input receiver.');
-                    $('[name="receiverId"]').css('border-color', 'red');
-                    return false;
-                }
-                if (receiverTelephone == '') {
-                    alertify.error('Please input receiver phone.');
-                    $('[name="receiverTelephone"]').css('border-color', 'red');
+            } else {
+                if (refCode == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '') {
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('refCode', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    Session.set('receiverValidatePhone', 'This field is required!');
                     return false;
                 }
             }
         } else {
-            if (dateNote == '') {
-                alertify.error('Please input Date Note.');
-                $('[name="dateNote"]').css('border-color', 'red');
-                return false;
-            }
-            if (timeNote == '') {
-                alertify.error('Please input Time Note.');
-                $('[name="timeNote"]').css('border-color', 'red');
-                return false;
-            }
-            if (senderId == '') {
-                alertify.error('Please input Sender.');
-                $('[name="senderId"]').css('border-color', 'red');
-                return false;
-            }
-            if (senderTelephone == '') {
-                alertify.error('Please input Sender Phone.');
-                $('[name="senderTelephone"]').css('border-color', 'red');
-                return false;
-            }
-            if (receiverId == '') {
-                alertify.error('Please input receiver.');
-                $('[name="receiverId"]').css('border-color', 'red');
-                return false;
-            }
-            if (receiverTelephone == '') {
-                alertify.error('Please input receiver phone.');
-                $('[name="receiverTelephone"]').css('border-color', 'red');
-                return false;
+            if (type == 'IN') {
+                if (type == '' || dateNote == '' || timeNote == '' || senderId == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '') {
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('typeValidate', 'This field is required!');
+                    Session.set('dateNote', 'This field is required!');
+                    Session.set('timeNote', 'This field is required!');
+                    Session.set('senderIdValidate', 'This field is required!');
+                    Session.set('senderValidatePhone', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    Session.set('receiverValidatePhone', 'This field is required!');
+                    return false;
+                }
+            } else {
+                if (type == '' || dateNote == '' || timeNote == '' || senderId == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '' || bankName == '' || bankNumber == '') {
+                    Session.set('productIdValidate', 'This field is required!');
+                    Session.set('currencyIdValidate', 'This field is required!');
+                    Session.set('amountValidate', 'This field is required!');
+                    Session.set('typeValidate', 'This field is required!');
+                    Session.set('dateNote', 'This field is required!');
+                    //Session.set('timeNote', 'This field is required!');
+                    //Session.set('senderIdValidate', 'This field is required!');
+                    //Session.set('senderValidatePhone', 'This field is required!');
+                    Session.set('receiverIdValidate', 'This field is required!');
+                    //ession.set('receiverValidatePhone', 'This field is required!');
+                    Session.set('bankNameValidate', 'This field is required!');
+                    Session.set('bankNumberValidate', 'This field is required!');
+                    return false;
+                }
             }
         }
     },
+
     'change [name="promotionId"]'(e, instance){
         let promotionId = $(e.currentTarget).val();
-        let transferDate = instance.$('[name="transferDate"]').val();
+        let transferDate = Session.get('transferDate');
+        // let transferDate = instance.$('[name="transferDate"]').val();
         let customerFee = instance.$('[name="customerFee"]').val();
+        let discountFee = instance.$('[name="discountFee"]').val();
         let amount = instance.$('[name="amount"]').val();
         let promotionAmount = instance.$('[name="promotionAmount"]').val();
+        let type = instance.$("input:radio[name=type]:checked").val();
+        let baseAmountFirst = instance.$('[name="baseAmountFirst"]').val();
+        let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
+        let totalFee = calculateAfterDiscount(customerFee, discountFee);
+        let totalAfterDis = new BigNumber(customerFee).minus(new BigNumber(totalFee)).toFixed(2);
+        let sumTotalFeeTotalAmount = 0;
+        let totalAmount = 0;
+        let bothBaseAmount = new BigNumber(baseAmountFirst).add(new BigNumber(baseAmountSecond)).toFixed(2);
+        let totalBaseAmountFeeIn = new BigNumber(bothBaseAmount).add(new BigNumber(customerFee)).toFixed(2);
+
         if (promotionId && transferDate && customerFee) {
             Meteor.call('newPromotion', promotionId, transferDate, customerFee, function (error, result) {
                 if (result) {
+                    if (type == 'IN') {
+                        let totalProAndDis = new BigNumber(totalAfterDis).add(new BigNumber(result)).toFixed(2);
+                        sumTotalFeeTotalAmount = new BigNumber(customerFee).minus(new BigNumber(totalProAndDis)).toFixed(2);
+                        totalAmount = new BigNumber(amount).add(new BigNumber(totalProAndDis)).minus(new BigNumber(totalBaseAmountFeeIn)).toFixed(2);
+                    } else {
+                        sumTotalFeeTotalAmount = new BigNumber(customerFee).minus(new BigNumber(result)).toFixed(2);
+                        let feeAndBaseAmount = new BigNumber(result).add(new BigNumber(bothBaseAmount)).add(new BigNumber(totalAfterDis)).toFixed(2);
+                        totalAmount = new BigNumber(amount).add(new BigNumber(customerFee)).minus(new BigNumber(feeAndBaseAmount)).toFixed(2);
+                    }
                     state.set('promotionAmount', result);
-                    let sumTotalFeeTotalAmount = new BigNumber(customerFee).minus(new BigNumber(result)).toFixed(2);
-                    let totalAmount = calculateTotalAmount(amount, sumTotalFeeTotalAmount);
                     state.set('promotion', sumTotalFeeTotalAmount);
                     tmpCollection.update({}, {$set: {totalFee: sumTotalFeeTotalAmount, totalAmount: totalAmount}});
                 } else {
@@ -704,9 +770,9 @@ formTmpl.events({
                 }
             });
         }
-        // else {
-        //     state.set('promotion', 0);
-        // }
+        else {
+            state.set('promotion', 0);
+        }
     },
     'keypress [name="amount"],[name="discountFee"],[name="sellingFirst"],[name="baseAmountFirst"],[name="sellingSecond"],[name="baseAmountSecond"]'(evt, instance){
         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -718,7 +784,21 @@ formTmpl.events({
         return !(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57));
     },
     'click [name="transferType"]'(e, instance){
+        Session.set('typeValidate', null);
+        Session.set('refCode', null);
+        Session.set('dateNote', null);
+        Session.set('timeNote', null);
+        Session.set('senderIdValidate', null);
+        Session.set('senderValidatePhone', null);
+        Session.set('receiverIdValidate', null);
+        Session.set('receiverValidatePhone', null);
+        Session.set('productIdValidate', null);
+        Session.set('currencyIdValidate', null);
+        Session.set('amountValidate', null);
+        Session.set('bankNameValidate', null);
+        Session.set('bankNumberValidate', null);
         let transferType = $(e.currentTarget).val();
+        let type = instance.$("input:radio[name=type]:checked").val();
         let transferDate = instance.$('[name="transferDate"]').val();
         let amount = instance.$('[name="amount"]').val();
         let customerFee = instance.$('[name="customerFee"]').val();
@@ -729,28 +809,51 @@ formTmpl.events({
         //let totalAmountThai = new BigNumber(amount).add(new BigNumber(bothBaseAmount)).toFixed(2);
         Session.set('transferType', transferType);
         if (transferType == "khmer") {
+            instance.$('[name="customerFee"]').prop('readonly', true);
             instance.$('[name="discountFee"]').prop('readonly', true);
             instance.$('[name="discountFee"]').val(0);
             tmpCollection.update({}, {$set: {totalFee: customerFee, totalAmount: totalAmount}});
             $('.hide-show').slideUp(300);
+            $('.promotion-hide-show').hide('fast');
+            $(".show-hide-bank").hide('fast');
             style = "display: none;"
         } else {
+            instance.$('[name="customerFee"]').prop('readonly', false);
             instance.$('[name="discountFee"]').prop('readonly', false);
-            //tmpCollection.update({}, {$set: {totalFee: customerFee, totalAmount: totalAmountThai}});
-            Meteor.call('promotionLabel', transferDate, function (error, result) {
+            Meteor.call('promotionLabel', Session.get('transferDate'), function (error, result) {
                 if (result) {
                     state.set('promotionLabel', 'Promotion');
                 }
                 state.set('promotionLabel', "None Promotion");
                 $('.hide-show').slideDown(300);
-
             });
+            $('.promotion-hide-show').show('fast');
+            if (type == 'OUT') {
+                $(".show-hide-bank").show('fast');
+            } else {
+                $(".show-hide-bank").hide('fast');
+            }
         }
+
         //AutoForm.resetForm('MoneyTransfer_transferForm');
+        instance.$('[name="productId"]').val('').trigger('change');
         tmpCollection.remove({});
         clearOnSuccess();
     },
     'click [name="type"]'(e, instance){
+        Session.set('typeValidate', null);
+        Session.set('refCode', null);
+        Session.set('dateNote', null);
+        Session.set('timeNote', null);
+        Session.set('senderIdValidate', null);
+        Session.set('senderValidatePhone', null);
+        Session.set('receiverIdValidate', null);
+        Session.set('receiverValidatePhone', null);
+        Session.set('productIdValidate', null);
+        Session.set('currencyIdValidate', null);
+        Session.set('amountValidate', null);
+        Session.set('bankNameValidate', null);
+        Session.set('bankNumberValidate', null);
         let type = instance.$("input:radio[name=type]:checked").val();
         let amount = instance.$('[name="amount"]').val();
         amount = _.isEmpty(amount) ? 0 : parseFloat(amount);
@@ -777,40 +880,51 @@ formTmpl.events({
             }
         } else {
             if (type == "IN") {
+                $('.show-hide-bank').hide("fast");
                 tmpCollection.update({}, {$set: {totalAmount: totalAmountThaiIn}});
             } else if (type == "OUT") {
+
+                $(".show-hide-bank").show('fast');
                 tmpCollection.update({}, {$set: {totalAmount: totalAmountThaiOut}});
             }
         }
-
     },
     'change [name="senderId"]'(e, instance){
         let senderId = $(e.currentTarget).val();
         Session.set('senderId', {senderId});
-
+        //Session.set('senderIdValidate', null);
+        // Session.set('senderValidatePhone', null);
     },
     'change [name="receiverId"]'(e, instance){
         let receiverId = $(e.currentTarget).val();
+        let transferType = instance.$("input:radio[name=transferType]:checked").val();
+        let type = instance.$("input:radio[name=type]:checked").val();
+        Session.set('checkReceiverTransferType', transferType);
+        Session.set('checkReceiverType', type);
         Session.set('receiverId', {receiverId});
+
+        //Session.set('receiverIdValidate', null);
+        //Session.set('receiverValidatePhone', null);
     },
     'change [name="productId"]'(e, instance){
         let productId = $(e.currentTarget).val();
         Session.set("productId", productId);
-        $('[name="currencyId"]').val('');
-        clearOnchange();
-        tmpCollection.remove({});
+        //Session.set('productIdValidate', null);
+        //$('[name="currencyId"]').val('');
+        //clearOnchange();
+        //tmpCollection.remove({});
 
         Meteor.call("getCurrency", productId, function (error, result) {
             if (result) {
-                //instance.currencyList.set(result);
                 state.set('currencyList', result);
-                instance.$('[name="amount"]').prop("readonly", true);
+                //instance.$('[name="amount"]').prop("readonly", true);
             } else {
-                instance.$('[name="amount"]').prop("readonly", true);
+                //instance.$('[name="amount"]').prop("readonly", true);
             }
         });
     },
     'change [name="currencyId"]'(e, instance){
+        //Session.set('currencyIdValidate', null);
         let currencyId = $(e.currentTarget).val();
         //let currencySymbol = $(e.currentTarget).val();
         let symbol;
@@ -848,7 +962,8 @@ formTmpl.events({
         tmpCollection.remove({});
         if (currencyId) {
             instance.$('[name="amount"]').prop("readonly", false);
-        } else {
+        }
+        else {
             instance.$('[name="amount"]').prop("readonly", true);
         }
     },
@@ -907,7 +1022,31 @@ formTmpl.events({
 
         //baseAmount 2
     },
-    'keyup [name="discountFee"]'(e, instance){
+    'keyup [name="customerFee"]'(e, instance){
+        let customerFee = $(e.currentTarget).val();
+        let discountFee = instance.$('[name="discountFee"]').val();
+        let amount = instance.$('[name="amount"]').val();
+        let transferType = instance.$('input:radio[name=transferType]:checked').val();
+        let type = instance.$("input:radio[name=type]:checked").val();
+        let promotionAmount = instance.$('[name="promotionAmount"]').val();
+        let totalFee = calculateAfterDiscount(customerFee, discountFee);
+        let totalAfterDis = new BigNumber(customerFee).minus(new BigNumber(totalFee)).toFixed(2);
+        let disAndPro = new BigNumber(promotionAmount).add(new BigNumber(totalAfterDis)).toFixed(2);
+        let reFeeIn = new BigNumber(customerFee).minus(new BigNumber(disAndPro)).toFixed(2);
+
+        let totalAmountIn = new BigNumber(amount).minus(new BigNumber(reFeeIn)).toFixed(2);
+        let totalAmountOut = new BigNumber(amount).add(new BigNumber(reFeeIn)).toFixed(2);
+
+        if (transferType == 'thai') {
+            if (type == 'IN') {
+                tmpCollection.update({}, {$set: {totalFee: reFeeIn, totalAmount: totalAmountIn}});
+            } else {
+                tmpCollection.update({}, {$set: {totalFee: reFeeIn, totalAmount: totalAmountOut}});
+            }
+        }
+    },
+    'keyup [name="discountFee"]'(e, instance)
+    {
         let discountFee = $(e.currentTarget).val();
         let amount = instance.$('[name="amount"]').val();
         let customerFee = instance.$('[name="customerFee"]').val();
@@ -915,9 +1054,10 @@ formTmpl.events({
         let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
         let transferType = instance.$('input:radio[name=transferType]:checked').val();
         let type = instance.$("input:radio[name=type]:checked").val();
-
+        let promotionAmount = instance.$('[name="promotionAmount"]').val();
         let bothBaseAmount = new BigNumber(baseAmountFirst).add(new BigNumber(baseAmountSecond)).toFixed(2);
         let totalFee = calculateAfterDiscount(customerFee, discountFee);
+        let totalFeeOut = new BigNumber(totalFee).minus(promotionAmount).toFixed(2);
         let totalAfterDis = new BigNumber(customerFee).minus(new BigNumber(totalFee)).toFixed(2);
         if (transferType == "khmer") {
             if (type == "IN") {
@@ -930,111 +1070,39 @@ formTmpl.events({
         } else {
             if (type == "IN") {
                 let thaiIn = new BigNumber(amount).minus(new BigNumber(customerFee)).toFixed(2);
-                let totalAmount = new BigNumber(thaiIn).add(new BigNumber(totalAfterDis)).minus(new BigNumber(bothBaseAmount)).toFixed(2);
-                tmpCollection.update({}, {$set: {totalFee: totalFee, totalAmount: totalAmount}});
+                let totalAmount = new BigNumber(thaiIn).add(new BigNumber(totalAfterDis)).add(new BigNumber(promotionAmount)).minus(new BigNumber(bothBaseAmount)).toFixed(2);
+                tmpCollection.update({}, {$set: {totalFee: totalFeeOut, totalAmount: totalAmount}});
             } else {
                 let thaiOut = new BigNumber(amount).add(new BigNumber(customerFee)).toFixed(2);
-                let totalAmount = new BigNumber(thaiOut).minus(new BigNumber(totalAfterDis)).minus(new BigNumber(bothBaseAmount)).toFixed(2);
-                tmpCollection.update({}, {$set: {totalFee: totalFee, totalAmount: totalAmount}});
+                let ex = new BigNumber(totalAfterDis).add(new BigNumber(bothBaseAmount)).add(new BigNumber(promotionAmount)).toFixed(2);
+                // let totalAmount = new BigNumber(thaiOut).minus(new BigNumber(ex)).minus(new BigNumber(bothBaseAmount)).toFixed(2);
+                let totalAmount = new BigNumber(thaiOut).minus(new BigNumber(ex)).toFixed(2);
+                tmpCollection.update({}, {$set: {totalFee: totalFeeOut, totalAmount: totalAmount}});
             }
         }
 
-    },
-    'click .js-print'(e, instance){
+    }
+    ,
+    'click .js-print'(e, instance)
+    {
         Session.set("savePrint", true);
-    },
+    }
+    ,
 
-    'click .sender' (e, instance) {
+    'click .sender'(e, instance)
+    {
         Session.set('quickAddCustomerFlag', 'sender');
         alertify.customer(fa('plus', 'Customer'), renderTemplate(customerForm));
-    },
-    'click .receiver' (e, instance) {
+    }
+    ,
+    'click .receiver'(e, instance)
+    {
         Session.set('quickAddCustomerFlag', 'receiver');
         alertify.customer(fa('plus', 'Customer'), renderTemplate(customerForm));
-    },
-    // 'click [name="deductFee"]'(e, instance){
-    //     // UIBlock.block('Wait...');
-    //     $.blockUI();
-    //     Meteor.setTimeout(()=> {
-    //         UIBlock.unblock();
-    //         let deductFee = $(e.currentTarget).prop('checked');
-    //         let amount = instance.$('[name="amount"]').val();
-    //         let customerFee = instance.$('[name="customerFee"]').val();
-    //         let productId = instance.$('[name="productId"]').val();
-    //         let currencyId = instance.$('[name="currencyId"]').val();
-    //         //selling rate 1
-    //         let type = instance.$("input:radio[name=type]:checked").val();
-    //         let baseAmountFirst = instance.$('[name="baseAmountFirst"]').val();
-    //         let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
-    //         let totalFee = instance.$('[name="totalFee"]').val();
-    //         let discountAmount = new BigNumber(customerFee).minus(new BigNumber(totalFee)).toFixed(2);
-    //         let exchangeAmount = new BigNumber(baseAmountFirst).add(new BigNumber(baseAmountSecond)).toFixed(2);
-    //         let totalDiscountAmountExchangeAmount = new BigNumber(discountAmount).add(new BigNumber(exchangeAmount)).toFixed(2);
-    //
-    //         if (deductFee == true) {
-    //             let amountDeductFee = new BigNumber(amount).minus(new BigNumber(customerFee)).toFixed(2);
-    //             if (productId && currencyId && amount) {
-    //                 Meteor.call("getFee", productId, currencyId, amountDeductFee, type, function (error, result) {
-    //                     if (result) {
-    //                         if (type == 'IN') {
-    //                             tmpCollection.remove({});
-    //                             tmpCollection.insert(result);
-    //                             let totalAmountPri = new BigNumber(amount).minus(new BigNumber(result.customerFee)).toFixed(2);
-    //                             let totalAmount = new BigNumber(totalAmountPri).minus(new BigNumber(totalDiscountAmountExchangeAmount)).toFixed(2);
-    //                             instance.amount.set(totalAmount);
-    //                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
-    //                             instance.$('.save').prop('disabled', false);
-    //                             instance.$('.save-print').prop('disabled', false);
-    //                         } else {
-    //                             tmpCollection.remove({});
-    //                             tmpCollection.insert(result);
-    //                             let totalAmountPri = new BigNumber(amount).minus(new BigNumber(result.customerFee)).toFixed(2);
-    //                             let totalAmount = new BigNumber(totalAmountPri).minus(new BigNumber(totalDiscountAmountExchangeAmount)).toFixed(2);
-    //                             instance.amount.set(totalAmountPri);
-    //                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
-    //                             instance.$('.save').prop('disabled', false);
-    //                             instance.$('.save-print').prop('disabled', false);
-    //                         }
-    //                     }
-    //
-    //                 });
-    //             }
-    //         } else {
-    //             let amountDeductFee = new BigNumber(amount).add(new BigNumber(customerFee)).toFixed(2);
-    //             if (amount == "") {
-    //                 clearOnKeyupAmount();
-    //             }
-    //             if (productId && currencyId && amount) {
-    //                 Meteor.call("getFee", productId, currencyId, amountDeductFee, type, function (error, result) {
-    //                     if (result) {
-    //                         if (type == 'IN') {
-    //                             tmpCollection.remove({});
-    //                             tmpCollection.insert(result);
-    //                             //let totalAmountPri = new BigNumber(amountDeductFee).add(new BigNumber(result.customerFee)).toFixed(2);
-    //                             let totalAmount = new BigNumber(amountDeductFee).minus(new BigNumber(totalDiscountAmountExchangeAmount)).toFixed(2);
-    //                             instance.amount.set(amountDeductFee);
-    //                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
-    //                             instance.$('.save').prop('disabled', false);
-    //                             instance.$('.save-print').prop('disabled', false);
-    //                         } else {
-    //                             tmpCollection.remove({});
-    //                             tmpCollection.insert(result);
-    //                             let totalAmountPri = new BigNumber(amountDeductFee).add(new BigNumber(result.customerFee)).toFixed(2);
-    //                             let totalAmount = new BigNumber(totalAmountPri).minus(new BigNumber(totalDiscountAmountExchangeAmount)).toFixed(2);
-    //                             instance.amount.set(amountDeductFee);
-    //                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
-    //                             instance.$('.save').prop('disabled', false);
-    //                             instance.$('.save-print').prop('disabled', false);
-    //                         }
-    //                     }
-    //
-    //                 });
-    //             }
-    //         }
-    //         $.unblockUI();
-    //     }, 200);
-    // },
-    'change [name="baseAmountFirst"]'(e, instance){
+    }
+    ,
+    'change [name="baseAmountFirst"]'(e, instance)
+    {
         let baseAmountFirst = $(e.currentTarget).val();
         let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
         let currencyId = instance.$('[name="currencyId"]').val();
@@ -1046,7 +1114,7 @@ formTmpl.events({
         let totalFee = instance.$('[name="totalFee"]').val();
         let transferType = instance.$('input:radio[name=transferType]:checked').val();
         let type = instance.$("input:radio[name=type]:checked").val();
-
+        let promotionAmount = instance.$('[name="promotionAmount"]').val();
         //selling rate 1
         if (currencyId && convertToFirst && baseAmountFirst && sellingFirst) {
             Meteor.call("exchangeRateTransfer", currencyId, convertToFirst, baseAmountFirst, sellingFirst, function (error, res) {
@@ -1094,9 +1162,10 @@ formTmpl.events({
             }
 
         }
-
-    },
-    'change [name="baseAmountSecond"]'(e, instance){
+    }
+    ,
+    'change [name="baseAmountSecond"]'(e, instance)
+    {
         let baseAmountSecond = $(e.currentTarget).val();
         let baseAmountFirst = $('[name="baseAmountFirst"]').val();
         let totalFee = instance.$('[name="totalFee"]').val();
@@ -1108,6 +1177,7 @@ formTmpl.events({
         let customerFee = instance.$('[name="customerFee"]').val();
         let transferType = instance.$('input:radio[name=transferType]:checked').val();
         let type = instance.$("input:radio[name=type]:checked").val();
+        let promotionAmount = instance.$('[name="promotionAmount"]').val();
 
         //selling rate 2
         if (currencyId && convertToSecond && baseAmountSecond && sellingSecond) {
@@ -1158,8 +1228,10 @@ formTmpl.events({
 
 
         }
-    },
-    'change [name="sellingFirst"]'(e, instance){
+    }
+    ,
+    'change [name="sellingFirst"]'(e, instance)
+    {
         let sellingFirst = $(e.currentTarget).val();
         let currencyId = instance.$('[name="currencyId"]').val();
         let convertToFirst = instance.$('[name="convertToFirst"]').val();
@@ -1169,8 +1241,10 @@ formTmpl.events({
                 state.set("toAmountFirst", res);
             });
         }
-    },
-    'change [name="sellingSecond"]'(e, instance){
+    }
+    ,
+    'change [name="sellingSecond"]'(e, instance)
+    {
         let sellingSecond = $(e.currentTarget).val();
         let currencyId = instance.$('[name="currencyId"]').val();
         let convertToSecond = instance.$('[name="convertToSecond"]').val();
@@ -1238,8 +1312,6 @@ let hooksObject = {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
 
                 });
-                tmpCollection.remove({});
-                // exchangeItemCollection.remove({});
             }
         } else {
             if (Session.get("savePrint")) {
@@ -1247,14 +1319,17 @@ let hooksObject = {
                     alertify.invoice(fa('', 'Invoice'), renderTemplate(invoice, doc));
                 });
             }
+            Session.set("savePrint", false);
             tmpCollection.remove({});
             state.set('toAmountFirst', 0);
             state.set('toAmountSecond', 0);
             state.set("exchangeTransfer", 0);
             state.set('exchangeId', null);
-
+            state.set('senderPhone', null);
+            state.set('receiverPhone', null);
+            state.set('bankName', null);
+            state.set('bankNumber', null);
         }
-
         displaySuccess();
     },
     onError (formType, error) {
@@ -1300,12 +1375,7 @@ function readOnlyFalse() {
     $('[name="baseAmountFirst"]').prop("readonly", false);
     $('[name="baseAmountSecond"]').prop("readonly", false);
 }
-function exchangeClear() {
-    $('[name="baseAmountFirst"]').val(0);
-    $('[name="baseAmountSecond"]').val(0);
-    $('[name="toAmountFirst"]').val(0);
-    $('[name="toAmountSecond"]').val(0);
-}
+
 function clearOnSuccess() {
     $('[name="customerFee"]').val(0);
     $('[name="discountFee"]').val(0);
@@ -1322,9 +1392,7 @@ function clearOnSuccess() {
 
 }
 function calculateAfterDiscount(customerFee, discountFee) {
-    //return customerFee * (1 - discountFee / 100);
     return new BigNumber(customerFee).times(new BigNumber(new BigNumber(1).minus(new BigNumber(discountFee).div(new BigNumber(100))))).toFixed(2);
-    //return new BigNumber(customerFee).times(new BigNumber(1).minus(new BigNumber(discountFee)).div(new BigNumber(100))).toFixed(2);
 }
 function calculateTotalAmount(amount, disAmountFee) {
     return new BigNumber(amount).add(new BigNumber(disAmountFee)).toFixed(2);

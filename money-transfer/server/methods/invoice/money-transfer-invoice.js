@@ -24,18 +24,28 @@ Meteor.methods({
             doc.title.transferTypeIn = 'ខ្មែរ';
             doc.title.dateNote = '';
             doc.title.timeNote = '';
+            doc.title.refCode = doc.refCode;
+            if (doc.type == 'IN') {
+                doc.title.transferReveive = "ទទួល";
+            }else{
+                doc.title.transferReveive = "ផ្ទេរ";
+            }
         } else {
-            doc.title.transferTypeIn = 'ថៃ';
-            doc.title.dateNote = doc.dateNote;
-            doc.title.timeNote = doc.timeNote;
+            if (doc.type == 'IN') {
+                doc.title.transferTypeIn = 'ថៃ';
+                doc.title.dateNote = doc.dateNote;
+                doc.title.timeNote = doc.timeNote;
+                doc.title.transferReveive = "ទទួល";
+                doc.title.senderAndReceiver = doc.receiver.name;
+                doc.title.refCode = '';
+            } else {
+                doc.title.transferTypeIn = 'ថៃ';
+                doc.title.transferReveive = "ផ្ទេរ";
+                doc.title.senderAndReceiver = doc.sender.name;
+                doc.title.refCode = doc.bankNumber;
+            }
         }
-        if (doc.type == 'IN') {
-            doc.title.transferReveive = "ទទួល";
-            doc.title.senderAndReceiver=doc.receiver.name;
-        } else {
-            doc.title.transferReveive = "ផ្ទេរ";
-            doc.title.senderAndReceiver=doc.sender.name;
-        }
+
         return doc;
     },
     getSenderDoc(tmpId){

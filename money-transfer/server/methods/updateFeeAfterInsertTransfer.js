@@ -80,6 +80,9 @@ Meteor.methods({
                 if (doc.senderId) {
                     Meteor.call('updateCustomerExpireDay', {doc});
                 }
+                if(doc.receiverId){
+                    Meteor.call('updateCustomerBankAccount', {doc});
+                }
             }
         }
 
