@@ -640,7 +640,7 @@ formTmpl.events({
                     return false;
                 }
             } else {
-                if (type == '' || dateNote == '' || timeNote == '' || senderId == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '' || bankName == '' || bankNumber == '') {
+                if (type == '' || dateNote == '' || receiverId == '' || productId == '' || currencyId == '' || amount == '' || bankName == '' || bankNumber == '') {
                     Session.set('productIdValidate', 'This field is required!');
                     Session.set('currencyIdValidate', 'This field is required!');
                     Session.set('amountValidate', 'This field is required!');
@@ -712,7 +712,7 @@ formTmpl.events({
                     return false;
                 }
             } else {
-                if (type == '' || dateNote == '' || timeNote == '' || senderId == '' || receiverId == '' || receiverTelephone == '' || productId == '' || currencyId == '' || amount == '' || bankName == '' || bankNumber == '') {
+                if (type == '' || dateNote == '' || receiverId == '' || productId == '' || currencyId == '' || amount == '' || bankName == '' || bankNumber == '') {
                     Session.set('productIdValidate', 'This field is required!');
                     Session.set('currencyIdValidate', 'This field is required!');
                     Session.set('amountValidate', 'This field is required!');

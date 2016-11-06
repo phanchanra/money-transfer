@@ -17,32 +17,34 @@ Meteor.methods({
         doc.sender = Customer.findOne(doc.senderId);
         doc.receiver = Customer.findOne(doc.receiverId);
         doc.product = Product.findOne(doc.productId);
-        //console.log(doc);
+        //console.log(doc.receiver.address);
         doc.title.invoiceId = doc._id;
         //doc.title.dateTimeNote = doc.dateTimeNote;
         if (doc.transferType == 'khmer') {
-            doc.title.transferTypeIn = 'ខ្មែរ';
-            doc.title.dateNote = '';
-            doc.title.timeNote = '';
+            doc.title.transferTypeIn = 'ខ្មែរ~ខ្មែរ';
             doc.title.refCode = doc.refCode;
             if (doc.type == 'IN') {
                 doc.title.transferReveive = "ទទួល";
-            }else{
+                doc.address = doc.receiver.address;
+            } else {
                 doc.title.transferReveive = "ផ្ទេរ";
+                doc.address = doc.sender.address;
             }
         } else {
             if (doc.type == 'IN') {
-                doc.title.transferTypeIn = 'ថៃ';
+                doc.title.transferTypeIn = 'ថៃ~ខ្មែរ';
                 doc.title.dateNote = doc.dateNote;
                 doc.title.timeNote = doc.timeNote;
                 doc.title.transferReveive = "ទទួល";
                 doc.title.senderAndReceiver = doc.receiver.name;
                 doc.title.refCode = '';
+                doc.address = doc.receiver.address;
             } else {
-                doc.title.transferTypeIn = 'ថៃ';
+                doc.title.transferTypeIn = 'ខ្មែរ~ថៃ';
                 doc.title.transferReveive = "ផ្ទេរ";
-                doc.title.senderAndReceiver = doc.sender.name;
+                doc.title.senderAndReceiver = doc.receiver.name;
                 doc.title.refCode = doc.bankNumber;
+                doc.address = doc.receiver.address;
             }
         }
 
