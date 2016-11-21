@@ -11,7 +11,7 @@
 <!--Action-->
 <template name="MoneyTransfer_transactionItemsAction">
     <ul class="list-inline">
-        <li><a href="#" class="js-update-item"><i class="fa fa-pencil"></i></a></li>
+        <!--<li><a href="#" class="js-update-item"><i class="fa fa-pencil"></i></a></li>-->
         <li><a href="#" class="js-destroy-item"><i class="fa fa-remove"></i></a></li>
     </ul>
 </template>
@@ -24,14 +24,15 @@
                 <h4><span class="label label-primary">Base Currency Exchange: {{baseExchangeShow}}</span></h4>
             </div>
             <div class="col-sm-3">
-                <h4><span class="label label-primary">Exchange Rate: {{exchangeRateLabel}}</span></h4>
+                <h4><span class="label label-primary">Exchange Rate: {{exchangeRateSelling}}</span></h4>
             </div>
             <div class="col-sm-6"></div>
         </div>
         <div class="row">
             <div class="col-sm-3">
                 {{> afQuickField name="baseCurrency" class='base-currency' label=false placeholder="Base Currency"}}
-                {{> afQuickField name="selling" value=exchangeRateLabel class='selling' label=false type='hidden'}}
+                {{> afQuickField name="buying" value=exchangeRateBuying class='buying' label=false type="hidden"}}
+                {{> afQuickField name="selling" value=exchangeRateSelling class='selling' label=false type="hidden"}}
             </div>
             <div class="col-sm-3">
                 {{> afQuickField name="convertTo" class='convert-to' label=false placeholder="Convert To"}}
@@ -40,7 +41,9 @@
                 {{> afQuickField name="baseAmount" class="base-amount" label=false placeholder="Base Amount"}}
             </div>
             <div class="col-sm-2">
+                {{> afQuickField name="toAmountBuying" value=toAmountBuying class="to-amount-buying" label=false type="hidden"}}
                 {{> afQuickField name="toAmount" value=toAmount class="to-amount" label=false placeholder="To Amount" }}
+                {{> afQuickField name="income" value=income class="income" label=false }}
             </div>
             <div class="col-sm-1">
                 <button type="button" class="btn btn-primary js-add-item" {{disabledAddItemBtn}}>+</button>
@@ -56,10 +59,13 @@
             <div class="row">
                 <div class="col-md-12">
                     {{> afQuickField name="baseCurrency"}}
+                    {{> afQuickField name="buying"}}
                     {{> afQuickField name="selling"}}
                     {{> afQuickField name="convertTo"}}
                     {{> afQuickField name="baseAmount" }}
+                    {{> afQuickField name="toAmountBuying" value=toAmountBuying readonly="true"}}
                     {{> afQuickField name="toAmount" value=toAmount readonly="true"}}
+                    {{> afQuickField name="income" value=income readonly="true"}}
                 </div>
             </div>
 

@@ -1,0 +1,126 @@
+<template name="generateExchangeInvoice">
+    {{#if Template.subscriptionsReady}}
+        <div class="container print" id="print-invoice" style="width: 559px;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="invoice-title">
+                        <div class="row">
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-11">
+                                <table width="100%">{{#with title}}
+                                    <tr>
+                                        <td><h4 style="font-family: 'Khmer OS Muol'"><b>{{khName}}</b></h4></td>
+                                        <td><h5 style="font-family: 'Khmer OS Muol'">
+                                            <b>វិក្កយបត្រ ប្តូរប្រាក់</b></h5>
+                                        </td>
+                                    </tr>
+                                    <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
+                                        <td>{{khAddress}}</td>
+                                        <td>លេខវិក្កយបត្រ: {{invoiceId}}</td>
+                                    </tr>
+                                    <tr style="font-size: 11px; font-family: 'Khmer OS Battambang';">
+                                        <td>{{telephone}}</td>
+                                        <td></td>
+                                    </tr>
+                                {{/with}}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">Customer : {{customer._id}}-{{customer.name}}</div>
+                        <div class="col-xs-6">Exchange Date : {{moFormat exchangeDate "DD/MM/YYYY"}}</div>
+                    </div>
+                </div>
+                <table class="rpt rpt-content">
+                    <thead class="rpt-content-body">
+                    <tr style="background-color: lightgrey; text-align: center;">
+                        <td>#</td>
+                        <td>Base Currency</td>
+                        <td>Convert To Currency</td>
+                        <td>Base Amount</td>
+                        <td>Convert To Amount</td>
+                    </tr>
+                    </thead>
+                    <tbody class="rpt-content-body">
+                    {{#each item in items}}
+                        <tr>
+                            <td align="center">{{no @index}}</td>
+                            <td>{{item.baseCurrency}}</td>
+                            <td>{{item.convertTo}}</td>
+                            <td align="right">{{numFormat item.baseAmount '000.00'}}</td>
+                            <td align="right">{{numFormat item.toAmount '000.00'}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div style="font-size: 12px; font-family: 'Khmer OS Battambang';">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="text-align: center; width: 50%; float: right;">
+                            {{#with title}}
+                                <span>ឈ្មេាះ និងស្នាមេដៃអ្នក{{transferReveive}}</span>
+                            {{/with}}
+                            <br><br>
+                        </div>
+                        <div style="text-align: center; width: 50%;">
+                            <span>ឈ្មេាះ និងហត្ថលេខា បេឡា</span>
+                            <br><br>
+                        </div>
+                        <div style="height: 5px;"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div style="text-align: center; width: 50%; float: right;">
+                            {{#with title}}
+                                <span>{{senderAndReceiver}}</span>
+                            {{/with}}
+                        </div>
+                        <div style="text-align: center; width: 50%;">
+                            <span>{{userName}}</span>
+                        </div>
+                        <div style="height: 5px;"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"
+                         style="text-align: center; font-family: 'Khmer OS Battambang'; font-size: 9px;">
+                        <span>អរគុណ សូមអញ្ចើញមកម្តងទៀត!</span>
+                        <br>
+                        <p style="text-align: center;">Powered by Rabbit Technology</p>
+                    </div>
+                </div>
+            </div>
+            <hr style="border: 1px dashed #322f32;">
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="border-top: dotted 1px black; margin-bottom: 1px; margin-top: 20px;"></div>
+            </div>
+        </div>
+        <div class="container" style="width: 559px;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <address>
+                            </address>
+                        </div>
+                        <div class="col-xs-11">
+                            <address class="text-right">
+                                <button type="button" id="print" class="btn btn-primary fa fa-print"><span
+                                        style="font-family: Arial;">Print</span></button>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---->
+
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>

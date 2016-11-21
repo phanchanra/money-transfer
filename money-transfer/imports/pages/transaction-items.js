@@ -80,9 +80,17 @@ indexTmpl.helpers({
                 key: 'baseAmount',
                 label: 'Base Amount',
                 fn(value, obj, key){
-                    return Spacebars.SafeString(`<input type="text" value="${value}" class="base-amount">`);
+                    return Spacebars.SafeString(`<input type="text" value="${value}" class="base-amount" readonly="readonly">`);
                 }
             },
+            // {
+            //     key: 'toAmountBuying',
+            //     label: 'រឹរ',
+            //     fn (value, object, key) {
+            //         return Spacebars.SafeString(`<input type="text" value="${numeral(value).format('0,0.00')}" class="to-amount-buying">`);
+            //         //return Spacebars.SafeString(`<span class="to-amount">${numeral(value).format('0,0.00')}</span>`);
+            //     }
+            // },
             {
                 key: 'toAmount',
                 label: 'To Amount',
@@ -103,12 +111,16 @@ indexTmpl.helpers({
                 tmpl: actionTmpl, sortable: false
             }
         ];
-
         return reactiveTableSettings;
     }
-
 });
-
+let state = new ReactiveObj({
+    buyingRate: 0,
+    sellingRate: 0,
+    toAmountBuying: 0,
+    toAmount: 0,
+    income: 0
+});
 indexTmpl.events({
     'click .js-update-item': function (event, instance) {
         alertify.item(fa('pencil', 'Transaction Item'), renderTemplate(editTmpl, this));
@@ -120,7 +132,7 @@ indexTmpl.events({
             {title: 'Transaction Item', itemTitle: this.exchangeTransaction}
         );
     },
-    'change .base-amount'(event, instance){
+    'keyup .base-amount'(event, instance){
         let $parents = $(event.currentTarget).parents('tr');
         let baseCurrency = $parents.find('.base-currency').text();
         let convertTo = $parents.find('.convert-to').text();
@@ -128,7 +140,8 @@ indexTmpl.events({
         baseAmount = _.isEmpty(baseAmount) ? 0 : parseFloat(baseAmount);
         if (baseCurrency && convertTo && baseAmount) {
             Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
-                $parents.find('.to-amount').val(result);
+                $parents.find('.to-amount-buying').val(result.buying);
+                $parents.find('.to-amount').val(result.selling);
             });
         }
     },
@@ -142,7 +155,7 @@ indexTmpl.events({
             Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
                 itemsCollection.update(
                     {baseCurrency: baseCurrency, convertTo: convertTo},
-                    {$set: {baseAmount: baseAmount, toAmount: result}}
+                    {$set: {baseAmount: baseAmount, toAmountBuying: result.buying, toAmount: result.selling}}
                 );
             });
         }
@@ -155,7 +168,7 @@ newTmpl.onCreated(function () {
     //this.baseCurrency = new ReactiveVar();
     //this.convertTo = new ReactiveVar();
     //this.baseAmount = new ReactiveVar(0);
-    this.toAmount = new ReactiveVar();
+    //this.toAmount = new ReactiveVar();
 });
 
 newTmpl.helpers({
@@ -163,15 +176,11 @@ newTmpl.helpers({
         return TransactionItemsSchema;
     },
     disabledAddItemBtn: function () {
-        const instance = Template.instance();
-        if (instance.toAmount.get() > 0) {
+        //const instance = Template.instance();
+        if (state.get('toAmount') > 0) {
             return {};
         }
         return {disabled: true};
-    },
-    toAmount: function () {
-        const instance = Template.instance();
-        return instance.toAmount.get();
     },
     baseExchangeShow(){
         let getBaseCurrency = Session.get("baseCurrency");
@@ -187,8 +196,20 @@ newTmpl.helpers({
             return baseCur;
         }
     },
-    exchangeRateLabel(){
-        return Session.get("exchangeRateLabelOnHelper");
+    exchangeRateSelling(){
+        return state.get("sellingRate");
+    },
+    exchangeRateBuying(){
+        return state.get("buyingRate");
+    },
+    toAmountBuying(){
+        return state.get("toAmountBuying");
+    },
+    toAmount(){
+        return state.get('toAmount');
+    },
+    income(){
+        return state.get('income');
     }
 });
 
@@ -215,11 +236,10 @@ newTmpl.events({
             $.unblockUI();
         }, 200);
     },
-    'change .convert-to,.base-amount'(e, instance){
-        let baseAmount = instance.$('[name="baseAmount"]').val();
+    'change .convert-to'(e, instance){
+        //let baseAmount = instance.$('[name="baseAmount"]').val();
         let baseCurrency = instance.$('[name="baseCurrency"]').val();
         let convertTo = instance.$('[name="convertTo"]').val();
-
         let convertToSymbol;
         if (convertTo == 'USD') {
             convertToSymbol = '$'
@@ -232,17 +252,27 @@ newTmpl.events({
 
         if (baseCurrency && convertTo) {
             Meteor.call("exchangeItemsLabel", baseCurrency, convertTo, function (err, res) {
-                Session.set("exchangeRateLabelOnHelper", res);
+                state.set('buyingRate', res.exBuyingRate);
+                state.set('sellingRate', res.exSellingRate);
+                // Session.set("exchangeRateLabelOnHelper", res.exSellingRate);
             });
         }
 
+    },
+    'keyup .base-amount'(e, instance){
+        let baseAmount = $(e.currentTarget).val();
+        let baseCurrency = instance.$('[name="baseCurrency"]').val();
+        let convertTo = instance.$('[name="convertTo"]').val();
         if (baseCurrency && convertTo && baseAmount) {
             Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
                 if (!result) {
                     clear();
                     swal("Please check", "Your exchange rate are not yet data Entry!");
                 } else {
-                    instance.toAmount.set(result);
+                    let income = new BigNumber(result.selling).minus(new BigNumber(result.buying)).toFixed(2);
+                    state.set('toAmountBuying', result.buying);
+                    state.set('toAmount', result.selling);
+                    state.set('income', income);
                 }
             });
         }
@@ -251,8 +281,12 @@ newTmpl.events({
         let baseCurrency = instance.$('[name="baseCurrency"]').val();
         let convertTo = instance.$('[name="convertTo"]').val();
         let baseAmount = math.round(parseFloat(instance.$('[name="baseAmount"]').val()), 2);
-        let toAmount = math.round(parseFloat(instance.$('[name="toAmount"]').val()), 2);
+        let buying = instance.$('[name="buying"]').val();
         let selling = instance.$('[name="selling"]').val();
+        let toAmountBuying = math.round(parseFloat(instance.$('[name="toAmountBuying"]').val()), 2);
+        let toAmount = math.round(parseFloat(instance.$('[name="toAmount"]').val()), 2);
+        let income = math.round(parseFloat(instance.$('[name="income"]').val()), 2);
+
         clearFrom();
         Session.set("baseCurrencySymbol", false);
         Session.set("convertToSymbol", false);
@@ -260,21 +294,29 @@ newTmpl.events({
         let exist = itemsCollection.findOne({baseCurrency: baseCurrency, convertTo: convertTo});
         if (exist) {
             baseAmount += parseFloat(exist.baseAmount);
+            toAmountBuying += parseFloat(exist.toAmountBuying);
             toAmount += parseFloat(exist.toAmount);
+            income += parseFloat(exist.income);
             itemsCollection.update(
                 {baseCurrency: baseCurrency, convertTo: convertTo},
-                {$set: {baseAmount: baseAmount, toAmount: toAmount}}
+                {$set: {baseAmount: baseAmount, toAmountBuying: toAmountBuying, toAmount: toAmount, income: income}}
             );
         } else {
             itemsCollection.insert({
                 baseCurrency: baseCurrency,
+                buying: buying,
                 selling: selling,
                 convertTo: convertTo,
                 baseAmount: baseAmount,
-                toAmount: toAmount
+                toAmountBuying: toAmountBuying,
+                toAmount: toAmount,
+                income: income
             });
         }
-        instance.toAmount.set(0);
+        state.set('toAmount', 0);
+        state.set('toAmountBuying', 0);
+        state.set('buyingRate', 0);
+        state.set('sellingRate', 0);
     },
 });
 
@@ -295,54 +337,101 @@ editTmpl.helpers({
         let data = Template.currentData();
         return data;
     },
-    toAmount: function () {
-        const instance = Template.instance();
-        return instance.toAmount.get();
+    // toAmount: function () {
+    //     const instance = Template.instance();
+    //     return instance.toAmount.get();
+    // }
+    toAmountBuying(){
+        return state.get("toAmountBuying");
+    },
+    toAmount(){
+        return state.get('toAmount');
     }
 });
 //
-editTmpl.events({
-    'change [name="baseCurrency"]'(e, instance){
-        let baseCurrency = $(e.currentTarget).val();
-        clear();
-        let baseCurrencySymbol;
-        if (baseCurrency == 'USD') {
-            baseCurrencySymbol = '$'
-        } else if (baseCurrency == 'KHR') {
-            baseCurrencySymbol = '៛'
-        } else {
-            baseCurrencySymbol = 'B'
-        }
-        Session.set("baseCurrency", baseCurrency);
-        Session.set("baseCurrencySymbol", baseCurrencySymbol);
-    },
-    'change [name="convertTo"],[name="baseAmount"]'(e, instance){
-        let baseAmount = instance.$('[name="baseAmount"]').val();
-        let baseCurrency = instance.$('[name="baseCurrency"]').val();
-        let convertTo = instance.$('[name="convertTo"]').val();
-
-        let convertToSymbol;
-        if (convertTo == 'USD') {
-            convertToSymbol = '$'
-        } else if (convertTo == 'KHR') {
-            convertToSymbol = '៛'
-        } else {
-            convertToSymbol = 'B'
-        }
-        Session.set("convertToSymbol", convertToSymbol);
-
-        if (baseCurrency && convertTo && baseAmount) {
-            Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
-                if (!result) {
-                    clear();
-                    swal("Please check", "Your exchange rate are not yet data Entry!");
-                } else {
-                    instance.toAmount.set(result);
-                }
-            });
-        }
-    },
-});
+// editTmpl.events({
+//     'change [name="baseCurrency"]'(e, instance){
+//         let baseCurrency = $(e.currentTarget).val();
+//         clear();
+//         let baseCurrencySymbol;
+//         if (baseCurrency == 'USD') {
+//             baseCurrencySymbol = '$'
+//         } else if (baseCurrency == 'KHR') {
+//             baseCurrencySymbol = '៛'
+//         } else {
+//             baseCurrencySymbol = 'B'
+//         }
+//         Session.set("baseCurrency", baseCurrency);
+//         Session.set("baseCurrencySymbol", baseCurrencySymbol);
+//     },
+//     // 'change [name="convertTo"],[name="baseAmount"]'(e, instance){
+//     //     let baseAmount = instance.$('[name="baseAmount"]').val();
+//     //     let baseCurrency = instance.$('[name="baseCurrency"]').val();
+//     //     let convertTo = instance.$('[name="convertTo"]').val();
+//     //
+//     //     let convertToSymbol;
+//     //     if (convertTo == 'USD') {
+//     //         convertToSymbol = '$'
+//     //     } else if (convertTo == 'KHR') {
+//     //         convertToSymbol = '៛'
+//     //     } else {
+//     //         convertToSymbol = 'B'
+//     //     }
+//     //     Session.set("convertToSymbol", convertToSymbol);
+//     //
+//     //     if (baseCurrency && convertTo && baseAmount) {
+//     //         Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
+//     //             if (!result) {
+//     //                 clear();
+//     //                 swal("Please check", "Your exchange rate are not yet data Entry!");
+//     //             } else {
+//     //                 state.set('toAmountBuying', result.buying);
+//     //                 state.set('toAmount', result.selling);
+//     //                 // instance.toAmount.set(result.selling);
+//     //             }
+//     //         });
+//     //     }
+//     // },
+//     'change .convert-to'(e, instance){
+//         //let baseAmount = instance.$('[name="baseAmount"]').val();
+//         let baseCurrency = instance.$('[name="baseCurrency"]').val();
+//         let convertTo = instance.$('[name="convertTo"]').val();
+//         let convertToSymbol;
+//         if (convertTo == 'USD') {
+//             convertToSymbol = '$'
+//         } else if (convertTo == 'KHR') {
+//             convertToSymbol = '៛'
+//         } else {
+//             convertToSymbol = 'B'
+//         }
+//         Session.set("convertToSymbol", convertToSymbol);
+//
+//         if (baseCurrency && convertTo) {
+//             Meteor.call("exchangeItemsLabel", baseCurrency, convertTo, function (err, res) {
+//                 state.set('buyingRate', res.exBuyingRate);
+//                 state.set('sellingRate', res.exSellingRate);
+//                 // Session.set("exchangeRateLabelOnHelper", res.exSellingRate);
+//             });
+//         }
+//
+//     },
+//     'keyup .base-amount'(e, instance){
+//         let baseAmount = $(e.currentTarget).val();
+//         let baseCurrency = instance.$('[name="baseCurrency"]').val();
+//         let convertTo = instance.$('[name="convertTo"]').val();
+//         if (baseCurrency && convertTo && baseAmount) {
+//             Meteor.call("calculateExchangeRateSelling", baseCurrency, convertTo, baseAmount, function (error, result) {
+//                 if (!result) {
+//                     clear();
+//                     swal("Please check", "Your exchange rate are not yet data Entry!");
+//                 } else {
+//                     state.set('toAmountBuying', result.buying);
+//                     state.set('toAmount', result.selling);
+//                 }
+//             });
+//         }
+//     },
+// });
 
 let hooksObject = {
     onSubmit: function (insertDoc, updateDoc, currentDoc) {
@@ -359,24 +448,37 @@ let hooksObject = {
             // Check exist item
             let exist = itemsCollection.findOne({baseCurrency: insertDoc.baseCurrency, convertTo: insertDoc.convertTo});
             if (exist) {
-                let newBaseAmount = new BigNumber(exist.baseAmount).add(new BigNumber(insertDoc.baseAmount));
-                let newToAmount = new BigNumber(exist.toAmount).add(new BigNumber(insertDoc.toAmount));
-
+                let newBaseCurrency = exist.baseCurrency;
+                let newBuying = exist.buying;
+                let newSelling = exist.selling;
+                let newBaseAmount = new BigNumber(exist.baseAmount).add(new BigNumber(insertDoc.baseAmount)).toFixed(2);
+                let newToAmountBuying = new BigNumber(exist.toAmountBuying).add(new BigNumber(insertDoc.toAmountBuying)).toFixed(2);
+                let newToAmount = new BigNumber(exist.toAmount).add(new BigNumber(insertDoc.toAmount)).toFixed(2);
+                let newIncome = new BigNumber(exist.income).add(new BigNumber(insertDoc.income)).toFixed(2);
                 itemsCollection.update(
                     {baseCurrency: insertDoc.baseCurrency, convertTo: insertDoc.converTo},
                     {
                         $set: {
+                            baseCurrency: newBaseCurrency,
+                            buying: newBuying,
+                            selling: newSelling,
                             baseAmount: newBaseAmount,
-                            toAmount: newToAmount
+                            toAmountBuying: newToAmountBuying,
+                            toAmount: newToAmount,
+                            income: newIncome
                         }
                     }
                 );
             } else {
                 itemsCollection.insert({
                     baseCurrency: insertDoc.baseCurrency,
+                    buying: insertDoc.buying,
+                    selling: insertDoc.selling,
                     convertTo: insertDoc.convertTo,
                     baseAmount: insertDoc.baseAmount,
-                    toAmount: insertDoc.toAmount
+                    toAmountBuying: insertDoc.toAmountBuying,
+                    toAmount: insertDoc.toAmount,
+                    income: insertDoc.income
                 });
             }
         }
@@ -396,6 +498,7 @@ function clearFrom() {
     $('[name="baseCurrency"]').val('');
     $('[name="convertTo"]').val('');
     $('[name="baseAmount"]').val('');
+    $('[name="toAmountBuying"]').val('');
     $('[name="toAmount"]').val('');
 }
 function clear() {

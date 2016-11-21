@@ -421,6 +421,42 @@ Transfer.accountSchema = new SimpleSchema({
         decimal: true,
         defaultValue: 0,
         optional: true
+    },
+    buyingFirst:{
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    buyingSecond:{
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    toAmountBuyingFirst:{
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    toAmountBuyingSecond:{
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    incomeFirst:{
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    incomeSecond:{
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
     }
     // //
     // 'items': {

@@ -26,9 +26,11 @@ Meteor.methods({
             if (doc.type == 'IN') {
                 doc.title.transferReveive = "ទទួល";
                 doc.address = doc.receiver.address;
+                doc.title.senderAndReceiver = doc.receiver.name;
             } else {
                 doc.title.transferReveive = "ផ្ទេរ";
                 doc.address = doc.sender.address;
+                doc.title.senderAndReceiver = doc.sender.name;
             }
         } else {
             if (doc.type == 'IN') {

@@ -10,28 +10,36 @@ Meteor.methods({
         );
         if (exchangeRate) {
             let sellingRate = exchangeRate.convertCurrency.find(x=>x.convertTo === convertTo).selling;
+            let buyingRate = exchangeRate.convertCurrency.find(x=>x.convertTo === convertTo).buying;
             if (baseCurrency && convertTo && baseAmount) {
                 let convertAmount = {};
+                let convertAmountBuying = {};
                 if (baseCurrency == 'KHR') {
                     if (convertTo == 'USD') {
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
+                        convertAmountBuying = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(buyingRate))).toFixed(2);
                     } else if (convertTo == 'THB') {
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
+                        convertAmountBuying = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(buyingRate))).toFixed(2);
                     }
                 } else if (baseCurrency == 'USD') {
                     if (convertTo == 'KHR') {
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(sellingRate)).toFixed(2);
+                        convertAmountBuying = new BigNumber(baseAmount).times(new BigNumber(buyingRate)).toFixed(2);
                     } else if (convertTo == 'THB') {
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(sellingRate)).toFixed(2);
+                        convertAmountBuying = new BigNumber(baseAmount).times(new BigNumber(buyingRate)).toFixed(2);
                     }
-                } else  {
+                } else {
                     if (convertTo == 'KHR') {
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(sellingRate)).toFixed(2);
+                        convertAmountBuying = new BigNumber(baseAmount).times(new BigNumber(buyingRate)).toFixed(2);
                     } else if (convertTo == 'USD') {
                         convertAmount = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(sellingRate))).toFixed(2);
+                        convertAmountBuying = new BigNumber(baseAmount).times(new BigNumber(1).div(new BigNumber(buyingRate))).toFixed(2);
                     }
                 }
-                return convertAmount;
+                return {selling: convertAmount, buying: convertAmountBuying};
             } else {
                 throw new Meteor.Error("Don't have any exchange Rate.");
             }

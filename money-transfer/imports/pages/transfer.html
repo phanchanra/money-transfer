@@ -234,22 +234,22 @@
                                 <h4><span class="label label-primary"><i
                                         class="fa fa-money"></i> Exchange Rate :{{exchangeTransferLabelFirst}}</span>
                                 </h4>
+                                {{> afQuickField name='buyingFirst' value=exchangeFirstBuy label=false type='hidden'}}
                                 {{> afQuickField name='sellingFirst' value=exchangeTransferFormFirst label=false }}
                             </div>
                             <div class="col-md-2">
                                 <h4><span class="label label-primary"><i class="fa fa-money"></i> Exchange Amount</span>
                                 </h4>
-
                                 {{> afQuickField name='baseAmountFirst' label=false}}
-                                <!--{{> afQuickField name='baseAmountFirst' value=baseAmountFirst label=false}}-->
-
                                 {{> afQuickField name='convertToFirst' value=exchangeTransferLabelFirst type='hidden'}}
                             </div>
                             <div class="col-md-2">
                                 <h4><span class="label label-primary"><i
                                         class="fa fa-money"></i> Convert Amount :{{exchangeTransferLabelFirst}}</span>
                                 </h4>
+                                {{> afQuickField name='toAmountBuyingFirst' value=toAmountFirstBuy label=false readonly=true type='hidden'}}
                                 {{> afQuickField name='toAmountFirst' value=toAmountFirst label=false readonly=true }}
+                                {{> afQuickField name='incomeFirst' value=resultIncomeAmountFirst label=false readonly=true type='hidden'}}
                             </div>
                         </div>
                         <div class="convert-block">
@@ -257,25 +257,23 @@
                                 <h4><span class="label label-primary"><i
                                         class="fa fa-money"></i> Exchange Rate :{{exchangeTransferLabelSecond}}</span>
                                 </h4>
-
+                                {{> afQuickField name='buyingSecond' value=exchangeSecondBuy label=false type='hidden'}}
                                 {{> afQuickField name='sellingSecond' value=exchangeTransferFormSecond label=false}}
-
                             </div>
                             <div class="col-md-2">
                                 <h4><span class="label label-primary"><i class="fa fa-money"></i> Exchange Amount</span>
                                 </h4>
 
                                 {{> afQuickField name='baseAmountSecond' label=false}}
-                                <!--{{> afQuickField name='baseAmountSecond' value=baseAmountSecond label=false}}-->
-
                                 {{> afQuickField name='convertToSecond' value=exchangeTransferLabelSecond type='hidden'}}
-                                <!--{{> afQuickField name='convertToSecond' value=exchangeTransferLabelSecond}}-->
                             </div>
                             <div class="col-md-2">
                                 <h4><span class="label label-primary"><i
                                         class="fa fa-money"></i> Convert Amount :{{exchangeTransferLabelSecond}}</span>
                                 </h4>
+                                {{> afQuickField name='toAmountBuyingSecond' value=toAmountSecondBuy label=false readonly=true type='hidden'}}
                                 {{> afQuickField name='toAmountSecond' value=toAmountSecond label=false readonly=true }}
+                                {{> afQuickField name='incomeSecond' value=resultIncomeAmountSecond label=false readonly=true type='hidden'}}
                             </div>
                         </div>
                     </div>

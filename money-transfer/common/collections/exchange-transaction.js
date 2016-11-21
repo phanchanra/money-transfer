@@ -19,7 +19,13 @@ export const ExchangeTransaction = new Mongo.Collection("currencyExchange_Exchan
 ExchangeTransaction.itemsSchema = new SimpleSchema({
     baseCurrency: {
         type: String,
-        label: 'Base Currency'
+        label: 'Base Currency',
+        optional:true
+    },
+    buying:{
+        type: Number,
+        decimal:true,
+        optional:true
     },
     selling:{
         type: Number,
@@ -34,6 +40,7 @@ ExchangeTransaction.itemsSchema = new SimpleSchema({
         type: Number,
         label: 'Base Amount',
         decimal: true,
+        optional:true
         // autoform: {
         //     type: 'inputmask',
         //     inputmaskOptions: function () {
@@ -43,17 +50,28 @@ ExchangeTransaction.itemsSchema = new SimpleSchema({
         //     }
         // }
     },
+    toAmountBuying: {
+        type: Number,
+        decimal: true,
+        optional:true
+    },
     toAmount: {
         type: Number,
         label: 'To Amount',
         decimal: true,
+        optional:true
         // autoform: {
         //     type: 'inputmask',
         //     inputmaskOptions: function () {
         //         return inputmaskOptions.currency();
         //     }
         // }
-    }
+    },
+    income: {
+        type: Number,
+        decimal: true,
+        optional:true
+    },
 });
 ExchangeTransaction.schema = new SimpleSchema({
     exchangeDate: {

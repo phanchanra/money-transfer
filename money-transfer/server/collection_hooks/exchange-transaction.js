@@ -6,11 +6,18 @@ BigNumber.config({ERRORS: false});
 // Collection
 import {ExchangeTransaction} from '../../common/collections/exchange-transaction';
 import {ExchangeStock} from '../../common/collections/exchange-stock';
+import {exchangeState} from '../../common/libs/exchangeState';
 
 ExchangeTransaction.before.insert(function (userId, doc) {
     // let prefix = doc.productId + '-';
+    let tmpId = doc._id;
     let prefix = doc.branchId + '-';
     doc._id = idGenerator.genWithPrefix(ExchangeTransaction, prefix, 12);
+    exchangeState.set(tmpId, doc);
+    // doc.items.forEach(function (o) {
+    //     console.log(o);
+    //     //doc.income = new BigNumber(o.toAmount).minus(new BigNumber(o.toAmountBuying)).toFixed(2);
+    // });
 });
 ExchangeTransaction.after.insert(function (userId, doc) {
     Meteor.defer(function () {
@@ -52,11 +59,12 @@ ExchangeTransaction.after.update(function (userId, doc) {
     Meteor.defer(function () {
         doc.items.forEach(function (obj) {
             let exchangeStockForUpdate = ExchangeStock.findOne({
-                baseCurrency: doc.baseCurrency,
+                baseCurrency: obj.baseCurrency,
                 convertTo: obj.convertTo,
             }, {sort: {_id: -1}});
+
             let previousExchangeStock = ExchangeStock.findOne({
-                baseCurrency: doc.baseCurrency,
+                baseCurrency: obj.baseCurrency,
                 convertTo: obj.convertTo,
                 _id: {$ne: exchangeStockForUpdate._id}
             }, {sort: {_id: -1}});
@@ -65,11 +73,11 @@ ExchangeTransaction.after.update(function (userId, doc) {
                 ExchangeStock.direct.update(
                     exchangeStockForUpdate._id, {
                         $set: {
-                            baseCurrency: doc.baseCurrency,
+                            baseCurrency: obj.baseCurrency,
                             convertTo: obj.convertTo,
                             exchangeDate: doc.exchangeDate,
-                            amount: obj.convertAmount,
-                            balanceAmount: new BigNumber(previousExchangeStock.balanceAmount).minus(new BigNumber(obj.convertAmount)).toFixed(2)
+                            amount: obj.baseAmount,
+                            balanceAmount: new BigNumber(previousExchangeStock.balanceAmount).minus(new BigNumber(obj.toAmount)).toFixed(2)
                         }
                     }
                 );
@@ -77,11 +85,11 @@ ExchangeTransaction.after.update(function (userId, doc) {
                 ExchangeStock.direct.update(
                     exchangeStockForUpdate._id, {
                         $set: {
-                            baseCurrency: doc.baseCurrency,
+                            baseCurrency: obj.baseCurrency,
                             convertTo: obj.convertTo,
                             exchangeDate: doc.exchangeDate,
-                            amount: obj.convertAmount,
-                            balanceAmount: -obj.convertAmount
+                            amount: obj.baseAmount,
+                            balanceAmount: -obj.toAmount
                         }
                     }
                 );
@@ -92,12 +100,13 @@ ExchangeTransaction.after.update(function (userId, doc) {
 
 ExchangeTransaction.after.remove(function (userId, doc) {
     Meteor.defer(function () {
-        doc.convertCurrency.forEach(function (obj) {
+        doc.items.forEach(function (obj) {
             let exchangeStock = ExchangeStock.findOne({
-                baseCurrency: doc.baseCurrency,
+                baseCurrency: obj.baseCurrency,
                 convertTo: obj.convertTo
             }, {sort: {_id: -1}});
-            ExchangeStock.remove({exchangeId:exchangeStock.exchangeId});
+            if (exchangeStock)
+                ExchangeStock.remove({exchangeId: doc.exchangeId});
         });
     });
 });

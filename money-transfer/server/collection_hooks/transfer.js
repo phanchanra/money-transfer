@@ -73,16 +73,33 @@ Transfer.after.insert(function (userId, doc) {
         //exchange transaction
         Meteor._sleepForMs(200);
         Meteor.call('updateFeeAfterInsertTransfer', {doc});
-        // ExchangeTransaction.insert(
-        //     {
-        //         transferId: doc._id,
-        //         exchangeDate: doc.transferDate,
-        //         customerId: doc.senderId,
-        //         branchId: doc.branchId,
-        //         items: doc.items,
-        //         transactionExchangeRef: "Exchange from transfer"
-        //     }
-        // );
+        let exchangeOnTransfer={
+            transferId: doc._id,
+            exchangeDate: doc.transferDate,
+            customerId: doc.receiverId,
+            transactionExchangeRef: "Exchange from transfer",
+            branchId: doc.branchId,
+            items:[{
+                baseCurrency: doc.currencyId,
+                buying: doc.buyingFirst,
+                selling: doc.sellingFirst,
+                convertTo: doc.convertToFirst,
+                baseAmount: doc.baseAmountFirst,
+                toAmountBuying: doc.toAmountBuyingFirst,
+                toAmount: doc.toAmountFirst,
+                income: doc.incomeFirst
+            },{
+                baseCurrency: doc.currencyId,
+                buying: doc.buyingSecond,
+                selling: doc.sellingSecond,
+                convertTo: doc.convertToSecond,
+                baseAmount: doc.baseAmountSecond,
+                toAmountBuying: doc.toAmountBuyingSecond,
+                toAmount: doc.toAmountSecond,
+                income: doc.incomeSecond
+            }]
+        };
+        ExchangeTransaction.insert(exchangeOnTransfer);
     });
 });
 //
@@ -106,19 +123,36 @@ Transfer.after.update(function (userId, doc) {
     //prevDoc = this.previous;
     Meteor.defer(function () {
         Meteor._sleepForMs(200);
-
         Meteor.call('updateTransferFeeAfterUpdateTransfer', {doc});
-        // let exchangeTransfer = ExchangeTransaction.findOne({transferId: doc._id});
-        // ExchangeTransaction.direct.update(
-        //     {_id: exchangeTransfer._id},
-        //     {
-        //         $set: {
-        //             exchangeDate: doc.transferDate,
-        //             customerId: doc.senderId,
-        //             items: doc.items
-        //         }
-        //     }
-        // );
+        let exchangeTransfer = ExchangeTransaction.findOne({transferId: doc._id});
+        ExchangeTransaction.direct.update(
+            {_id: exchangeTransfer._id},
+            {
+                $set: {
+                    exchangeDate: doc.transferDate,
+                    customerId: doc.receiverId,
+                    items:[{
+                        baseCurrency: doc.currencyId,
+                        buying: doc.buyingFirst,
+                        selling: doc.sellingFirst,
+                        convertTo: doc.convertToFirst,
+                        baseAmount: doc.baseAmountFirst,
+                        toAmountBuying: doc.toAmountBuyingFirst,
+                        toAmount: doc.toAmountFirst,
+                        income: doc.incomeFirst
+                    },{
+                        baseCurrency: doc.currencyId,
+                        buying: doc.buyingSecond,
+                        selling: doc.sellingSecond,
+                        convertTo: doc.convertToSecond,
+                        baseAmount: doc.baseAmountSecond,
+                        toAmountBuying: doc.toAmountBuyingSecond,
+                        toAmount: doc.toAmountSecond,
+                        income: doc.incomeSecond
+                    }]
+                }
+            }
+        );
     });
 
 });

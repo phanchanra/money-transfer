@@ -73,8 +73,8 @@ indexTmpl.helpers({
 let state = new ReactiveObj({
     baseAmountFirst: 0,
     baseAmountSecond: 0,
-    toAmountFirst: 0.00,
-    toAmountSecond: 0.00,
+    toAmountFirst: 0,
+    toAmountSecond: 0,
     exchangeTransfer: '',
     currencyList: '',
     promotionLabel: '',
@@ -87,6 +87,10 @@ let state = new ReactiveObj({
     receiverPhone: '',
     bankName: '',
     bankNumber: '',
+    exToAmountBuyingFirst: 0,
+    exToAmountBuyingSecond: 0,
+    resultIncomeAmountFirst: 0,
+    resultIncomeAmountSecond: 0
     //transferDate: ''
 });
 invoice.helpers({
@@ -99,7 +103,6 @@ indexTmpl.events({
         alertify.transfer(fa('plus', 'Transfer'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        debugger;
         let currencySymbol = this.currencyId;
         Session.set('currencyId', this.currencyId);
         if (currencySymbol == 'USD') {
@@ -160,7 +163,7 @@ indexTmpl.events({
                         agentFee: feeDocAgentFee
                     }
                 );
-                alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this));
+                alertify.transfer(fa('pencil', 'Transfer'), renderTemplate(formTmpl, this)).maximize();
             } else {
                 displayError("This record is not last!");
             }
@@ -280,9 +283,9 @@ formTmpl.helpers({
             data.type = 'update';
             data.doc = Transfer.findOne({_id: currentData._id});
             //when update
-            if(Session.get('transferType')=='thai'){
+            if (Session.get('transferType') == 'thai') {
                 $('[name="customerFee"]').prop("readonly", false);
-            }else{
+            } else {
                 $('[name="customerFee"]').prop("readonly", true);
                 $('.promotion-hide-show').hide('fast');
                 //$('[name="amount"]').prop("readonly", true);
@@ -381,6 +384,55 @@ formTmpl.helpers({
                 }
             } catch (e) {
             }
+        }
+    },
+    exchangeFirstBuy(){
+        if (Session.get('currencyId')) {
+            try {
+                let exchangeTransferFirstBuy = state.get("exchangeTransfer");
+                let exchangeFormFirstBuy = exchangeTransferFirstBuy ? exchangeTransferFirstBuy[0] : undefined;
+                if (exchangeFormFirstBuy) {
+                    return exchangeFormFirstBuy.buying;
+                }
+            } catch (e) {
+            }
+        }
+    },
+    exchangeSecondBuy(){
+        if (Session.get('currencyId')) {
+            try {
+                let exchangeTransferSecondBuy = state.get("exchangeTransfer");
+                let exchangeFormSecondBuy = exchangeTransferSecondBuy ? exchangeTransferSecondBuy[1] : undefined;
+                if (exchangeFormSecondBuy) {
+                    return exchangeFormSecondBuy.buying;
+                }
+            } catch (e) {
+
+            }
+        }
+    },
+    toAmountFirstBuy(){
+        let exToAmountBuyingFirst = state.get('exToAmountBuyingFirst');
+        if (exToAmountBuyingFirst) {
+            return exToAmountBuyingFirst;
+        }
+    },
+    toAmountSecondBuy(){
+        let exToAmountBuyingSecond = state.get('exToAmountBuyingSecond');
+        if (exToAmountBuyingSecond) {
+            return exToAmountBuyingSecond;
+        }
+    },
+    resultIncomeAmountFirst(){
+        let resultIncomeAmountFirst = state.get('resultIncomeAmountFirst');
+        if (resultIncomeAmountFirst) {
+            return resultIncomeAmountFirst;
+        }
+    },
+    resultIncomeAmountSecond(){
+        let resultIncomeAmountSecond = state.get('resultIncomeAmountSecond');
+        if (resultIncomeAmountSecond) {
+            return resultIncomeAmountSecond;
         }
     },
     exchangeTransferFormFirst(){
@@ -556,6 +608,12 @@ formTmpl.onDestroyed(function () {
     Session.set('bankNumberValidate', null);
     Session.set("savePrint", false);
     tmpCollection.remove({});
+    state.set('exToAmountBuyingSecond', null);
+    state.set('toAmountSecond', null);
+    state.set('resultIncomeAmountSecond', null);
+    state.set('exToAmountBuyingFirst', null);
+    state.set('toAmountFirst', null);
+    state.set('resultIncomeAmountFirst', null);
 });
 invoice.events({
     'click #print' (e, instance) {
@@ -967,7 +1025,8 @@ formTmpl.events({
             instance.$('[name="amount"]').prop("readonly", true);
         }
     },
-    'change [name="amount"]'(e, instance){
+    'keyup [name="amount"]'(e, instance){
+        debugger;
         let amount = parseFloat($(e.currentTarget).val());
         let productId = instance.$('[name="productId"]').val();
         let currencyId = instance.$('[name="currencyId"]').val();
@@ -987,15 +1046,16 @@ formTmpl.events({
                 if (result) {
                     tmpCollection.remove({});
                     tmpCollection.insert(result);
+                    let khmerInAmount = new BigNumber(amount).minus(new BigNumber(totalExchangeAmount)).toFixed(2);
                     let totalAmountPri = calculateTotalAmount(amount, result.customerFee);
                     let totalAmount = new BigNumber(totalAmountPri).minus(new BigNumber(totalExchangeAmount)).toFixed(2);
+                    // let totalThaiIn=new BigNumber(result.customerFee).add(new BigNumber(totalExchangeAmount)).toFixed(2);
+                    // let totalAmountThaiIn = new BigNumber(amount).minus(new BigNumber(totalThaiIn)).toFixed(2);
                     let totalAmountThaiIn = new BigNumber(amount).minus(new BigNumber(result.customerFee)).minus(new BigNumber(totalExchangeAmount)).toFixed(2);
-                    //let typeIn = new BigNumber(amount).minus(new BigNumber(customerFee)).toFixed(2);
-                    //Session.set("totalAmount", totalAmount);
 
                     if (transferType == 'khmer') {
                         if (type == "IN") {
-                            tmpCollection.update({}, {$set: {totalAmount: amount}});
+                            tmpCollection.update({}, {$set: {totalAmount: khmerInAmount}});
                         } else if (type == "OUT") {
                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
                         }
@@ -1009,7 +1069,7 @@ formTmpl.events({
 
                     instance.$('.save').prop('disabled', false);
                     instance.$('.save-print').prop('disabled', false);
-                    instance.$('[name="baseAmountFirst"]').val(0);
+                    //instance.$('[name="baseAmountFirst"]').val(0);
                     //, feeDoc: result
                 } else {
                     instance.$('.save').prop('disabled', true);
@@ -1017,7 +1077,6 @@ formTmpl.events({
                     displayError("Your balance are exceeded of fee");
                 }
             });
-
         }
 
         //baseAmount 2
@@ -1101,7 +1160,7 @@ formTmpl.events({
         alertify.customer(fa('plus', 'Customer'), renderTemplate(customerForm));
     }
     ,
-    'change [name="baseAmountFirst"]'(e, instance)
+    'keyup [name="baseAmountFirst"]'(e, instance)
     {
         let baseAmountFirst = $(e.currentTarget).val();
         let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
@@ -1132,14 +1191,18 @@ formTmpl.events({
                 if (type == "IN") {
                     let resultAmountFirst = new BigNumber(amount).minus(new BigNumber(bothBaseAmountFirstIn)).toFixed(2);
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToFirst, baseAmountFirst, function (err, res) {
-                        state.set('toAmountFirst', res);
+                        state.set('exToAmountBuyingFirst', res.buying);
+                        state.set('toAmountFirst', res.selling);
+                        state.set('resultIncomeAmountFirst', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
                     });
                 } else {
                     let totalAmount = new BigNumber(amount).add(new BigNumber(totalFee)).toFixed(2);
                     let resultAmountFirst = new BigNumber(totalAmount).minus(new BigNumber(bothBaseAmountFirstOut)).toFixed(2);
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToFirst, baseAmountFirst, function (err, res) {
-                        state.set('toAmountFirst', res);
+                        state.set('exToAmountBuyingFirst', res.buying);
+                        state.set('toAmountFirst', res.selling);
+                        state.set('resultIncomeAmountFirst', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
                     });
                 }
@@ -1148,14 +1211,18 @@ formTmpl.events({
                     let totalSubtract = new BigNumber(customerFee).add(new BigNumber(bothBaseAmountFirstIn)).toFixed(2);
                     let resultAmountFirst = new BigNumber(amount).add(new BigNumber(totalFeeAfterDis)).minus(new BigNumber(totalSubtract)).toFixed(2);
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToFirst, baseAmountFirst, function (err, res) {
-                        state.set('toAmountFirst', res);
+                        state.set('exToAmountBuyingFirst', res.buying);
+                        state.set('toAmountFirst', res.selling);
+                        state.set('resultIncomeAmountFirst', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
                     });
                 } else {
                     let totalAmount = new BigNumber(amount).add(new BigNumber(totalFee)).minus(new BigNumber(bothBaseAmountFirstIn)).toFixed(2);
                     //let resultAmountFirst = new BigNumber(totalAmount).minus(new BigNumber(bothBaseAmountFirstOut)).toFixed(2);
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToFirst, baseAmountFirst, function (err, res) {
-                        state.set('toAmountFirst', res);
+                        state.set('exToAmountBuyingFirst', res.buying);
+                        state.set('toAmountFirst', res.selling);
+                        state.set('resultIncomeAmountFirst', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
                     });
                 }
@@ -1164,8 +1231,7 @@ formTmpl.events({
         }
     }
     ,
-    'change [name="baseAmountSecond"]'(e, instance)
-    {
+    'keyup [name="baseAmountSecond"]'(e, instance){
         let baseAmountSecond = $(e.currentTarget).val();
         let baseAmountFirst = $('[name="baseAmountFirst"]').val();
         let totalFee = instance.$('[name="totalFee"]').val();
@@ -1178,7 +1244,6 @@ formTmpl.events({
         let transferType = instance.$('input:radio[name=transferType]:checked').val();
         let type = instance.$("input:radio[name=type]:checked").val();
         let promotionAmount = instance.$('[name="promotionAmount"]').val();
-
         //selling rate 2
         if (currencyId && convertToSecond && baseAmountSecond && sellingSecond) {
             Meteor.call("exchangeRateTransfer", currencyId, convertToSecond, baseAmountSecond, sellingSecond, function (error, res) {
@@ -1197,7 +1262,9 @@ formTmpl.events({
                     let resultAmountSecond = new BigNumber(amount).minus(new BigNumber(bothBaseAmountSecondIn)).toFixed(2);
                     tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToSecond, baseAmountSecond, function (err, res) {
-                        state.set('toAmountSecond', res);
+                        state.set('exToAmountBuyingSecond', res.buying);
+                        state.set('toAmountSecond', res.selling);
+                        state.set('resultIncomeAmountSecond', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
                     });
                 } else {
@@ -1205,7 +1272,9 @@ formTmpl.events({
                     let resultAmountSecond = new BigNumber(totalAmount).minus(new BigNumber(bothBaseAmountSecondOut)).toFixed(2);
                     tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToSecond, baseAmountSecond, function (err, res) {
-                        state.set('toAmountSecond', res);
+                        state.set('exToAmountBuyingSecond', res.buying);
+                        state.set('toAmountSecond', res.selling);
+                        state.set('resultIncomeAmountSecond', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
                     });
                 }
@@ -1214,13 +1283,18 @@ formTmpl.events({
                     let thaiIn = new BigNumber(customerFee).add(new BigNumber(bothBaseAmountSecondIn)).toFixed(2);
                     let totalThaiIn = new BigNumber(amount).add(new BigNumber(totalFeeAfterDis)).minus(new BigNumber(thaiIn)).toFixed(2);
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToSecond, baseAmountSecond, function (err, res) {
-                        state.set('toAmountSecond', res);
+                        state.set('exToAmountBuyingSecond', res.buying);
+                        state.set('toAmountSecond', res.selling);
+                        state.set('resultIncomeAmountSecond', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
+                        tmpCollection.update({}, {$set: {totalAmount: totalThaiIn}});
                         tmpCollection.update({}, {$set: {totalAmount: totalThaiIn}});
                     });
                 } else {
                     let totalAmount = new BigNumber(amount).add(new BigNumber(totalFee)).minus(new BigNumber(bothBaseAmountSecondIn)).toFixed(2);
                     Meteor.call("calculateExchangeRateSelling", currencyId, convertToSecond, baseAmountSecond, function (err, res) {
-                        state.set('toAmountSecond', res);
+                        state.set('exToAmountBuyingSecond', res.buying);
+                        state.set('toAmountSecond', res.selling);
+                        state.set('resultIncomeAmountSecond', new BigNumber(res.selling).minus(new BigNumber(res.buying)).toFixed(2));
                         tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
                     });
                 }
@@ -1230,28 +1304,32 @@ formTmpl.events({
         }
     }
     ,
-    'change [name="sellingFirst"]'(e, instance)
+    'keyup [name="sellingFirst"]'(e, instance)
     {
         let sellingFirst = $(e.currentTarget).val();
         let currencyId = instance.$('[name="currencyId"]').val();
         let convertToFirst = instance.$('[name="convertToFirst"]').val();
         let baseAmountFirst = instance.$('[name="baseAmountFirst"]').val();
+        let toAmountBuyingFirst = instance.$('[name="toAmountBuyingFirst"]').val();
         if (currencyId && convertToFirst && baseAmountFirst && sellingFirst) {
             Meteor.call("exchangeRateTransfer", currencyId, convertToFirst, baseAmountFirst, sellingFirst, function (error, res) {
                 state.set("toAmountFirst", res);
+                state.set('resultIncomeAmountFirst', new BigNumber(res).minus(new BigNumber(toAmountBuyingFirst)).toFixed(2));
             });
         }
     }
     ,
-    'change [name="sellingSecond"]'(e, instance)
+    'keyup [name="sellingSecond"]'(e, instance)
     {
         let sellingSecond = $(e.currentTarget).val();
         let currencyId = instance.$('[name="currencyId"]').val();
         let convertToSecond = instance.$('[name="convertToSecond"]').val();
         let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
+        let toAmountBuyingSecond = instance.$('[name="toAmountBuyingSecond"]').val();
         if (currencyId && convertToSecond && baseAmountSecond && sellingSecond) {
             Meteor.call("exchangeRateTransfer", currencyId, convertToSecond, baseAmountSecond, sellingSecond, function (error, res) {
                 state.set('toAmountSecond', res);
+                state.set('resultIncomeAmountSecond', new BigNumber(res).minus(new BigNumber(toAmountBuyingSecond)).toFixed(2));
             });
 
         }
@@ -1329,6 +1407,12 @@ let hooksObject = {
             state.set('receiverPhone', null);
             state.set('bankName', null);
             state.set('bankNumber', null);
+            state.set('exToAmountBuyingSecond', 0);
+            state.set('toAmountSecond', 0);
+            state.set('resultIncomeAmountSecond', 0);
+            state.set('exToAmountBuyingFirst', 0);
+            state.set('toAmountFirst', 0);
+            state.set('resultIncomeAmountFirst', 0);
         }
         displaySuccess();
     },
@@ -1364,10 +1448,8 @@ function clearOnKeyupAmount() {
     $('[name="discountFee"]').val(0);
     $('[name="totalFee"]').val(0);
     $('[name="totalAmount"]').val(0);
-    $('[name="baseAmountFirst"]').val(0);
-    $('[name="baseAmountSecond"]').val(0);
-    $('[name="toAmountFirst"]').val(0);
-    $('[name="toAmountSecond"]').val(0);
+    // $('[name="baseAmountFirst"]').val(0);
+    // $('[name="baseAmountSecond"]').val(0);
 }
 function readOnlyFalse() {
     $('[name="sellingFirst"]').prop("readonly", false);
