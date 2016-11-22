@@ -142,7 +142,7 @@ indexTmpl.events({
         let totalAmount = this.totalAmount;
         let feeDocAmount = this.feeDoc.fromAmount;
         let feeDocToAmount = this.feeDoc.toAmount;
-        let feeDocCustomerFee = this.feeDoc.customerFee;
+        let feeDocCustomerFee = this.customerFee;
         let feeDocOwnerFee = this.feeDoc.ownerFee;
         let feeDocAgentFee = this.feeDoc.agentFee;
 
@@ -297,10 +297,10 @@ formTmpl.helpers({
                 if (result) {
                     state.set('currencyList', result);
                     $('[name="amount"]').prop("readonly", false);
-                    $('[name="customerFee"]').prop("readonly", false);
+                    //$('[name="customerFee"]').prop("readonly", false);
                 } else {
                     $('[name="amount"]').prop("readonly", true);
-                    $('[name="customerFee"]').prop("readonly", true);
+                    //$('[name="customerFee"]').prop("readonly", true);
                 }
             });
             // Meteor.call('promotionLabel', Session.get('transferDate'), function (error, result) {
@@ -878,8 +878,8 @@ formTmpl.events({
             $(".show-hide-bank").hide('fast');
             style = "display: none;"
         } else {
-            instance.$('[name="customerFee"]').prop('readonly', false);
             instance.$('[name="discountFee"]').prop('readonly', false);
+            instance.$('[name="customerFee"]').prop("readonly", false);
             Meteor.call('promotionLabel', Session.get('transferDate'), function (error, result) {
                 if (result) {
                     state.set('promotionLabel', 'Promotion');
@@ -1022,11 +1022,11 @@ formTmpl.events({
         tmpCollection.remove({});
         if (currencyId) {
             instance.$('[name="amount"]').prop("readonly", false);
-            instance.$('[name="customerFee"]').prop("readonly", false);
+            //instance.$('[name="customerFee"]').prop("readonly", false);
         }
         else {
             instance.$('[name="amount"]').prop("readonly", true);
-            instance.$('[name="customerFee"]').prop("readonly", true);
+            //instance.$('[name="customerFee"]').prop("readonly", true);
         }
     },
     'keyup [name="amount"]'(e, instance){
@@ -1069,6 +1069,7 @@ formTmpl.events({
                         } else if (type == "OUT") {
                             tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
                         }
+                        instance.$('[name="customerFee"]').prop("readonly", false);
                     }
 
                     instance.$('.save').prop('disabled', false);
@@ -1092,13 +1093,18 @@ formTmpl.events({
         let transferType = instance.$('input:radio[name=transferType]:checked').val();
         let type = instance.$("input:radio[name=type]:checked").val();
         let promotionAmount = instance.$('[name="promotionAmount"]').val();
+        let baseAmountFirst = instance.$('[name="baseAmountFirst"]').val();
+        let baseAmountSecond = instance.$('[name="baseAmountSecond"]').val();
+        let totalBaseAmount = new BigNumber(baseAmountFirst).add(new BigNumber(baseAmountSecond)).toFixed(2);
         let totalFee = calculateAfterDiscount(customerFee, discountFee);
         let totalAfterDis = new BigNumber(customerFee).minus(new BigNumber(totalFee)).toFixed(2);
         let disAndPro = new BigNumber(promotionAmount).add(new BigNumber(totalAfterDis)).toFixed(2);
         let reFeeIn = new BigNumber(customerFee).minus(new BigNumber(disAndPro)).toFixed(2);
 
-        let totalAmountIn = new BigNumber(amount).minus(new BigNumber(reFeeIn)).toFixed(2);
-        let totalAmountOut = new BigNumber(amount).add(new BigNumber(reFeeIn)).toFixed(2);
+        let feeIn = new BigNumber(customerFee).add(new BigNumber(totalBaseAmount)).toFixed(2);
+
+        let totalAmountIn = new BigNumber(amount).minus(new BigNumber(feeIn)).toFixed(2);
+        let totalAmountOut = new BigNumber(amount).add(new BigNumber(reFeeIn)).minus(new BigNumber(totalBaseAmount)).toFixed(2);
 
         if (transferType == 'thai') {
             if (type == 'IN') {
