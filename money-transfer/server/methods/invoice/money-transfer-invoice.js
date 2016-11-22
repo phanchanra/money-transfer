@@ -44,7 +44,9 @@ Meteor.methods({
             } else {
                 doc.title.transferTypeIn = 'ខ្មែរ~ថៃ';
                 doc.title.transferReveive = "ផ្ទេរ";
-                doc.title.senderAndReceiver = doc.receiver.name;
+                if (doc.sende != null) {
+                    doc.title.senderAndReceiver = doc.sender.name;
+                }
                 doc.title.refCode = doc.bankNumber;
                 doc.address = doc.receiver.address;
             }

@@ -77,7 +77,7 @@ Transfer.after.insert(function (userId, doc) {
             transferId: doc._id,
             exchangeDate: doc.transferDate,
             customerId: doc.receiverId,
-            transactionExchangeRef: "Exchange from transfer",
+            transactionExchangeRef: "Transfer",
             branchId: doc.branchId,
             items:[{
                 baseCurrency: doc.currencyId,
