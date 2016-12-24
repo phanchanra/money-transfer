@@ -11,6 +11,8 @@ import {Product} from '../collections/product';
 import {Exchange} from '../../../core/common/collections/exchange';
 import {Provider} from '../collections/provider';
 import {Promotion} from '../collections/promotion';
+import {Currency} from '../../../core/common/collections/currency';
+
 export let SelectOptsMethod = {};
 
 SelectOptsMethod.customer = new ValidatedMethod({
@@ -200,7 +202,35 @@ SelectOptsMethod.exchange = new ValidatedMethod({
         }
     }
 });
+/*******************
+/ Exchange
+ *******************/
+SelectOptsMethod.currency = new ValidatedMethod({
+    name: 'moneyTransfer.selectOptsMethod.currency',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
 
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+
+            if (searchText) {
+                selector = {$text: {$search: searchText}};
+            } else if (values.length) {
+                selector = {_id: {$in: values}};
+            }
+
+            let data = Currency.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                list.push({label: value._id + ' (' + value.num + ')', value: value._id});
+            });
+
+            return list;
+        }
+    }
+});
 /*******************
  * Borrowing
  ******************/

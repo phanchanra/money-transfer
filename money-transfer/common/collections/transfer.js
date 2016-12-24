@@ -117,15 +117,6 @@ Transfer.generalSchema = new SimpleSchema({
                 }
             }
         },
-        // custom: function () {
-        //     //let transferType = this.field('transferType');
-        //     if (!this.field('transferType').value == 'thai' && !this.value) {
-        //         //if (!this.value) {
-        //         //return 'required';
-        //         return "required";
-        //         //}
-        //     }
-        // }
     },
     senderTelephone: {
         type: String,
@@ -137,14 +128,6 @@ Transfer.generalSchema = new SimpleSchema({
                 return inputmaskOptions.phone();
             }
         },
-        // custom: function () {
-        //     let transferType = this.field('transferType');
-        //     if (transferType.value == 'thai') {
-        //         if (!this.value) {
-        //             return 'requiredSenderPhone';
-        //         }
-        //     }
-        // }
     },
     receiverId: {
         type: String,
@@ -196,7 +179,90 @@ Transfer.generalSchema = new SimpleSchema({
         optional: true,
     }
 });
+let exchangeFormItems = new SimpleSchema({
+    sellingFirst: {
+        type: String,
+        // decimal: true,
+        // defaultValue: 0,
+        optional: true
+    },
+    baseAmountFirst: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    convertToFirst: {
+        type: String,
+        optional: true
+    },
+    toAmountFirst: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    //
+    sellingSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    baseAmountSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    convertToSecond: {
+        type: String,
+        optional: true
+    },
+    toAmountSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    buyingFirst: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    buyingSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    toAmountBuyingFirst: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    toAmountBuyingSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    incomeFirst: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
+    incomeSecond: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    },
 
+});
 Transfer.accountSchema = new SimpleSchema({
     productId: {
         type: String,
@@ -216,16 +282,6 @@ Transfer.accountSchema = new SimpleSchema({
                     return list;
                 }
             },
-            // afFieldInput: {
-            //     uniPlaceholder: 'Please search... (limit 10)',
-            //     optionsMethod: 'moneyTransfer.selectOptsMethod.product'
-            // },
-            // optionsMethodParams: function () {
-            //     if (Meteor.isClient) {
-            //         let type = AutoForm.getFieldValue('transferType') || 'thai';
-            //         return {type};
-            //     }
-            // }
         }
     },
     currencyId: {
@@ -317,10 +373,6 @@ Transfer.accountSchema = new SimpleSchema({
             }
         }
     },
-    // deductFee: {
-    //     type: Boolean,
-    //     optional: true
-    // },
     discountFee: {
         type: Number,
         label: 'Discount fee',
@@ -377,100 +429,98 @@ Transfer.accountSchema = new SimpleSchema({
         type: String,
         optional: true
     },
-    sellingFirst: {
-        type: Number,
-        decimal: true,
-        defaultValue: 0,
-        optional: true
-    },
-    baseAmountFirst: {
-        type: Number,
-        decimal: true,
-        defaultValue: 0,
-        optional: true
-    },
-    convertToFirst: {
-        type: String,
-        optional: true
-    },
-    toAmountFirst: {
-        type: Number,
-        decimal: true,
-        defaultValue: 0,
-        optional: true
-    },
-    //
-    sellingSecond: {
-        type: Number,
-        decimal: true,
-        defaultValue: 0,
-        optional: true
-    },
-    baseAmountSecond: {
-        type: Number,
-        decimal: true,
-        defaultValue: 0,
-        optional: true
-    },
-    convertToSecond: {
-        type: String,
-        optional: true
-    },
-    toAmountSecond: {
-        type: Number,
-        decimal: true,
-        defaultValue: 0,
-        optional: true
-    }
+    // sellingFirst: {
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // baseAmountFirst: {
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // convertToFirst: {
+    //     type: String,
+    //     optional: true
+    // },
+    // toAmountFirst: {
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
     // //
-    // 'items': {
-    //     type: Object,
-    //     optional: true,
-    // },
-    // 'items._id': {
-    //     type: String,
-    //     optional: true
-    // },
-    // 'items.baseCurrency': {
-    //     type: String,
-    //     optional: true
-    // },
-    // 'items.selling': {
-    //     type: Number,
-    //     decimal:true,
-    //     defaultValue:0,
-    //     optional: true
-    // },
-    // 'items.convertTo': {
-    //     type: String,
-    //     optional: true
-    // },
-    // 'items.baseAmount': {
+    // sellingSecond: {
     //     type: Number,
     //     decimal: true,
     //     defaultValue: 0,
     //     optional: true
     // },
-    // 'items.toAmount': {
+    // baseAmountSecond: {
     //     type: Number,
     //     decimal: true,
     //     defaultValue: 0,
-    //     optional: true,
-    // }
+    //     optional: true
+    // },
+    // convertToSecond: {
+    //     type: String,
+    //     optional: true
+    // },
+    // toAmountSecond: {
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // buyingFirst:{
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // buyingSecond:{
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // toAmountBuyingFirst:{
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // toAmountBuyingSecond:{
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // incomeFirst:{
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    // incomeSecond:{
+    //     type: Number,
+    //     decimal: true,
+    //     defaultValue: 0,
+    //     optional: true
+    // },
+    exchangeForm: {
+        type: exchangeFormItems,
+    },
+    exchangeDoc: {
+        type: Object,
+        blackbox: true,
+        optional:true
+    },
 });
 
 Transfer.attachSchema([
     Transfer.generalSchema,
     Transfer.accountSchema,
 ]);
-
-// SimpleSchema.messages({
-//     // 'regEx firstName': "[label] can have alphabets only",
-//     // 'regEx lastName': "[label] can have alphabets only",
-//     required: 'Sender is required',
-//     requiredSenderPhone:"Sender Phone"
-//     // duplicateEmail: 'Email already in use',
-//     // notUnique: 'Please use another email, this is already in use',
-//     // 'regEx tel': 'Invalid phone number',
-//     // 'regEx password': "Password must be 8-20 characters long and contain a lowercase alphabet, an uppercase alphabet, a digit and a special character",
-// });

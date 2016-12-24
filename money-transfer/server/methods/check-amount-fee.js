@@ -7,8 +7,10 @@ Meteor.methods({
         if (productId && currencyId && amount && type) {
             let fees = Fee.findOne({productId: productId, currencyId: currencyId});
             var tmpFee = [];
+            // console.log(fees);
             fees.service.forEach(function (obj) {
                 if (amount >= obj.fromAmount && amount <= obj.toAmount) {
+                    console.log(fees.status);
                     if (fees.status == true) {
                         if (type == "OUT") {
                             tmpFee.push({
@@ -44,6 +46,7 @@ Meteor.methods({
                     }
                 }
             });
+             console.log(tmpFee);
             return _.last(tmpFee);
         } else {
             return false;

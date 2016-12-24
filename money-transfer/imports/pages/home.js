@@ -61,7 +61,7 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .transfer' (e, instance) {
-        alertify.home(fa('plus', 'Transfer'), renderTemplate(transferForm));
+        alertify.home(fa('plus', 'Transfer'), renderTemplate(transferForm)).maximize();
     },
     'click .exchange' (e, instance) {
         alertify.home(fa('plus', 'Exchange Transaction'), renderTemplate(exchangeForm));

@@ -33,19 +33,26 @@ import {ExchangeTransactionTabular} from '../../common/tabulars/exchange-transac
 // Page
 import './exchange-transaction.html';
 import './transaction-items.js';
+//import '../reports/exchangeInvoice.html';
+import '../reports/exchangeInvoice'
 // Declare template
 let itemsCollection = new Mongo.Collection(null);
 
 let indexTmpl = Template.MoneyTransfer_exchangeTransaction,
     actionTmpl = Template.MoneyTransfer_exchangeTransactionAction,
     formTmpl = Template.MoneyTransfer_exchangeTransactionForm,
-    showTmpl = Template.MoneyTransfer_exchangeTransactionShow;
+    showTmpl = Template.MoneyTransfer_exchangeTransactionShow,
+    invoice = Template.generateExchangeInvoice,
+    exchangeInvoice = Template.generateExchangeInvoice;
+
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('exchangeTransaction', {size: 'lg'});
     createNewAlertify('exchangeTransactionShow');
+    createNewAlertify('exchangeInvoice', {size: 'lg'});
+
 
 });
 
@@ -57,23 +64,58 @@ indexTmpl.helpers({
         return {branchId: Session.get('currentBranch')};
     }
 });
-
+invoice.helpers({
+    userName(){
+        return Meteor.user().profile.name;
+    }
+});
 indexTmpl.events({
     'click .js-create' (event, instance) {
         alertify.exchangeTransaction(fa('plus', 'Exchange Transaction'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.exchangeTransaction(fa('pencil', 'Exchange Transaction'), renderTemplate(formTmpl, {exchangeTransactionId: this._id}));
+        let id = this._id;
+        Meteor.call('lastExchangeTransactionRemoveEdit', {_id: id,}, function (error, result) {
+            if (result) {
+                alertify.exchangeTransaction(fa('pencil', 'Exchange Transaction'), renderTemplate(formTmpl, {exchangeTransactionId: id}));
+            } else {
+                displayError("This record is not last");
+            }
+        });
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            ExchangeTransaction,
-            {_id: this._id},
-            {title: 'Exchange Transaction', exchangeTransactionTitle: this._id}
-        );
+        let id = this._id;
+        Meteor.call('checkTransferIdExchangeTransaction', id, function (err, result) {
+            if (result == undefined) {
+                destroyAction(
+                    ExchangeTransaction,
+                    {_id: id},
+                    {title: 'Exchange Transaction', exchangeTransactionTitle: id}
+                );
+            } else {
+                displayError("មិនអាចលុបកំនត់ត្រានេះបានទេព្រេាះវាជាការប្តូរប្រាក់មកពីផ្ទេរប្រាក់")
+            }
+        });
+        // Meteor.call('lastExchangeTransactionRemoveEdit', {_id: this._id}, function (error, result) {
+        //     if (result) {
+        //         destroyAction(
+        //             ExchangeTransaction,
+        //             {_id: id},
+        //             {title: 'Exchange Transaction', exchangeTransactionTitle: id}
+        //         );
+        //     } else {
+        //         displayError("This record is not last");
+        //     }
+        // });
     },
     'click .js-display' (event, instance) {
         alertify.exchangeTransactionShow(fa('eye', 'Exchange Transaction'), renderTemplate(showTmpl, this));
+    },
+    'click .js-invoice' (event, instance) {
+        let queryParams = this._id;
+        Meteor.call('exchangeInvoice', queryParams, function (err, doc) {
+            alertify.exchangeInvoice(fa('', 'Invoice'), renderTemplate(exchangeInvoice, doc)).maximize();
+        });
     },
 });
 
@@ -143,7 +185,20 @@ formTmpl.helpers({
         return {};
     }
 });
-
+exchangeInvoice.events({
+    'click #print' (e, instance) {
+        //printDiv('print-invoice');
+        var mode = 'iframe'; // popup
+        var close = mode == "popup";
+        var options = {mode: mode, popClose: close};
+        $("div.print").printArea(options);
+    }
+});
+formTmpl.events({
+    'click .save-print'(e, instance){
+        Session.set("savePrint", true);
+    }
+});
 formTmpl.onDestroyed(function () {
     // Remove items collection
     itemsCollection.remove({});
@@ -171,16 +226,22 @@ let hooksObject = {
         },
         update: function (doc) {
             doc.$set.items = itemsCollection.find().fetch();
-
             delete doc.$unset;
-
             return doc;
         }
     },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.exchangeTransaction().close();
+        }else{
+            if (Session.get("savePrint")) {
+                Meteor.call('exchangeInvoice', result, function (err, doc) {
+                    alertify.exchangeInvoice(fa('', 'Invoice'), renderTemplate(exchangeInvoice, doc)).maximize();
+                });
+            }
+            Session.set("savePrint", false);
         }
+
         displaySuccess();
         itemsCollection.remove({});
     },

@@ -34,6 +34,7 @@ let indexTmpl = Template.MoneyTransfer_exchangeRate,
     actionTmpl = Template.MoneyTransfer_exchangeRateAction,
     productTmpl = Template.MoneyTransfer_exchangeRateProductShow,
     formTmpl = Template.MoneyTransfer_exchangeRateForm,
+    formCustom = Template.customObjectFieldForConvertCurrency,
     showTmpl = Template.MoneyTransfer_exchangeRateShow;
 
 // Index
@@ -49,19 +50,30 @@ indexTmpl.helpers({
         return ExchangeRateTabular;
     }
 });
+// let state = new ReactiveObj({
+//     currencyList: '',
+// });
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.exchangeRate(fa('plus', 'Exchange Rate'), renderTemplate(formTmpl));
+        alertify.exchangeRate(fa('plus', 'Exchange Rate'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        alertify.exchangeRate(fa('pencil', 'Exchange Rate'), renderTemplate(formTmpl, this));
+        Session.set('baseCurrency', this.baseCurrency);
+        alertify.exchangeRate(fa('pencil', 'Exchange Rate'), renderTemplate(formTmpl, this)).maximize();
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            ExchangeRate,
-            {_id: this._id},
-            {title: 'Exchange Rate', exchangeRateTitle: this._id}
-        );
+        let id = this._id;
+        Meteor.call('checkExchangeRateInStock', id, function (err, res) {
+            if (res == 'inactive') {
+                displayError("លុយនៅក្នុងឃ្លាំងអត្រាប្តូរប្រាក់នេះត្រូវបានប្រើប្រាស់ហើយ មិនអាចលុបបានទេ")
+            } else {
+                destroyAction(
+                    ExchangeRate,
+                    {_id: this._id},
+                    {title: 'Exchange Rate', exchangeRateTitle: this._id}
+                );
+            }
+        });
     },
     'click .js-display' (event, instance) {
         alertify.exchangeRateShow(fa('eye', 'Exchange Rate'), renderTemplate(showTmpl, this));
@@ -73,8 +85,8 @@ indexTmpl.events({
     },
 });
 formTmpl.onCreated(function () {
-    Session.set("baseCurrency", 'USD');
-    Session.set("currencySymbol", "$");
+    // Session.set("baseCurrency", 'USD');
+    // Session.set("currencySymbol", "$");
     ///this.checkBaseCurrency = new ReactiveVar();
     this.autorun(()=> {
         let currentData = Template.currentData();
@@ -112,71 +124,143 @@ formTmpl.helpers({
                 Session.set("baseCurrency", baseCurrency);
                 Session.set("currencySymbol", symbol);
             }
+
         }
         return data;
-    }
+    },
+
 
 });
-formTmpl.events({
-    'click [name="baseCurrency"]'(e, instance){
-        let baseCurrency = $(e.currentTarget).val();
-        //let currencySymbol = $(e.currentTarget).val();
-        let symbol;
-        if (baseCurrency == 'USD') {
-            symbol = '$'
-        } else if (baseCurrency == 'KHR') {
-            symbol = '៛'
+formCustom.helpers({
+    currencyList(){
+        let currencies = Session.get(this.name);
+        let lists = [];
+        if (currencies) {
+            currencies.map(function (c) {
+                lists.push({value: c, label: `${c}`})
+            });
+            return lists;
         } else {
-            symbol = 'B'
+            return lists;
         }
-        // UIBlock.block('Wait...');
-        $.blockUI();
-        Meteor.setTimeout(()=> {
-            UIBlock.unblock();
-            Session.set("baseCurrency", baseCurrency);
-            Session.set("currencySymbol", symbol);
-            //clear
-            clearForm();
-            $.unblockUI();
-        }, 200);
+    }
+});
+formCustom.events({
+    'change .base-currency'(e, instance){
+        let currentObj = $(e.currentTarget);
+        let currentDom = this.name.split('.'); // get name "convertBaseCurrency.0.baseCurrency"
+        let parentsObj = currentObj.parents('.exchange-rate');
+        let baseCurrency = parentsObj.find('.base-currency').val();
+        Session.set("baseCurrency", baseCurrency);
+        Meteor.call("currencyExchangeRate", baseCurrency, function (error, result) {
+            if (result) {
+                Session.set(`${currentDom[0]}.${currentDom[1]}`, result);
+            }
+
+        });
+        //let currencySymbol = $(e.currentTarget).val();
+        // let symbol;
+        // if (baseCurrency == 'USD') {
+        //     symbol = '$'
+        // } else if (baseCurrency == 'KHR') {
+        //     symbol = '៛'
+        // } else {
+        //     symbol = 'B'
+        // }
+        // // UIBlock.block('Wait...');
+        // // $.blockUI();
+        // // Meteor.setTimeout(()=> {
+        // //     UIBlock.unblock();
+        //     Session.set("baseCurrency", baseCurrency);
+        //     Session.set("currencySymbol", symbol);
+        //     //clear
+        // //     clearForm();
+        // //     $.unblockUI();
+        // // }, 200);
 
     },
-    'change .amount,.convert-to,.buying'(e, instance){
+    'keyup .amount'(e, instance){
         let currentObj = $(e.currentTarget);
         let parentsObj = currentObj.parents('.exchange-rate');
+        let baseCurrency = parentsObj.find('.base-currency').val();
         let amount = parentsObj.find('.amount').val();
         let convertTo = parentsObj.find('.convert-to').val();
         let buying = parentsObj.find('.buying').val();
         amount = _.isEmpty(amount) ? 0 : parseFloat(amount);
         buying = _.isEmpty(buying) ? 0 : parseFloat(buying);
-        //check Duplicate
-        let arr = [];
-        $('.exchange-rate .convert-to').each(function () {
-            let exchangeRate = $(this).val();
-            if (exchangeRate != "") {
-                arr.push(exchangeRate);
-            }
-        });
-        if (duplicateEntry(arr)) {
-            let checkSlice = arr.splice(0, 1);
-            $(".save").prop("disabled", true);
-            displayError("Convert to already exist!"+'  '+ checkSlice);
 
-        }else{
-            $(".save").prop("disabled", false);
+        // //check Duplicate
+        // let arr = [];
+        // $('.exchange-rate .convert-to').each(function () {
+        //     let exchangeRate = $(this).val();
+        //     if (exchangeRate != "") {
+        //         arr.push(exchangeRate);
+        //     }
+        // });
+        // if (duplicateEntry(arr)) {
+        //     let checkSlice = arr.splice(0, 1);
+        //     $(".save").prop("disabled", true);
+        //     displayError("Convert to already exist!" + '  ' + checkSlice);
+        //
+        // } else {
+        //     $(".save").prop("disabled", false);
+        // }
+        // if (convertTo != '') {
+        //     parentsObj.find('.buying').prop("readonly", false);
+        // } else {
+        //     parentsObj.find('.buying').prop("readonly", true);
+        // }
+        // if (buying > 0) {
+        //     parentsObj.find('.selling').prop("readonly", false);
+        // } else {
+        //     parentsObj.find('.selling').prop("readonly", true);
+        // }
+        if (baseCurrency && convertTo && amount && buying) {
+            parentsObj.find('.convert-amount').val(calculateExchangeRate(baseCurrency, amount, convertTo, buying));
         }
+    },
+    'change .convert-to'(e, instance){
+        let currentObj = $(e.currentTarget);
+        let parentsObj = currentObj.parents('.exchange-rate');
+        let convertTo = parentsObj.find('.convert-to').val();
         if (convertTo != '') {
             parentsObj.find('.buying').prop("readonly", false);
         } else {
             parentsObj.find('.buying').prop("readonly", true);
         }
+        //check Duplicate
+        // let arr = [];
+        // $('.exchange-rate .convert-to').each(function () {
+        //     let exchangeRate = $(this).val();
+        //     if (exchangeRate != "") {
+        //         arr.push(exchangeRate);
+        //     }
+        // });
+        // if (duplicateEntry(arr)) {
+        //     let checkSlice = arr.splice(0, 1);
+        //     $(".save").prop("disabled", true);
+        //     displayError("Convert to already exist!" + '  ' + checkSlice);
+        //
+        // } else {
+        //     $(".save").prop("disabled", false);
+        // }
+    },
+    'keyup .buying'(e, instance){
+        let currentObj = $(e.currentTarget);
+        let parentsObj = currentObj.parents('.exchange-rate');
+        let baseCurrency = parentsObj.find('.base-currency').val();
+        let amount = parentsObj.find('.amount').val();
+        let convertTo = parentsObj.find('.convert-to').val();
+        let buying = parentsObj.find('.buying').val();
+        amount = _.isEmpty(amount) ? 0 : parseFloat(amount);
+        buying = _.isEmpty(buying) ? 0 : parseFloat(buying);
         if (buying > 0) {
             parentsObj.find('.selling').prop("readonly", false);
         } else {
             parentsObj.find('.selling').prop("readonly", true);
         }
-        if (Session.get("baseCurrency") && convertTo && amount && buying) {
-            parentsObj.find('.convert-amount').val(calculateExchangeRate(Session.get("baseCurrency"), convertTo, amount, buying));
+        if (baseCurrency && convertTo && amount && buying) {
+            parentsObj.find('.convert-amount').val(calculateExchangeRate(baseCurrency, amount, convertTo, buying));
         }
     }
 });
@@ -213,6 +297,8 @@ let hooksObject = {
             alertify.exchangeRate().close();
         }
         displaySuccess();
+        Session.set('baseCurrency', null);
+        Session.set('currencySymbol', null);
     },
     onError (formType, error) {
         displayError(error.message);
@@ -227,12 +313,20 @@ function clearForm() {
     $('.selling').val('');
     $('.convert-amount').val('');
 }
-function calculateExchangeRate(baseCurrency, convertTo, amount, buying) {
+function calculateExchangeRate(baseCurrency, amount, convertTo, buying) {
     let convertAmount = {};
     if (baseCurrency == 'KHR') {
-        convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
+        if (convertTo == 'USD') {
+            convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
+        } else {
+            convertAmount = new BigNumber(amount).times(new BigNumber(1).div(new BigNumber(buying))).toFixed(2);
+        }
     } else if (baseCurrency == 'USD') {
-        convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
+        if (convertTo == 'KHR') {
+            convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
+        } else {
+            convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);
+        }
     } else {
         if (convertTo == 'KHR') {
             convertAmount = new BigNumber(amount).times(new BigNumber(buying)).toFixed(2);

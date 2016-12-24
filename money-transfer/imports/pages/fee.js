@@ -62,7 +62,9 @@ indexTmpl.events({
     },
     'click .js-update' (event, instance) {
         let feeId = this._id;
+        Session.set('checkStatus', this.status);
         Session.set("existFeeId", feeId);
+
         alertify.fee(fa('pencil', 'Fee'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -143,6 +145,12 @@ formTmpl.helpers({
                 symbol = 'B';
                 Session.set("currencySymbol", symbol);
 
+            }
+            console.log(Session.get('checkStatus'));
+            if (Session.get('checkStatus') == true) {
+                $('.show-hide').show();
+            } else {
+                $('.show-hide').hide();
             }
         }
 
@@ -225,9 +233,9 @@ formTmpl.events({
     'click [name="status"]'(e, instance){
         let status = $(e.currentTarget).is(':checked');
         if (status == true) {
-            $('.show-hide').slideToggle("fast");
-        }else{
-            $('.show-hide').slideToggle("fast");
+            $('.show-hide').show();
+        } else {
+            $('.show-hide').hide();
         }
     }
 });

@@ -1,0 +1,131 @@
+<!--Report-->
+<template name="MoneyTransfer_exchangeDetailReport">
+    <div class="box-body">
+        <!--Form-->
+        {{#autoForm schema=schema id="MoneyTransfer_exchangeDetailReport" type="normal"}}
+            <div class="row">
+                <div class="col-md-6">
+                    {{> afQuickField name="branch"}}
+                    {{> afQuickField name="exchange"}}
+                </div>
+                <div class="col-md-6">
+                    {{> afQuickField name="repDate"}}
+                </div>
+            </div>
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+        <!--Print Button-->
+        <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
+        <!--Report Paper-->
+        <div id="print-data">
+            <div class="rpt rpt-landscape-a4">
+                {{#if rptInit}}
+                    {{#if rptData}}
+                        {{#with rptData}}
+
+                            <!--Title-->
+                            {{#with title}}
+                                <div class="rpt-title">
+                                    <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                                    <div class="rpt-title-2x">{{enName}}</div>
+                                    <div><u>Exchange Detail Report</u></div>
+                                    <div>{{enAddress}}</div>
+                                </div>
+                            {{/with}}
+
+                            <!--Header-->
+                            {{#with header}}
+                                <div style="width: 100%">
+                                    <div style="width: 50%; float: left">
+                                        <div><strong>Branch:</strong> {{branch}}</div>
+                                        <div><strong>Exchange:</strong> {{exchangeObj}}</div>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <div><strong>Date:</strong>
+                                            {{moFormat repDate.[0] "DD/MM/YYYY"}}
+                                            -
+                                            {{moFormat repDate.[1] "DD/MM/YYYY"}}
+                                        </div>
+                                        <!--<div><strong>Exchange:</strong>-->
+                                        <!--{{exchangeObj}}-->
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Content-->
+                            <table class="rpt rpt-content">
+                                <thead class="rpt-content-header">
+                                <tr style="-webkit-print-color-adjust: exact; background-color: lightgrey !important;">
+                                    <th>No</th>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Ref</th>
+                                    <th>Base Currency</th>
+                                    <th>Buying</th>
+                                    <th>Selling</th>
+                                    <th>Convert To</th>
+                                    <th>Base Amount</th>
+                                    <th>To Amount Buying</th>
+                                    <th>To Amount</th>
+                                    <th>Income</th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="rpt-content-body">
+                                {{#each content}}
+                                    <tr>
+                                        <td align="center">{{no @index}}</td>
+                                        <td>{{_id}}</td>
+                                        <td>{{moFormat exchangeDate "DD/MM/YYYY"}}</td>
+                                        <td>{{customerDoc.name}}</td>
+                                        <td>{{transferId}}</td>
+                                        <td colspan="8"></td>
+                                    </tr>
+                                    {{#each items}}
+                                        <tr>
+                                            <td colspan="5"></td>
+                                            <td align="center">{{baseCurrency}}</td>
+                                            <td align="right">{{buying}}</td>
+                                            <td align="right">{{selling}}</td>
+                                            <td align="center">{{convertTo}}</td>
+                                            <td align="right">{{numFormat baseAmount "0,0.00"}}</td>
+                                            <td align="right">{{numFormat toAmountBuying "0,0.00"}}</td>
+                                            <td align="right">{{numFormat toAmount "0,0.00"}}</td>
+                                            <td align="right">{{numFormat income "0,0.00"}}</td>
+                                        </tr>
+                                    {{/each}}
+                                {{/each}}
+                                <tr style="-webkit-print-color-adjust: exact; background-color: lightgrey !important;">
+                                    <td colspan="11" align="right">Total:</td>
+                                    <td align="right"
+                                        style="background-color: lightgrey;">{{numFormat footer.totalToAmount "0,0.00"}}</td>
+                                    <td align="right"
+                                        style="background-color: lightgrey;">{{numFormat footer.totalIncome "0,0.00"}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        {{/with}}
+
+                        <!--&lt;!&ndash;Sign&ndash;&gt;-->
+                        <!--{{> ReportSignFooter classSize="rpt-2x"}}-->
+                        {{> ReportSignFooter}}
+
+
+                        <!--Auto print-->
+                        <!--{{autoprint close="true"}}-->
+
+                    {{else }}
+                        <div class="text-center">
+                            {{> iconLoading size="fa-5x"}}
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+
+    </div>
+</template>

@@ -1,38 +1,44 @@
 import BigNumber from 'bignumber.js';
 BigNumber.config({ERRORS: false});
 
-import {ExchangeRate} from '../collections/exchange-rate';
+import {ExchangeStock} from '../collections/exchange-stock';
 Meteor.methods({
-    exchangeItemsLabel: function (baseCurrency, convertTo) {
-        let exchangeRate = ExchangeRate.findOne(
-            {baseCurrency: baseCurrency, 'convertCurrency.convertTo': convertTo},
-            {sort: {_id: -1}}
+    exchangeItemsLabel: function (baseCurrency, convertTo, toAmount) {
+        let exchangeStock = ExchangeStock.findOne({baseCurrency: baseCurrency, convertTo: convertTo},
+            {sort: {_id: 1}}
         );
-        let exchangeCurrencyRate ={};
-
-        if (exchangeRate) {
-            let sellingRate = exchangeRate.convertCurrency.find(x=>x.convertTo === convertTo).selling;
+        let exchangeCurrencyRateBuying = {};
+        let exchangeCurrencyRate = {};
+        if (exchangeStock) {
+            // let buyingRate = getConvertCurrency.find(x=>x.convertTo === convertTo).buying;
+            // let sellingRate = getConvertCurrency.find(x=>x.convertTo === convertTo).selling;
             if (baseCurrency && convertTo) {
                 if (baseCurrency == 'KHR') {
                     if (convertTo == 'USD') {
-                        exchangeCurrencyRate = sellingRate;
-                    } else if (convertTo == 'THB') {
-                        exchangeCurrencyRate = sellingRate;
+                        exchangeCurrencyRateBuying = exchangeStock.buying;
+                        exchangeCurrencyRate = exchangeStock.selling;
+                    } else {
+                        exchangeCurrencyRateBuying = exchangeStock.buying;
+                        exchangeCurrencyRate = exchangeStock.selling;
                     }
                 } else if (baseCurrency == 'USD') {
                     if (convertTo == 'KHR') {
-                        exchangeCurrencyRate = sellingRate;
-                    } else if (convertTo == 'THB') {
-                        exchangeCurrencyRate = sellingRate;
+                        exchangeCurrencyRateBuying = exchangeStock.buying;
+                        exchangeCurrencyRate = exchangeStock.selling;
+                    } else {
+                        exchangeCurrencyRateBuying = exchangeStock.buying;
+                        exchangeCurrencyRate = exchangeStock.selling;
                     }
                 } else if (baseCurrency == 'THB') {
                     if (convertTo == 'KHR') {
-                        exchangeCurrencyRate = sellingRate;
+                        exchangeCurrencyRateBuying = exchangeStock.buying;
+                        exchangeCurrencyRate = exchangeStock.selling;
                     } else if (convertTo == 'USD') {
-                        exchangeCurrencyRate = sellingRate;
+                        exchangeCurrencyRateBuying = exchangeStock.buying;
+                        exchangeCurrencyRate = exchangeStock.selling;
                     }
                 }
-                return exchangeCurrencyRate;
+                return {exBuyingRate: exchangeCurrencyRateBuying, exSellingRate: exchangeCurrencyRate};
             } else {
                 throw new Meteor.Error("Don't have any exchange Rate.");
             }
@@ -41,3 +47,52 @@ Meteor.methods({
         }
     }
 });
+// import BigNumber from 'bignumber.js';
+// BigNumber.config({ERRORS: false});
+//
+// import {ExchangeStock} from '../collections/exchange-stock';
+// Meteor.methods({
+//     exchangeItemsLabel: function (baseCurrency, convertTo) {
+//         let exchangeStock = ExchangeStock.findOne({baseCurrency: baseCurrency, convertTo: convertTo},
+//             {sort: {_id: 1}}
+//         );
+//         let exchangeCurrencyRateBuying = {};
+//         let exchangeCurrencyRate = {};
+//         if (exchangeStock) {
+//             // let buyingRate = getConvertCurrency.find(x=>x.convertTo === convertTo).buying;
+//             // let sellingRate = getConvertCurrency.find(x=>x.convertTo === convertTo).selling;
+//             if (baseCurrency && convertTo) {
+//                 if (baseCurrency == 'KHR') {
+//                     if (convertTo == 'USD') {
+//                         exchangeCurrencyRateBuying = exchangeStock.buying;
+//                         exchangeCurrencyRate = exchangeStock.selling;
+//                     } else {
+//                         exchangeCurrencyRateBuying = exchangeStock.buying;
+//                         exchangeCurrencyRate = exchangeStock.selling;
+//                     }
+//                 } else if (baseCurrency == 'USD') {
+//                     if (convertTo == 'KHR') {
+//                         exchangeCurrencyRateBuying = exchangeStock.buying;
+//                         exchangeCurrencyRate = exchangeStock.selling;
+//                     } else {
+//                         exchangeCurrencyRateBuying = exchangeStock.buying;
+//                         exchangeCurrencyRate = exchangeStock.selling;
+//                     }
+//                 } else if (baseCurrency == 'THB') {
+//                     if (convertTo == 'KHR') {
+//                         exchangeCurrencyRateBuying = exchangeStock.buying;
+//                         exchangeCurrencyRate = exchangeStock.selling;
+//                     } else if (convertTo == 'USD') {
+//                         exchangeCurrencyRateBuying = exchangeStock.buying;
+//                         exchangeCurrencyRate = exchangeStock.selling;
+//                     }
+//                 }
+//                 return {exBuyingRate: exchangeCurrencyRateBuying, exSellingRate: exchangeCurrencyRate};
+//             } else {
+//                 throw new Meteor.Error("Don't have any exchange Rate.");
+//             }
+//         } else {
+//             return false;
+//         }
+//     }
+// });

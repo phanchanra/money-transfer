@@ -15,7 +15,6 @@ export const lookupExchangeTransaction = new ValidatedMethod({
     run({exchangeTransactionId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
-
             let data = ExchangeTransaction.aggregate([
                 {
                     $match: {_id: exchangeTransactionId}
@@ -68,9 +67,13 @@ export const lookupExchangeTransaction = new ValidatedMethod({
                         items: {
                             $addToSet: {
                                 baseCurrency: "$items.baseCurrency",
+                                buying: "$items.buying",
+                                selling: "$items.selling",
                                 convertTo: "$items.convertTo",
                                 baseAmount: "$items.baseAmount",
-                                toAmount: "$items.toAmount"
+                                toAmountBuying: "$items.toAmountBuying",
+                                toAmount: "$items.toAmount",
+                                income: "$items.income"
                             }
                         }
                     }

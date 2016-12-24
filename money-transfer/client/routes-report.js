@@ -127,7 +127,74 @@ MoneyTransferRoutes.route('/balance-report', {
         parent: 'moneyTransfer.home'
     }
 });
+/********************
+ * Exchange
+ ********************/
+// Exchange Transaction
+import '../imports/reports/exchange-transaction';
+MoneyTransferRoutes.route('/exchange-transaction-report', {
+    name: 'moneyTransfer.exchangeTransactionReport',
+    title: "Exchange Transaction",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeTransactionReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Exchange Transaction Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Exchange Detail
+import '../imports/reports/exchange-detail';
+MoneyTransferRoutes.route('/exchange-detail-report', {
+    name: 'moneyTransfer.exchangeDetailReport',
+    title: "Exchange Detail",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeDetailReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Exchange Detail Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Exchange Stock In
+import '../imports/reports/exchange-stockIn';
+MoneyTransferRoutes.route('/exchange-stockIn-report', {
+    name: 'moneyTransfer.exchangeStockInReport',
+    title: "Exchange Stock In",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeStockInReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Exchange Stock In Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
 
+// Balance
+import '../imports/reports/exchange-outstanding';
+MoneyTransferRoutes.route('/exchange-outstanding', {
+    name: 'moneyTransfer.exchangeOutstandingReport',
+    title: "Exchange Outstanding Report",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeOutstandingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Exchange Outstanding Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
 /********************
  * Borrowing
  *******************/

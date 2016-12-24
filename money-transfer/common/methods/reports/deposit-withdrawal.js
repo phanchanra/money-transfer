@@ -138,7 +138,7 @@ export const depositWithdrawalReport = new ValidatedMethod({
                 data.footer.totalAmount = transfers[0].totalAmount;
             }
             //console.log(data);
-            return data
+            return data;
         }
     }
 });

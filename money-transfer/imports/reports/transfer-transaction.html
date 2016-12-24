@@ -20,7 +20,7 @@
         <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
         <!--Report Paper-->
         <div id="print-data">
-            <div class="rpt rpt-portrait-a4">
+            <div class="rpt rpt-landscape-a4">
                 {{#if rptInit}}
                     {{#if rptData}}
                         {{#with rptData}}
@@ -59,7 +59,7 @@
                             <!--Content-->
                             <table class="rpt rpt-content">
                                 <thead class="rpt-content-header">
-                                <tr>
+                                <tr style="-webkit-print-color-adjust: exact; background-color: lightgrey !important;">
                                     <th>No</th>
                                     <th>Type</th>
                                     <th>Ref</th>

@@ -38,16 +38,16 @@
         <div class="box-body">
             {{#autoForm collection=collection validation="blur" id="MoneyTransfer_exchangeRateForm" doc=form.doc type=form.type}}
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <fieldset>
                             <legend>General</legend>
                             {{> afQuickField name='providerId'}}
                             {{> afQuickField name='exchangeDate'}}
-                            {{> afQuickField name='baseCurrency'}}
+                            <!--{{> afQuickField name='baseCurrency'}}-->
                             {{> afQuickField type="hidden" name='branchId' value=currentBranch}}
                         </fieldset>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-10">
                         <fieldset>
                             <legend>Exchange Rate</legend>
                             {{> afArrayField name="convertCurrency" id="convertCurrency" template="customArrayFieldForConvertCurrency" subtemplate="customObjectFieldForConvertCurrency"}}
@@ -94,7 +94,7 @@
                             <dd>{{amount}}</dd>
                             <dt>Currency To</dt>
                             <dd>{{convertTo}}</dd>
-                            <dt>Buying </dt>
+                            <dt>Buying</dt>
                             <dd>{{buying}}</dd>
                             <dt>Selling</dt>
                             <dd>{{selling}}</dd>
@@ -142,9 +142,12 @@
         <div class="panel-heading">
             <div style="height: 18px;">
                 <div class="col-sm-2">
+                    Base Currency
+                </div>
+                <div class="col-sm-2">
                     Amount
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     Convert To
                 </div>
                 <div class="col-sm-2">
@@ -153,7 +156,7 @@
                 <div class="col-sm-2">
                     Selling
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     Convert Amount
                 </div>
                 <div class="col-sm-1">
@@ -173,7 +176,6 @@
             {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
                 <div class="row exchange-rate">
                     {{> UI.dynamic template=../atts.subtemplate}}
-
                     <div class="col-sm-1">
                         {{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount
                         maxCount=../atts.maxCount}}
@@ -204,18 +206,22 @@
 
 <template name="customObjectFieldForConvertCurrency">
     <div class="col-sm-2">
-        {{> afQuickField name=current.amount template="bootstrap3" label=false class="input-sm amount" Placeholder="Amount"}}
-    </div>
-    <div class="col-sm-3">
-        {{> afQuickField name=current.convertTo template="bootstrap3" label=false class="input-sm convert-to" Placeholder="Convert To"}}
+        {{> afQuickField name=current.baseCurrency template="bootstrap3" label=false class="input-sm base-currency" Placeholder="Base Currency"}}
     </div>
     <div class="col-sm-2">
-        {{> afQuickField name=current.buying template="bootstrap3" readonly=true label=false class="input-sm buying" Placeholder="Buying"}}
+        {{> afQuickField name=current.amount template="bootstrap3" label=false class="input-sm amount" Placeholder="Amount"}}
+    </div>
+
+    <div class="col-sm-2">
+        {{> afQuickField name=current.convertTo template="bootstrap3" label=false class="input-sm convert-to" options=currencyList}}
+    </div>
+    <div class="col-sm-2">
+        {{> afQuickField name=current.buying template="bootstrap3" readonly=true  label=false class="input-sm buying" Placeholder="Buying"}}
     </div>
     <div class="col-sm-2">
         {{> afQuickField name=current.selling template="bootstrap3" readonly=true label=false class="input-sm selling" Placeholder="Selling"}}
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
         {{> afQuickField name=current.convertAmount template="bootstrap3" readonly=true label=false class="input-sm convert-amount" Placeholder="Convert Amount"}}
     </div>
 </template>

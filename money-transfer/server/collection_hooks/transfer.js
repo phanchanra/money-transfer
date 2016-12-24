@@ -12,6 +12,16 @@ Transfer.before.insert(function (userId, doc) {
     let tmpId = doc._id;
     let prefix = doc.branchId + '-';
     doc._id = idGenerator.genWithPrefix(Transfer, prefix, 12);
+    // Insert exchange
+    if (doc.exchangeDoc) {
+        if (doc.exchangeDoc.items.length > 0) {
+            doc.exchangeDoc.transferId = doc._id;
+            let exchangeId = ExchangeTransaction.insert(doc.exchangeDoc);
+            doc.exchangeId = exchangeId;
+            delete doc.exchangeForm;
+            delete doc.exchangeDoc;
+        }
+    }
     moneyTransferState.set(tmpId, doc);
     let fee = Fee.findOne({productId: doc.productId, currencyId: doc.currencyId});
     if (doc.transferType == 'khmer') {
@@ -73,16 +83,33 @@ Transfer.after.insert(function (userId, doc) {
         //exchange transaction
         Meteor._sleepForMs(200);
         Meteor.call('updateFeeAfterInsertTransfer', {doc});
-        // ExchangeTransaction.insert(
-        //     {
-        //         transferId: doc._id,
-        //         exchangeDate: doc.transferDate,
-        //         customerId: doc.senderId,
-        //         branchId: doc.branchId,
-        //         items: doc.items,
-        //         transactionExchangeRef: "Exchange from transfer"
-        //     }
-        // );
+        // let exchangeOnTransfer={
+        //     transferId: doc._id,
+        //     exchangeDate: doc.transferDate,
+        //     customerId: doc.receiverId,
+        //     transactionExchangeRef: "Transfer",
+        //     branchId: doc.branchId,
+        //     items:[{
+        //         baseCurrency: doc.currencyId,
+        //         buying: doc.buyingFirst,
+        //         selling: doc.sellingFirst,
+        //         convertTo: doc.convertToFirst,
+        //         baseAmount: doc.baseAmountFirst,
+        //         toAmountBuying: doc.toAmountBuyingFirst,
+        //         toAmount: doc.toAmountFirst,
+        //         income: doc.incomeFirst
+        //     },{
+        //         baseCurrency: doc.currencyId,
+        //         buying: doc.buyingSecond,
+        //         selling: doc.sellingSecond,
+        //         convertTo: doc.convertToSecond,
+        //         baseAmount: doc.baseAmountSecond,
+        //         toAmountBuying: doc.toAmountBuyingSecond,
+        //         toAmount: doc.toAmountSecond,
+        //         income: doc.incomeSecond
+        //     }]
+        // };
+        // ExchangeTransaction.insert(exchangeOnTransfer);
     });
 });
 //
@@ -106,19 +133,36 @@ Transfer.after.update(function (userId, doc) {
     //prevDoc = this.previous;
     Meteor.defer(function () {
         Meteor._sleepForMs(200);
-
         Meteor.call('updateTransferFeeAfterUpdateTransfer', {doc});
-        // let exchangeTransfer = ExchangeTransaction.findOne({transferId: doc._id});
-        // ExchangeTransaction.direct.update(
-        //     {_id: exchangeTransfer._id},
-        //     {
-        //         $set: {
-        //             exchangeDate: doc.transferDate,
-        //             customerId: doc.senderId,
-        //             items: doc.items
-        //         }
-        //     }
-        // );
+        let exchangeTransfer = ExchangeTransaction.findOne({transferId: doc._id});
+        ExchangeTransaction.direct.update(
+            {_id: exchangeTransfer._id},
+            {
+                $set: {
+                    exchangeDate: doc.transferDate,
+                    customerId: doc.receiverId,
+                    items: [{
+                        baseCurrency: doc.currencyId,
+                        buying: doc.buyingFirst,
+                        selling: doc.sellingFirst,
+                        convertTo: doc.convertToFirst,
+                        baseAmount: doc.baseAmountFirst,
+                        toAmountBuying: doc.toAmountBuyingFirst,
+                        toAmount: doc.toAmountFirst,
+                        income: doc.incomeFirst
+                    }, {
+                        baseCurrency: doc.currencyId,
+                        buying: doc.buyingSecond,
+                        selling: doc.sellingSecond,
+                        convertTo: doc.convertToSecond,
+                        baseAmount: doc.baseAmountSecond,
+                        toAmountBuying: doc.toAmountBuyingSecond,
+                        toAmount: doc.toAmountSecond,
+                        income: doc.incomeSecond
+                    }]
+                }
+            }
+        );
     });
 
 });
@@ -126,7 +170,7 @@ Transfer.after.update(function (userId, doc) {
 Transfer.after.remove(function (userId, doc) {
     Meteor.defer(function () {
         Meteor._sleepForMs(200);
-        ExchangeTransaction.remove({_id: doc._Id});
+        ExchangeTransaction.remove({transferId: doc._id});
         Meteor.call('updateFeeAfterRemoveTransferAndBankAccount', {doc});
     });
 });

@@ -19,11 +19,19 @@ export const ExchangeTransaction = new Mongo.Collection("currencyExchange_Exchan
 ExchangeTransaction.itemsSchema = new SimpleSchema({
     baseCurrency: {
         type: String,
-        label: 'Base Currency'
+        label: 'Base Currency',
+        optional:true
+    },
+    buying:{
+        type: String,
+        optional:true
     },
     selling:{
-        type: Number,
-        decimal:true,
+        type: String,
+        optional:true
+    },
+    customSelling:{
+        type: String,
         optional:true
     },
     convertTo: {
@@ -34,6 +42,7 @@ ExchangeTransaction.itemsSchema = new SimpleSchema({
         type: Number,
         label: 'Base Amount',
         decimal: true,
+        optional:true
         // autoform: {
         //     type: 'inputmask',
         //     inputmaskOptions: function () {
@@ -43,18 +52,119 @@ ExchangeTransaction.itemsSchema = new SimpleSchema({
         //     }
         // }
     },
+    toAmountBuying: {
+        type: Number,
+        decimal: true,
+        optional:true
+    },
     toAmount: {
         type: Number,
         label: 'To Amount',
         decimal: true,
+        optional:true
         // autoform: {
         //     type: 'inputmask',
         //     inputmaskOptions: function () {
         //         return inputmaskOptions.currency();
         //     }
         // }
-    }
+    },
+    income: {
+        type: Number,
+        decimal: true,
+        optional:true
+    },
+    costs:{
+        type:[Object],
+        optional:true,
+        blackbox:true
+    },
 });
+//==========================================
+// let exchangeFormSchema = new SimpleSchema({
+//     buyingFirst: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     sellingFirst: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     baseAmountFirst: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     convertToFirst: {
+//         type: String,
+//         optional: true
+//     },
+//     toAmountBuyingFirst: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     toAmountFirst: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     incomeFirst: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     //
+//     buyingSecond: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     sellingSecond: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     baseAmountSecond: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     convertToSecond: {
+//         type: String,
+//         optional: true
+//     },
+//     toAmountBuyingSecond: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     toAmountSecond: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     },
+//     incomeSecond: {
+//         type: Number,
+//         decimal: true,
+//         defaultValue: 0,
+//         optional: true
+//     }
+// });
+//==========================================
 ExchangeTransaction.schema = new SimpleSchema({
     exchangeDate: {
         type: Date,
@@ -105,18 +215,18 @@ ExchangeTransaction.schema = new SimpleSchema({
     items: {
         type: [ExchangeTransaction.itemsSchema],
     },
-    branchId: {
-        type: String,
-        optional: true,
-    },
     transferId: {
         type: String,
         optional: true
     },
-    transactionExchangeRef: {
+    // transactionExchangeRef: {
+    //     type: String,
+    //     optional: true
+    // }
+    branchId: {
         type: String,
-        optional: true
-    }
+        optional: true,
+    },
 });
 
 ExchangeTransaction.attachSchema(ExchangeTransaction.schema);

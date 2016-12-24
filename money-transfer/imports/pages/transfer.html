@@ -17,7 +17,7 @@
 <!--Action-->
 <template name="MoneyTransfer_transferAction">
     {{#columnAction}}
-        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>
+        <!--<li><a href="#" class="js-update"><i class="fa fa-pencil"></i> Edit</a></li>-->
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> Delete</a></li>
         <li><a href="#" class="js-display"><i class="fa fa-eye"></i>Show</a></li>
         <li><a href="#" class="js-invoice" id="js-invoice"><i class="fa fa-print"></i>​ Print</a></li>
@@ -26,15 +26,19 @@
 </template>
 <!-- Product-->
 <template name="MoneyTransfer_productShowAction">
-    <a href="#" class="js-display-product">{{productId}}</a>
+    <a href="#" class="js-display-product btn btn-block btn-info btn-flat">{{productId}}</a>
 </template>
 <!-- Sender-->
 <template name="MoneyTransfer_senderShowAction">
-    <a href="#" class="js-display-sender">{{senderId}}</a>
+    {{#if senderId}}
+        <a href="#" class="js-display-sender btn btn-block btn-info btn-flat">{{senderId}}</a>
+    {{else}}
+        <a href="#" class="btn btn-block btn-warning btn-fl">None</a>
+    {{/if}}
 </template>
 <!-- Receiver-->
 <template name="MoneyTransfer_receiverShowAction">
-    <a href="#" class="js-display-receiver">{{receiverId}}</a>
+    <a href="#" class="js-display-receiver btn btn-block btn-info btn-flat">{{receiverId}}</a>
 </template>
 
 <!--Form-->
@@ -185,7 +189,7 @@
                             <div class="row">
 
                                 <div class="col-md-4">
-                                    {{> afQuickField name='customerFee' value=customerFee}}
+                                    {{> afQuickField name='customerFee' value=customerFee readonly=true}}
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -231,51 +235,106 @@
                     <div class="row exchange-block" id="up-down-slide">
                         <div class="convert-block">
                             <div class="col-md-2">
-                                <h4><span class="label label-primary"><i
-                                        class="fa fa-money"></i> Exchange Rate :{{exchangeTransferLabelFirst}}</span>
-                                </h4>
-                                {{> afQuickField name='sellingFirst' value=exchangeTransferFormFirst label=false }}
+                                <div class="ui-group-buttons">
+                                    <button type="button" class="btn btn-primary btn-sm"><b>Exchange Rate</b></button>
+                                    <div class="or or-sm"></div>
+                                    {{#if exchangeTransferLabelFirst}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>{{exchangeTransferLabelFirst}}
+                                            ({{exchangeCuttingRateFirst}})</b>
+                                        </button>
+                                    {{else}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>None</b></button>
+                                    {{/if}}
+                                </div>
+
+                                {{> afQuickField name='exchangeForm.buyingFirst' value=exchangeFirstBuy label=false type='hidden'}}
+                                {{> afQuickField name='exchangeForm.sellingFirst' readonly=true value=exchangeTransferFormFirst label=false }}
                             </div>
                             <div class="col-md-2">
-                                <h4><span class="label label-primary"><i class="fa fa-money"></i> Exchange Amount</span>
-                                </h4>
-
-                                {{> afQuickField name='baseAmountFirst' label=false}}
-                                <!--{{> afQuickField name='baseAmountFirst' value=baseAmountFirst label=false}}-->
-
-                                {{> afQuickField name='convertToFirst' value=exchangeTransferLabelFirst type='hidden'}}
+                                <div class="ui-group-buttons">
+                                    <button type="button" class="btn btn-primary btn-sm"><b>Exchange Amount</b></button>
+                                    <div class="or or-sm"></div>
+                                    {{#if currencyLabel}}
+                                        <button type="button" class="btn btn-success btn-sm"><b>{{currencyLabel}}</b>
+                                        </button>
+                                    {{else}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>None</b></button>
+                                    {{/if}}
+                                </div>
+                                {{> afQuickField name='exchangeForm.baseAmountFirst' label=false}}
+                                {{> afQuickField name='exchangeForm.convertToFirst' value=exchangeTransferLabelFirst type='hidden'}}
                             </div>
                             <div class="col-md-2">
-                                <h4><span class="label label-primary"><i
-                                        class="fa fa-money"></i> Convert Amount :{{exchangeTransferLabelFirst}}</span>
-                                </h4>
-                                {{> afQuickField name='toAmountFirst' value=toAmountFirst label=false readonly=true }}
+                                <div class="ui-group-buttons">
+                                    <button type="button" class="btn btn-primary btn-sm"><b>Convert Amount</b></button>
+                                    <div class="or or-sm"></div>
+                                    {{#if exchangeTransferLabelFirst}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>{{exchangeTransferLabelFirst}}</b>
+                                        </button>
+                                    {{else}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>None</b></button>
+                                    {{/if}}
+                                </div>
+                                {{> afQuickField name='exchangeForm.toAmountBuyingFirst' value=toAmountFirstBuy label=false readonly=true type='hidden'}}
+                                {{> afQuickField name='exchangeForm.toAmountFirst' value=toAmountFirst label=false readonly=true }}
+                                {{> afQuickField name='exchangeForm.incomeFirst' value=resultIncomeAmountFirst label=false readonly=true type='hidden'}}
                             </div>
                         </div>
                         <div class="convert-block">
                             <div class="col-md-2">
-                                <h4><span class="label label-primary"><i
-                                        class="fa fa-money"></i> Exchange Rate :{{exchangeTransferLabelSecond}}</span>
-                                </h4>
-
-                                {{> afQuickField name='sellingSecond' value=exchangeTransferFormSecond label=false}}
-
+                                <div class="ui-group-buttons">
+                                    <button type="button" class="btn btn-primary btn-sm"><b>Exchange Rate</b></button>
+                                    <div class="or or-sm"></div>
+                                    {{#if exchangeTransferLabelSecond}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>{{exchangeTransferLabelSecond}}
+                                            ({{exchangeCuttingRateSecond}})</b>
+                                        </button>
+                                    {{else}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>None</b></button>
+                                    {{/if}}
+                                </div>
+                                {{> afQuickField name='exchangeForm.buyingSecond' value=exchangeSecondBuy label=false type='hidden'}}
+                                {{> afQuickField name='exchangeForm.sellingSecond' readonly=true value=exchangeTransferFormSecond label=false}}
                             </div>
                             <div class="col-md-2">
-                                <h4><span class="label label-primary"><i class="fa fa-money"></i> Exchange Amount</span>
-                                </h4>
+                                <div class="ui-group-buttons">
+                                    <button type="button" class="btn btn-primary btn-sm"><b>Exchange Amount</b></button>
+                                    <div class="or or-sm"></div>
+                                    {{#if currencyLabel}}
+                                        <button type="button" class="btn btn-success btn-sm"><b>{{currencyLabel}}</b>
+                                        </button>
+                                    {{else}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>None</b></button>
 
-                                {{> afQuickField name='baseAmountSecond' label=false}}
-                                <!--{{> afQuickField name='baseAmountSecond' value=baseAmountSecond label=false}}-->
-
-                                {{> afQuickField name='convertToSecond' value=exchangeTransferLabelSecond type='hidden'}}
-                                <!--{{> afQuickField name='convertToSecond' value=exchangeTransferLabelSecond}}-->
+                                    {{/if}}
+                                </div>
+                                {{> afQuickField name='exchangeForm.baseAmountSecond' label=false}}
+                                {{> afQuickField name='exchangeForm.convertToSecond' value=exchangeTransferLabelSecond type='hidden'}}
                             </div>
                             <div class="col-md-2">
-                                <h4><span class="label label-primary"><i
-                                        class="fa fa-money"></i> Convert Amount :{{exchangeTransferLabelSecond}}</span>
-                                </h4>
-                                {{> afQuickField name='toAmountSecond' value=toAmountSecond label=false readonly=true }}
+                                <div class="ui-group-buttons">
+                                    <button type="button" class="btn btn-primary btn-sm"><b>Convert Amount</b></button>
+                                    <div class="or or-sm"></div>
+                                    {{#if exchangeTransferLabelSecond}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>{{exchangeTransferLabelSecond}}</b>
+                                        </button>
+                                    {{else}}
+                                        <button type="button"
+                                                class="btn btn-success btn-sm"><b>None</b></button>
+                                    {{/if}}
+                                </div>
+                                {{> afQuickField name='exchangeForm.toAmountBuyingSecond' value=toAmountSecondBuy label=false readonly=true type='hidden'}}
+                                {{> afQuickField name='exchangeForm.toAmountSecond' value=toAmountSecond label=false readonly=true }}
+                                {{> afQuickField name='exchangeForm.incomeSecond' value=resultIncomeAmountSecond label=false readonly=true type='hidden'}}
                             </div>
                         </div>
                     </div>

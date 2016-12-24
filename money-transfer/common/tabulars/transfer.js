@@ -54,7 +54,17 @@ tabularOpts.columns = [
     {data: "discountFee", title: "Dis Fee"},
     {data: "totalFee", title: "Total Fee"},
     {data: "agentFee", title: "Agent Fee"},
-    {data: "exchangeId", title: "ExchangeId"},
+    {
+        data: "exchangeId",
+        title: "ExchangeId",
+        render: function (val, type, doc) {
+            if (val != undefined) {
+                return "<button type='button' class='btn btn-block btn-info btn-flat'>" + val + "</button>"
+            } else {
+                return "<button type='button' class='btn btn-block btn-warning btn-flat'>None</button>"
+            }
+        }
+    },
     {data: "totalAmount", title: "Total Amount"},
     {data: "balanceAmount", title: "Bal Amount"}
 

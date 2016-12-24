@@ -81,5 +81,5 @@ tabularOpts.columns = [
         }
     }
 ];
-tabularOpts.extraFields = ['service'];
+tabularOpts.extraFields = ['service','status'];
 export const FeeTabular = new Tabular.Table(tabularOpts);

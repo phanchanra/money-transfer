@@ -1,0 +1,98 @@
+<!--Report-->
+<template name="MoneyTransfer_exchangeOutstandingReport">
+    <div class="box-body">
+        <!--Form-->
+        {{#autoForm schema=schema id="MoneyTransfer_exchangeOutstandingReport" type="normal"}}
+            <div class="row">
+                <div class="col-md-6">
+                    {{> afQuickField name="branch"}}
+
+                </div>
+                <div class="col-md-6">
+                    {{> afQuickField name="repDate"}}
+                </div>
+            </div>
+            {{> formFooterWithButton}}
+            <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
+        {{/autoForm}}
+        <!--Print Button-->
+
+        <!--Report Paper-->
+        <div id="print-data">
+            <div class="rpt rpt-portrait-a4">
+                {{#if rptInit}}
+                    {{#if rptData}}
+                        {{#with rptData}}
+                            <!--Title-->
+                            {{#with title}}
+                                <div class="rpt-title">
+                                    <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                                    <div class="rpt-title-2x">{{enName}}</div>
+                                    <div><u>Exchange Outstanding Report</u></div>
+                                    <div>{{enAddress}}</div>
+                                </div>
+                            {{/with}}
+                            <!--Header-->
+                            {{#with header}}
+                                <div style="width: 100%">
+                                    <div style="width: 50%; float: left">
+                                        <div><strong>Branch:</strong> {{branch}}</div>
+                                    </div>
+                                    <div style="width: 50%; float: left">
+                                        <div><strong>Date As:</strong> {{moFormat repDate "DD/MM/YYYY"}}</div>
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Content-->
+                            <table class="rpt rpt-content">
+                                <thead class="rpt-content-header">
+                                <tr style="-webkit-print-color-adjust: exact; background-color: lightgrey !important;">
+                                    <th>No</th>
+                                    <th>ID</th>
+                                    <th>Stock Date</th>
+                                    <th>Base Currency</th>
+                                    <th>Balance BaseAmount</th>
+                                    <th>Convert To</th>
+                                    <th>Balance Amount</th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="rpt-content-body">
+                                {{#each content}}
+                                    <tr>
+                                        <td align="center">{{no @index}}</td>
+                                        <td align="center">{{data._id}}</td>
+                                        <td align="center">{{moFormat data.stockDate "DD/MM/YYYY"}}</td>
+                                        <td align="center">{{data.baseCurrency}}</td>
+                                        <td align="right">{{numFormat baseAmount "0,0.00"}}</td>
+                                        <td align="center">{{data.convertTo}}</td>
+                                        <td align="right">{{numFormat balanceVariety "0,0.00"}}</td>
+                                    </tr>
+
+                                {{/each}}
+
+                                </tbody>
+                            </table>
+
+                        {{/with}}
+
+                        <!--&lt;!&ndash;Sign&ndash;&gt;-->
+                        <!--{{> ReportSignFooter classSize="rpt-2x"}}-->
+                        {{> ReportSignFooter}}
+
+
+                        <!--Auto print-->
+                        <!--{{autoprint close="true"}}-->
+
+                    {{else}}
+                        <div class="text-center">
+                            {{> iconLoading size="fa-5x"}}
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+
+    </div>
+</template>

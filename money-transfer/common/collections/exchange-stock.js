@@ -9,22 +9,58 @@ import {SelectOpts} from '../../imports/libs/select-opts.js';
 
 export const ExchangeStock = new Mongo.Collection("currencyExchange_stock");
 
-ExchangeStock.schema = new SimpleSchema({
-    baseCurrency:{
+ExchangeStock.generalSchema = new SimpleSchema({
+    stockDate: {
+        type: Date,
+        optional:true
+    },
+    status: {
+        type: String,
+        optional:true
+    },
+    exchangeId: {
+        type: String,
+        optional: true
+    },
+    index:{
+        type: Number,
+        index:true,
+        optional:true
+    },
+    baseCurrency: {
         type: String,
         optional: true,
         index:true
+    },
+    originalBaseAmount: {
+        type: Number,
+        decimal: true,
+        optional: true
+    },
+    baseAmount: {
+        type: Number,
+        decimal: true,
+        optional: true
+    },
+    baseAmountSelling: {
+        type: Number,
+        decimal: true,
+        optional: true
     },
     convertTo: {
         type: String,
         optional: true,
         index:true
     },
-    exchangeDate: {
-        type: Date,
+    buying: {
+        type: Number,
+        decimal: true,
+        optional: true
     },
-    status: {
-        type: String
+    selling: {
+        type: Number,
+        decimal: true,
+        optional: true
     },
     amount: {
         type: Number,
@@ -34,16 +70,22 @@ ExchangeStock.schema = new SimpleSchema({
     balanceAmount: {
         type: Number,
         decimal: true,
-        optional: true
+        optional: true,
+        index:true
     },
-    exchangeId:{
-        type:String,
-        optional:true
+    balanceVariety:{
+        type: Number,
+        decimal: true,
+        optional: true,
+    },
+    balanceSelling:{
+        type: Number,
+        decimal: true,
+        optional: true,
     },
     branchId: {
         type: String,
         optional: true
     }
 });
-
-ExchangeStock.attachSchema(ExchangeStock.schema);
+ExchangeStock.attachSchema(ExchangeStock.generalSchema);

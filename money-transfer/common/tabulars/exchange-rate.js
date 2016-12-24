@@ -34,9 +34,8 @@ tabularOpts.columns = [
         render: function (val, type, doc) {
             return moment(val).format('DD/MM/YYYY');
         }
-    },
-    {data: "baseCurrency", title: "Base Currency"},
+    }
 
 ];
-//tabularOpts.extraFields = ['service'];
+tabularOpts.extraFields = ['convertCurrency'];
 export const ExchangeRateTabular = new Tabular.Table(tabularOpts);

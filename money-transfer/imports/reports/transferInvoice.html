@@ -1,11 +1,21 @@
 <template name="generateInvoice">
     {{#if Template.subscriptionsReady}}
+        <div class="container" style="width: 559px;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <address class="text-right">
+                        <button type="button" id="print" class="btn btn-warning btn-flat fa fa-print"><span
+                                style="font-family: Arial;">Print</span></button>
+                    </address>
+                </div>
+            </div>
+        </div>
         <div class="container print" id="print-invoice" style="width: 559px;">
+            <div style="height: 10px;"></div>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="invoice-title">
                         <div class="row">
-
                             <div class="col-xs-1"></div>
                             <div class="col-xs-11">
                                 <table width="100%">{{#with title}}
@@ -54,17 +64,33 @@
                             <div class="col-xs-12">អាស័យដ្ឋាន : {{address}}</div>
                         </div>
                         <div class="row">
+                            <div class="col-xs-12"><span
+                                    style="font-style: italic"><b>ផលិតផល: </b>{{product.name}}</span></div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-4">ប្រាក់ : {{amount}} {{currencyId}}</div>
-                            <div class="col-xs-4">ថ្លៃសេវា : {{numFormat customerFee "0,0.00"}}{{currencyId}}</div>
-                            <div class="col-xs-4">ប្រាក់នៅសល់ : {{numFormat totalAmount "0,0.00"}}{{currencyId}}</div>
+                            <div class="col-xs-4">ថ្លៃសេវា : {{numFormat customerFee "0,0.00"}} {{currencyId}}</div>
+                            <div class="col-xs-4">ប្រាក់នៅសល់ : {{numFormat totalAmount "0,0.00"}} {{currencyId}}</div>
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>
                             <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ
                                 :{{numFormat baseAmountFirst "0,0.00"}} {{currencyId}}</div>
                             <div class="col-xs-4"> ប្តូរបាន
-                                :{{numFormat toAmountFirst "0,0.00"}} {{convertToFirst}}
-                            </div>
+                                :{{numFormat toAmountFirst "0,0.00"}} {{convertToFirst}}</div>
+                                <!--{{# if exchangeItems}}-->
+                                <!--{{#each exchangeItems}}-->
+                                <!--<div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>-->
+                                <!--<div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ-->
+                                <!--:{{numFormat baseAmountFirst "0,0.00"}} {{baseCurrency}}</div>-->
+                                <!--<div class="col-xs-4"> ប្តូរបាន-->
+                                <!--:{{numFormat toAmountFirst "0,0.00"}} {{convertTo}}</div>-->
+                                    <!--{{/each}}-->
+                                <!--{{else}}-->
+                            <!--<div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>-->
+                            <!--<div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ</div>-->
+                            <!--<div class="col-xs-4"> ប្តូរបាន</div>-->
+                                <!--{{/if}}-->
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic"></span></div>
@@ -112,7 +138,12 @@
                     </div>
                 </div>
             </div>
-            <hr style="border: 1px dashed #322f32;">
+            <div style="top: 0px; margin:10px 0px 10px 0px; padding: 0px 0px 0px 0px; border-width: 1px; border-bottom-width:1px;
+   border-bottom-color:black;
+   border-bottom-style: dashed;
+   width: 100%;"></div>
+            <!--<hr style="border: 1px dashed #322f32; margin:0px;-->
+            <!--padding: 0px 0px 0px 0px;">-->
             <div class="row">
                 <div class="col-xs-12">
                     <div class="invoice-title">
@@ -164,17 +195,33 @@
                             <div class="col-xs-12">អាស័យដ្ឋាន : {{address}}</div>
                         </div>
                         <div class="row">
+                            <div class="col-xs-12"><span
+                                    style="font-style: italic"><b>ផលិតផល: </b>{{product.name}}</span></div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-4">ប្រាក់ : {{amount}} {{currencyId}}</div>
-                            <div class="col-xs-4">ថ្លៃសេវា : {{numFormat customerFee "0,0.00"}}{{currencyId}}</div>
-                            <div class="col-xs-4">ប្រាក់នៅសល់ : {{numFormat totalAmount "0,0.00"}}{{currencyId}}</div>
+                            <div class="col-xs-4">ថ្លៃសេវា : {{numFormat customerFee "0,0.00"}} {{currencyId}}</div>
+                            <div class="col-xs-4">ប្រាក់នៅសល់ : {{numFormat totalAmount "0,0.00"}} {{currencyId}}</div>
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>
                             <div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ
                                 :{{numFormat baseAmountFirst "0,0.00"}} {{currencyId}}</div>
                             <div class="col-xs-4"> ប្តូរបាន
-                                :{{numFormat toAmountFirst "0,0.00"}} {{convertToFirst}}
-                            </div>
+                                :{{numFormat toAmountFirst "0,0.00"}} {{convertToFirst}}</div>
+                                <!--{{# if exchangeItems}}-->
+                                <!--{{#each exchangeItems}}-->
+                                <!--<div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>-->
+                                <!--<div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ-->
+                                <!--:{{numFormat baseAmountFirst "0,0.00"}} {{baseCurrency}}</div>-->
+                                <!--<div class="col-xs-4"> ប្តូរបាន-->
+                                <!--:{{numFormat toAmountFirst "0,0.00"}} {{convertTo}}</div>-->
+                                    <!--{{/each}}-->
+                                <!--{{else}}-->
+                            <!--<div class="col-xs-4"><span style="font-style: italic">ប្តូរយកជារូបិយប័ណ្ណ:</span></div>-->
+                            <!--<div class="col-xs-4"> ប្រាក់ត្រូវប្តូរ</div>-->
+                            <!--<div class="col-xs-4"> ប្តូរបាន</div>-->
+                                <!--{{/if}}-->
                         </div>
                         <div class="row">
                             <div class="col-xs-4"><span style="font-style: italic"></span></div>
@@ -230,24 +277,7 @@
                 <div style="border-top: dotted 1px black; margin-bottom: 1px; margin-top: 20px;"></div>
             </div>
         </div>
-        <div class="container" style="width: 559px;">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="row">
-                        <div class="col-xs-1">
-                            <address>
-                            </address>
-                        </div>
-                        <div class="col-xs-11">
-                            <address class="text-right">
-                                <button type="button" id="print" class="btn btn-primary fa fa-print"><span
-                                        style="font-family: Arial;">Print</span></button>
-                            </address>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!---->
 
     {{else}}

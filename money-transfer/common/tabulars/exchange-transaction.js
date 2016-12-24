@@ -33,14 +33,28 @@ tabularOpts.columns = [
     },
     {data: "customerId", title: "Customer"},
     {
-        data: "transactionExchangeRef", title: 'Transaction Exchange Ref'
+        data: "transferId", title: 'Transaction Exchange'
         , render: function (val, type, doc) {
         if (val != undefined) {
-            return "<span class='label label-primary'>" + val + "</span>"
+            return "<button type='button' class='btn btn-block btn-warning btn-flat'>" + "From Transfer " + val + "</button>"
         } else {
-            return "<span class='label label-default'>Normal</span>"
+            return "<button type='button' class='btn btn-block btn-info btn-flat'>Normal</button>"
         }
     }
+    },
+    {
+        data: "items", title: "Exchange Items",
+        render: function (val, type, doc) {
+            var Exchange = '';
+            val.forEach(function (obj) {
+                if (obj != null) {
+
+                    Exchange += '' + "Base CRC = " + obj.baseCurrency + ', ' + 'Buying = ' + obj.buying + ', ' + 'Selling = ' + obj.selling + ', ' + 'Convert To = ' + obj.convertTo + ', ' + 'Base Amount = ' + obj.baseAmount + ', ' + 'Amount Buying = ' + ' ' + numeral(obj.toAmountBuying).format('0,000.00') + ', ' + 'Amount Selling = ' + numeral(obj.toAmount).format('0,000.00') + ", " + "Income = " + obj.income + "<br>";
+                }
+            });
+            //Exchange += '</ul>';
+            return Spacebars.SafeString(Exchange);
+        }
     }
 
 ];

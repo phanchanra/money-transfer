@@ -84,7 +84,28 @@
                         <i class="fa fa-file-text-o"></i> <span>Balance</span>
                     </a>
                 </li>
-
+                <!--exchange transaction-->
+                <li class="dropdown-header">Exchange Money</li>
+                <li class="{{isActiveRoute name='moneyTransfer.exchangeTransactionReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.exchangeTransactionReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Exchange Transaction</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.exchangeDetailReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.exchangeDetailReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Exchange Detail</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.exchangeStockInReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.exchangeStockInReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Exchange Stock In</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moneyTransfer.exchangeOutstandingReport'}}">
+                    <a href="{{pathFor 'moneyTransfer.exchangeOutstandingReport'}}">
+                        <i class="fa fa-file-text-o"></i> <span>Exchange Outstanding</span>
+                    </a>
+                </li>
                 <!--Borrowing-->
                 <li class="dropdown-header">Borrowing</li>
                 <li class="{{isActiveRoute name='moneyTransfer.borrowingReport'}}">
