@@ -1212,6 +1212,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToFirst, function (err, result) {
                             if (result < bothBaseAmountFirstIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingFirst', res.totalBuying);
                                 state.set('toAmountFirst', res.totalSelling);
@@ -1229,6 +1231,9 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
+
                             }
                         });
                     });
@@ -1247,6 +1252,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToFirst, function (err, result) {
                             if (result < bothBaseAmountFirstIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingFirst', res.totalBuying);
                                 state.set('toAmountFirst', res.totalSelling);
@@ -1264,6 +1271,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });
@@ -1282,6 +1291,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToFirst, function (err, result) {
                             if (result < bothBaseAmountFirstIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingFirst', res.totalBuying);
                                 state.set('toAmountFirst', res.totalSelling);
@@ -1299,6 +1310,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: resultAmountFirst}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });
@@ -1314,6 +1327,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToFirst, function (err, result) {
                             if (result < bothBaseAmountFirstIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingFirst', res.totalBuying);
                                 state.set('toAmountFirst', res.totalSelling);
@@ -1331,6 +1346,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });
@@ -1379,6 +1396,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToSecond, function (err, result) {
                             if (result < bothBaseAmountSecondIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingSecond', res.totalBuying);
                                 state.set('toAmountSecond', res.totalSelling);
@@ -1396,6 +1415,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });
@@ -1413,6 +1434,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToSecond, function (err, result) {
                             if (result < bothBaseAmountSecondIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingSecond', res.totalBuying);
                                 state.set('toAmountSecond', res.totalSelling);
@@ -1430,6 +1453,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: resultAmountSecond}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });
@@ -1448,6 +1473,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToSecond, function (err, result) {
                             if (result < bothBaseAmountSecondIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingSecond', res.totalBuying);
                                 state.set('toAmountSecond', res.totalSelling);
@@ -1465,6 +1492,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: totalThaiIn}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });
@@ -1480,6 +1509,8 @@ formTmpl.events({
                         Meteor.call('checkStockBeforeExchange', currencyId, convertToSecond, function (err, result) {
                             if (result < bothBaseAmountSecondIn) {
                                 displayError("លុយក្នុងឃ្លាំងមិនគ្រប់គ្រាន់សម្រាប់ប្តូរប្រាក់!" + "ចំនួនលុយក្នុងឃ្លាំង" + result + "​ < ​" + "ចំនួនលុយលក់ចេញ" + res.totalSelling);
+                                instance.$('.save').prop('disabled', true);
+                                instance.$('.save-print').prop('disabled', true);
                             } else {
                                 state.set('exToAmountBuyingSecond', res.totalBuying);
                                 state.set('toAmountSecond', res.totalSelling);
@@ -1497,6 +1528,8 @@ formTmpl.events({
                                 // console.log(res.totalSelling);
                                 // console.log(res.netIncome);
                                 tmpCollection.update({}, {$set: {totalAmount: totalAmount}});
+                                instance.$('.save').prop('disabled', false);
+                                instance.$('.save-print').prop('disabled', false);
                             }
                         });
                     });

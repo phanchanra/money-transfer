@@ -46,7 +46,7 @@ Meteor.methods({
                     }
                 }
             });
-             console.log(tmpFee);
+             // console.log(tmpFee);
             return _.last(tmpFee);
         } else {
             return false;
