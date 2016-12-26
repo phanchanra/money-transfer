@@ -64,15 +64,18 @@ indexTmpl.events({
     'click .js-destroy' (event, instance) {
         let id = this._id;
         Meteor.call('checkExchangeRateInStock', id, function (err, res) {
-            if (res == 'inactive') {
-                displayError("លុយនៅក្នុងឃ្លាំងអត្រាប្តូរប្រាក់នេះត្រូវបានប្រើប្រាស់ហើយ មិនអាចលុបបានទេ")
-            } else {
+            if (res) {
+                if (res.status == 'inactive') {
+                    displayError("លុយនៅក្នុងឃ្លាំងអត្រាប្តូរប្រាក់នេះត្រូវបានប្រើប្រាស់ហើយ មិនអាចលុបបានទេ")
+                }
+            }else{
                 destroyAction(
                     ExchangeRate,
                     {_id: this._id},
                     {title: 'Exchange Rate', exchangeRateTitle: this._id}
                 );
             }
+
         });
     },
     'click .js-display' (event, instance) {
