@@ -162,6 +162,38 @@ MoneyTransferRoutes.route('/exchange-detail-report', {
         parent: 'moneyTransfer.home'
     }
 });
+// Exchange Detail
+import '../imports/reports/exchange-detail';
+MoneyTransferRoutes.route('/exchange-detail-report', {
+    name: 'moneyTransfer.exchangeDetailReport',
+    title: "Exchange Detail",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeDetailReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Exchange Detail Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
+// Exchange By Currency
+import '../imports/reports/exchange-by-currency';
+MoneyTransferRoutes.route('/exchange-by-currency-report', {
+    name: 'moneyTransfer.exchangeByCurrencyReport',
+    title: "Exchange By Currency",
+    action: function (params, queryParams) {
+        Layout.main('MoneyTransfer_exchangeByCurrencyReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: "Exchange By Currency Report",
+        //icon: 'users',
+        parent: 'moneyTransfer.home'
+    }
+});
 // Exchange Stock In
 import '../imports/reports/exchange-stockIn';
 MoneyTransferRoutes.route('/exchange-stockIn-report', {

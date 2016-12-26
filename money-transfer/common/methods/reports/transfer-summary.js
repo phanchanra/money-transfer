@@ -112,6 +112,7 @@ export const transferSummaryReport = new ValidatedMethod({
                         productDoc: {$last: "$productDoc"},
                         convertToFirst:{$last:"$convertToFirst"},
                         convertToSecond:{$last:"$convertToSecond"},
+
                         //convert money
                         totalBaseAmountFirstUSD: {
                             $sum: {
