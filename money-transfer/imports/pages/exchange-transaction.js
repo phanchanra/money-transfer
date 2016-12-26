@@ -71,7 +71,7 @@ invoice.helpers({
 });
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.exchangeTransaction(fa('plus', 'Exchange Transaction'), renderTemplate(formTmpl));
+        alertify.exchangeTransaction(fa('plus', 'Exchange Transaction'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
         let id = this._id;
