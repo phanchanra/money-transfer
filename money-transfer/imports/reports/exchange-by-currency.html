@@ -15,11 +15,23 @@
             {{> formFooterWithButton}}
         {{/autoForm}}
         <!--Print Button-->
-        <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
+        <!--<button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>-->
         <!--Report Paper-->
-        <div id="print-data">
-            <div class="rpt rpt-landscape-a4">
-                {{#if rptInit}}
+
+        {{#if rptInit}}
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-11">
+                        <address class="text-right">
+                            <button type="button" class="btn btn-warning btn-print btn-flat fa fa-print">Print</button>
+                        </address>
+                    </div>
+                    <div class="col-xs-1">
+                    </div>
+                </div>
+            </div>
+            <div id="print-data">
+                <div class="rpt rpt-landscape-a4">
                     {{#if rptData}}
                         {{#with rptData}}
 
@@ -103,11 +115,11 @@
                                     {{/each}}
                                 {{/each}}
                                 <!--<tr style="-webkit-print-color-adjust: exact; background-color: lightgrey !important;">-->
-                                    <!--<td colspan="11" align="right">Total:</td>-->
-                                    <!--<td align="right"-->
-                                        <!--style="background-color: lightgrey;">{{numFormat footer.totalToAmount "0,0.00"}}</td>-->
-                                    <!--<td align="right"-->
-                                        <!--style="background-color: lightgrey;">{{numFormat footer.totalIncome "0,0.00"}}</td>-->
+                                <!--<td colspan="11" align="right">Total:</td>-->
+                                <!--<td align="right"-->
+                                <!--style="background-color: lightgrey;">{{numFormat footer.totalToAmount "0,0.00"}}</td>-->
+                                <!--<td align="right"-->
+                                <!--style="background-color: lightgrey;">{{numFormat footer.totalIncome "0,0.00"}}</td>-->
                                 <!--</tr>-->
                                 </tbody>
                             </table>
@@ -127,9 +139,10 @@
                             {{> iconLoading size="fa-5x"}}
                         </div>
                     {{/if}}
-                {{/if}}
+                </div>
             </div>
-        </div>
+        {{/if}}
+
 
     </div>
 </template>

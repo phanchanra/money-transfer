@@ -91,7 +91,7 @@ export const transferBalanceReport = new ValidatedMethod({
                         as: "productDoc"
                     }
                 },
-                { $unwind: { path: '$productDoc' } },
+                { $unwind: { path: '$productDoc', preserveNullAndEmptyArrays:true } },
                 {
                     $group: {
                         _id: null,

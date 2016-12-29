@@ -17,11 +17,23 @@
             {{> formFooterWithButton}}
         {{/autoForm}}
         <!--Print Button-->
-        <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
+        <!--<button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>-->
         <!--Report Paper-->
-        <div id="print-data">
-            <div class="rpt rpt-portrait-a4">
-                {{#if rptInit}}
+
+        {{#if rptInit}}
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-10">
+                        <address class="text-right">
+                            <button type="button" class="btn btn-warning btn-print btn-flat fa fa-print">Print</button>
+                        </address>
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                </div>
+            </div>
+            <div id="print-data">
+                <div class="rpt rpt-portrait-a4">
                     {{#if rptData}}
                         {{#with rptData}}
                             <!--Title-->
@@ -69,12 +81,15 @@
                                     <th>Dis%</th>
                                     <th>Total Fee</th>
                                     <th>Agent Fee</th>
-                                    <th>Ex F</th>
-                                    <th>Con F</th>
-                                    <th>To AF</th>
-                                    <th>Ex S</th>
-                                    <th>Con S</th>
-                                    <th>To AS</th>
+                                    <th>Ex BaseAmount</th>
+                                    <th>Ex Convert To</th>
+                                    <th>Ex Convert Amount</th>
+                                    <!--<th>Ex F</th>-->
+                                    <!--<th>Con F</th>-->
+                                    <!--<th>To AF</th>-->
+                                    <!--<th>Ex S</th>-->
+                                    <!--<th>Con S</th>-->
+                                    <!--<th>To AS</th>-->
                                     <th>Total Amount</th>
                                 </tr>
                                 </thead>
@@ -93,20 +108,48 @@
                                         <td align="center">{{discountFee}}</td>
                                         <td align="right">{{numFormat totalFee "0,0.00"}}</td>
                                         <td align="right">{{numFormat agentFee "0,0.00"}}</td>
-                                        <td align="right">{{numFormat baseAmountFirst "0,0.00"}}</td>
-                                        <td align="right">{{convertToFirst}}</td>
-                                        <td align="right">{{numFormat toAmountFirst "0,0.00"}}</td>
-                                        <td align="right">{{numFormat baseAmountSecond "0,0.00"}}</td>
-                                        <td align="right">{{convertToSecond}}</td>
-                                        <td align="right">{{numFormat toAmountSecond "0,0.00"}}</td>
+                                        <td align="right">
+                                            {{#each exDoc.items}}
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td align="right">{{numFormat baseAmount "0,0.00"}}</td>
+                                                    </tr>
+                                                </table>
+                                            {{/each}}
+                                        </td>
+                                        <td align="right">
+                                            {{#each exDoc.items}}
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td align="center">{{convertTo}}</td>
+                                                    </tr>
+                                                </table>
+                                            {{/each}}
+                                        </td>
+                                        <td align="right">
+                                            {{#each exDoc.items}}
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td align="right">{{ numFormat toAmount "0,0.00"}}</td>
+                                                    </tr>
+                                                </table>
+                                            {{/each}}
+                                        </td>
+                                        <!--<td align="right">{{numFormat baseAmountFirst "0,0.00"}}</td>-->
+                                        <!--<td align="right">{{convertToFirst}}</td>-->
+                                        <!--<td align="right">{{numFormat toAmountFirst "0,0.00"}}</td>-->
+                                        <!--<td align="right">{{numFormat baseAmountSecond "0,0.00"}}</td>-->
+                                        <!--<td align="right">{{convertToSecond}}</td>-->
+                                        <!--<td align="right">{{numFormat toAmountSecond "0,0.00"}}</td>-->
                                         <td align="right">{{numFormat totalAmount "0,0.00"}}</td>
                                     </tr>
 
                                 {{/each}}
                                 <tr style="-webkit-print-color-adjust: exact; background-color: lightgrey !important;">
-                                    <td colspan="17" style="text-align: right;">Grand Total:</td>
+                                    <td colspan="14" style="text-align: right;">Grand Total:</td>
 
-                                    <td align="right" style="background-color: lightgrey;">{{numFormat footer.total "0,0.00"}}</td>
+                                    <td align="right"
+                                        style="background-color: lightgrey;">{{numFormat footer.total "0,0.00"}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -126,9 +169,8 @@
                             {{> iconLoading size="fa-5x"}}
                         </div>
                     {{/if}}
-                {{/if}}
+                </div>
             </div>
-        </div>
-
+        {{/if}}
     </div>
 </template>

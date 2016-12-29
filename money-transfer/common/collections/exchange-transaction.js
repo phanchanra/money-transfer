@@ -173,7 +173,7 @@ ExchangeTransaction.schema = new SimpleSchema({
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'DD/MM/YYYY HH:mm:ss',
                     showTodayButton: true
                 }
             }

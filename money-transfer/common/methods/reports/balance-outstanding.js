@@ -159,7 +159,7 @@ export const transferBalanceOutstandingReport = new ValidatedMethod({
                         as: "productDoc"
                     }
                 },
-                { $unwind: { path: '$productDoc' } },
+                { $unwind: { path: '$productDoc',preserveNullAndEmptyArrays:true } },
                 // {
                 //     $project: {
                 //         _id: {

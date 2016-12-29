@@ -53,7 +53,7 @@ export const ExchangeOutstandingReport = new ValidatedMethod({
                         as: "exchangeDoc"
                     }
                 },
-                { $unwind: { path: '$exchangeDoc' } },
+                { $unwind: { path: '$exchangeDoc', preserveNullAndEmptyArrays:true } },
                 {   $lookup: {
                     from: "currencyExchange_provider",
                     localField: "exchangeDoc.providerId",
@@ -61,7 +61,7 @@ export const ExchangeOutstandingReport = new ValidatedMethod({
                     as: "providerDoc"
                 }
                 },
-                { $unwind: {path:'$providerDoc'}},
+                { $unwind: {path:'$providerDoc', preserveNullAndEmptyArrays:true}},
 
                 {
                     $group: {

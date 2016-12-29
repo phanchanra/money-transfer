@@ -29,9 +29,12 @@ export const depositWithdrawalReport = new ValidatedMethod({
             let branch = params.branch;
             let product = params.product;
             let type = params.type;
-            let date = params.repDate;
-            let fDate = moment(date[0]).toDate();
-            let tDate = moment(date[1]).add(1, 'days').toDate();
+            // let date = params.repDate;
+            // let fDate = moment(date[0]).toDate();
+            // let tDate = moment(date[1]).add(1, 'days').toDate();
+            var fDate = moment(params.repDate[0], "DD/MM/YYYY").startOf('day').toDate(); // set to 12:00 am today
+            var tDate = moment(params.repDate[1], "DD/MM/YYYY").endOf('day').toDate(); // set to 23:59 pm today
+
             //let exchangeId = params.exchange;
             let exchange = Exchange.findOne(params.exchange);
             params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';

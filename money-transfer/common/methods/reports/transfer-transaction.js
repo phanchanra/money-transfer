@@ -24,14 +24,21 @@ export const transferTransactionReport = new ValidatedMethod({
                 content: [{index: 'No Result'}],
                 footer: {}
             };
-
+            // let selector = {
+            //     orderDate: {
+            //         $gte: moment().subtract(6, 'days').startOf('day').toDate(),
+            //         $lte: moment().endOf('day').toDate()
+            //     }
+            // };
             // let date = _.trim(_.words(params.date, /[^To]+/g));
             let branch = params.branch;
             let product = params.product;
             let type = params.type;
-            let date = params.repDate;
-            let fDate = moment(date[0]).toDate();
-            let tDate = moment(date[1]).add(1, 'days').toDate();
+            //let date = params.repDate;
+            // let fDate = moment(params.repDate[0]).toDate();
+            // let tDate = moment(params.repDate[1]).add(1, 'days').toDate();
+            let fDate = moment(params.repDate[0], "DD/MM/YYYY").startOf('day').toDate(); // set to 12:00 am today
+            let tDate = moment(params.repDate[1], "DD/MM/YYYY").endOf('day').toDate(); // set to 23:59 pm today
             let exchangeId = params.exchange;
             let exchange = Exchange.findOne(exchangeId);
             params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';
@@ -44,10 +51,8 @@ export const transferTransactionReport = new ValidatedMethod({
             /****** Content *****/
             let content = [];
             let selector = {};
-            selector.transferDate = {
-                $gte: fDate,
-                $lte: tDate
-            };
+            selector.transferDate = {$gte: fDate, $lte: tDate};
+
             if (!_.isEmpty(branch)) {
                 selector.branchId = {$in: branch};
             }
@@ -57,7 +62,7 @@ export const transferTransactionReport = new ValidatedMethod({
             if (!_.isEmpty(type)) {
                 selector.type = {$in: type};
             }
-
+            //console.log(selector);
             let transfers = Transfer.aggregate([
                 {
                     $match: selector
@@ -86,9 +91,18 @@ export const transferTransactionReport = new ValidatedMethod({
                         as: "receiverDoc"
                     }
                 },
-                {$unwind: {path: '$productDoc'}},
-                {$unwind: {path: '$senderDoc'}},
-                {$unwind: {path: '$receiverDoc'}},
+                {
+                    $lookup: {
+                        from: "currencyExchange_ExchangeTransaction",
+                        localField: "exchangeId",
+                        foreignField: "_id",
+                        as: "exDoc"
+                    }
+                },
+                {$unwind: {path: '$productDoc', preserveNullAndEmptyArrays:true}},
+                {$unwind: {path: '$senderDoc', preserveNullAndEmptyArrays:true}},
+                {$unwind: {path: '$receiverDoc',preserveNullAndEmptyArrays:true}},
+                {$unwind: {path: '$exDoc', preserveNullAndEmptyArrays:true}},
                 {
                     $group: {
                         _id: '$currencyId',
@@ -98,10 +112,14 @@ export const transferTransactionReport = new ValidatedMethod({
                         totalFee: {$sum: '$totalFee'},
                         agentFee: {$sum: '$agentFee'},
                         totalAmount: {$sum: '$totalAmount'},
-                        baseAmountFirst: {$sum: '$baseAmountFirst'},
-                        baseAmountSecond: {$sum: '$baseAmountSecond'},
-                        toAmountFirst: {$sum: '$toAmountFirst'},
-                        toAmountSecond: {$sum: '$toAmountSecond'},
+                        baseAmountFirst: {$sum: '$exDoc.items[0].baseAmount'},
+                        baseAmountSecond: {$sum: '$exDoc.items[1].baseAmount'},
+                        toAmountFirst: {$sum: '$exDoc.items[0].toAmount'},
+                        toAmountSecond: {$sum: '$exDoc.items[1].toAmount'},
+                        // baseAmountFirst: {$sum: '$baseAmountFirst'},
+                        // baseAmountSecond: {$sum: '$baseAmountSecond'},
+                        // toAmountFirst: {$sum: '$toAmountFirst'},
+                        // toAmountSecond: {$sum: '$toAmountSecond'},
                         totalUSD: {
                             $sum: {
                                 $cond: {

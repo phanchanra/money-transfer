@@ -29,9 +29,12 @@ export const transferSummaryReport = new ValidatedMethod({
             let branch = params.branch;
             let product = params.product;
             let type = params.type;
-            let date = params.repDate;
-            let fDate = moment(date[0]).toDate();
-            let tDate = moment(date[1]).add(1, 'days').toDate();
+            // let date = params.repDate;
+            // let fDate = moment(date[0]).toDate();
+            // let tDate = moment(date[1]).add(1, 'days').toDate();
+            let fDate = moment(params.repDate[0], "DD/MM/YYYY").startOf('day').toDate(); // set to 12:00 am today
+            let tDate = moment(params.repDate[1], "DD/MM/YYYY").endOf('day').toDate(); // set to 23:59 pm today
+
             //let exchangeId = params.exchange;
             let exchange = Exchange.findOne(params.exchange);
             params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';
@@ -86,7 +89,16 @@ export const transferSummaryReport = new ValidatedMethod({
                         as: "productDoc"//get doc
                     }
                 },
-                {$unwind: {path: '$productDoc'}},
+                {
+                    $lookup: {
+                        from: "currencyExchange_ExchangeTransaction",
+                        localField: "exchangeId",
+                        foreignField: "_id",
+                        as: "exDoc"
+                    }
+                },
+                {$unwind: {path: '$productDoc', preserveNullAndEmptyArrays: true}},
+                {$unwind: {path: '$exDoc', preserveNullAndEmptyArrays: true}},
                 // {
                 //     $project: {
                 //         convertToFirst: 1,
@@ -99,7 +111,7 @@ export const transferSummaryReport = new ValidatedMethod({
                             currencyId: "$currencyId",//group by currency
                             productId: "$productId"//group by productId
                         },
-
+                        type:{$last:'$type'},
                         amount: {$sum: '$amount'},
                         customerFee: {$sum: '$customerFee'},
                         discountFee: {$sum: '$discountFee'},
@@ -110,8 +122,9 @@ export const transferSummaryReport = new ValidatedMethod({
                         toAmountSecond: {$sum: '$toAmountSecond'},
                         totalAmount: {$sum: '$totalAmount'},
                         productDoc: {$last: "$productDoc"},
-                        convertToFirst:{$last:"$convertToFirst"},
-                        convertToSecond:{$last:"$convertToSecond"},
+                        exDoc: {$last: "$exDoc"},
+                        convertToFirst: {$last: "$convertToFirst"},
+                        convertToSecond: {$last: "$convertToSecond"},
 
                         //convert money
                         totalBaseAmountFirstUSD: {
@@ -270,6 +283,8 @@ export const transferSummaryReport = new ValidatedMethod({
                         data: {
                             $addToSet: {
                                 productDoc: '$productDoc',//add to array
+                                exDoc: '$exDoc',
+                                type:'$type',
                                 amount: '$amount',//
                                 customerFee: '$customerFee',
                                 discountFee: '$discountFee',

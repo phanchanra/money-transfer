@@ -24,9 +24,12 @@ export const exchangeTransactionReport = new ValidatedMethod({
                 footer: {}
             };
             let branch = params.branch;
-            let date = params.repDate;
-            let fDate = moment(date[0]).toDate();
-            let tDate = moment(date[1]).add(1, 'days').toDate();
+            // let date = params.repDate;
+            // let fDate = moment(date[0]).toDate();
+            // let tDate = moment(date[1]).add(1, 'days').toDate();
+            var fDate = moment(params.repDate[0], "DD/MM/YYYY").startOf('day').toDate(); // set to 12:00 am today
+            var tDate = moment(params.repDate[1], "DD/MM/YYYY").endOf('day').toDate(); // set to 23:59 pm today
+
             // let dateFrom = moment(params.repDate[0]).startOf('day').toDate();
             // let dateTo = moment(params.repDate[1]).endOf('day').toDate();
 
@@ -59,7 +62,7 @@ export const exchangeTransactionReport = new ValidatedMethod({
                         as: "customerDoc"
                     }
                 },
-                {$unwind: {path: '$customerDoc'}},
+                {$unwind: {path: '$customerDoc', preserveNullAndEmptyArrays:true}},
                 {
                     $project: {
                         exchangeDate: 1,

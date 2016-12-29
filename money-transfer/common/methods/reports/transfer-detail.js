@@ -29,9 +29,12 @@ export const transferDetailReport = new ValidatedMethod({
             let branch = params.branch;
             let product = params.product;
             let type = params.type;
-            let date = params.repDate;
-            let fDate = moment(date[0]).toDate();
-            let tDate = moment(date[1]).add(1, 'days').toDate();
+            // let date = params.repDate;
+            // let fDate = moment(date[0]).toDate();
+            // let tDate = moment(date[1]).add(1, 'days').toDate();
+            let fDate = moment(params.repDate[0], "DD/MM/YYYY").startOf('day').toDate(); // set to 12:00 am today
+            let tDate = moment(params.repDate[1], "DD/MM/YYYY").endOf('day').toDate(); // set to 23:59 pm today
+
             //let exchangeId = params.exchange;
             let exchange = Exchange.findOne(params.exchange);
             params.exchangeObj = moment(exchange.exDate).format('DD/MM/YYYY') + ' ' + exchange.base + '  ' + exchange.rates.USD + '=' + exchange.rates.KHR + 'KHR' + ' | ' + exchange.rates.THB + 'THB';
@@ -85,37 +88,40 @@ export const transferDetailReport = new ValidatedMethod({
                         as: "productDoc"
                     }
                 },
-                { $unwind: { path: '$productDoc' } },
+
+                {$unwind: {path: '$productDoc', preserveNullAndEmptyArrays: true}},
                 {
                     $project: {
                         currencyId: 1,
+                        exchangeId:1,
                         productId: 1,
                         productDoc: 1,
+                        //exDock:1,
                         transferDate: 1,
-                        type:1,
-                        amount:1,
-                        customerFee:1,
-                        discountFee:1,
-                        totalFee:1,
-                        agentFee:1,
-                        convertToFirst:1,
-                        baseAmountFirst:1,
-                        toAmountFirst:1,
-                        convertToSecond:1,
-                        baseAmountSecond:1,
-                        toAmountSecond:1,
-                        totalAmount:1,
+                        type: 1,
+                        amount: 1,
+                        customerFee: 1,
+                        discountFee: 1,
+                        totalFee: 1,
+                        agentFee: 1,
+                        convertToFirst: 1,
+                        baseAmountFirst: 1,
+                        toAmountFirst: 1,
+                        convertToSecond: 1,
+                        baseAmountSecond: 1,
+                        toAmountSecond: 1,
+                        totalAmount: 1,
                         sumProduct: {
                             $sum: {
                                 $cond: {//condition sum by currency and product
-                                    if: { $eq: ["$currencyId", "THB"] },
-                                    then: { $divide: ["$amount", exchange.rates.THB] },
+                                    if: {$eq: ["$currencyId", "THB"]},
+                                    then: {$divide: ["$amount", exchange.rates.THB]},
                                     else: {
                                         $cond: {
                                             if: {
                                                 $eq: ['$currencyId', 'KHR']
                                             },
-                                            then: { $divide: ["$amount", exchange.rates.KHR] },
+                                            then: {$divide: ["$amount", exchange.rates.KHR]},
                                             else: "$amount"
 
                                         }
@@ -125,6 +131,16 @@ export const transferDetailReport = new ValidatedMethod({
                         }
                     }
                 },
+                {
+                    $lookup: {
+                        from: "currencyExchange_ExchangeTransaction",
+                        localField: "exchangeId",
+                        foreignField: "_id",
+                        as: "exDoc"
+                    }
+                },
+                {$unwind: {path: '$exDoc', preserveNullAndEmptyArrays: true}},
+
                 {
                     $group: {
                         _id: null,
@@ -137,7 +153,7 @@ export const transferDetailReport = new ValidatedMethod({
                     }
                 }
             ]);
-            if(transfers.length > 0) {
+            if (transfers.length > 0) {
                 data.content = transfers[0].data;
                 data.footer.total = transfers[0].total;
             }

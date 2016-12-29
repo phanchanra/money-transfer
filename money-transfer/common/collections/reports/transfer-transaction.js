@@ -6,18 +6,6 @@ import {moment} from 'meteor/momentjs:moment';
 import {SelectOpts} from '../../../imports/libs/select-opts.js';
 
 export const TransferTransactionSchema = new SimpleSchema({
-    repDate: {
-        type: [Date],
-        label: 'Date',
-        autoform: {
-            type: "bootstrap-daterangepicker",
-            afFieldInput: {
-                dateRangePickerOptions: function () {
-                    return dateRangePickerOptions;
-                }
-            }
-        }
-    },
     type: {
         type: [String],
         label: 'Type',
@@ -60,6 +48,18 @@ export const TransferTransactionSchema = new SimpleSchema({
             afFieldInput: {
                 select2Options: {
                     multiple: true
+                }
+            }
+        }
+    },
+    repDate: {
+        type: [Date],
+        label: 'Date',
+        autoform: {
+            type: "bootstrap-daterangepicker",
+            afFieldInput: {
+                dateRangePickerOptions: function () {
+                    return dateRangePickerOptions;
                 }
             }
         }
